@@ -28,7 +28,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Class Smush
  */
 class Smush extends Abstract_Module {
-	const ERROR_SSL_CERT = 'ssl_cert_error';
+	private static $error_ssl_cert = 'ssl_cert_error';
 
 	/**
 	 * Meta key to save smush result to db.
@@ -436,7 +436,7 @@ class Smush extends Abstract_Module {
 		$data = $this->parse_response( $response );
 
 		if ( is_wp_error( $data ) ) {
-			if ( $data->get_error_code() === self::ERROR_SSL_CERT ) {
+			if ( $data->get_error_code() === self::$error_ssl_cert ) {
 				// Switch to http protocol.
 				$this->settings->set_setting( 'wp-smush-use_http', 1 );
 			}
@@ -524,7 +524,7 @@ class Smush extends Abstract_Module {
 
 			if ( strpos( $error, 'SSL CA cert' ) !== false ) {
 				return new WP_Error(
-					self::ERROR_SSL_CERT,
+					self::$error_ssl_cert,
 					$error
 				);
 			} else if ( strpos( $error, 'timed out' ) !== false ) {
@@ -616,7 +616,7 @@ class Smush extends Abstract_Module {
 	 *
 	 * @return array
 	 */
-	public function array_fill_placeholders( array $placeholders, array $data ) {
+	public function array_fill_placeholders( $placeholders, $data ) {
 		$placeholders['percent']     = $data['compression'];
 		$placeholders['bytes']       = $data['bytes_saved'];
 		$placeholders['size_before'] = $data['before_size'];
@@ -967,7 +967,7 @@ class Smush extends Abstract_Module {
 		// Check if the file is ignored or animated.
 		$is_ignored = (int) get_post_meta( $attachment_id, 'wp-smush-ignore-bulk', true );
 		if ( $is_ignored > 0 ) {
-			$type = Core::STATUS_ANIMATED === $is_ignored ? 'animated' : 'ignored';
+			$type = Core::get_status_animated() === $is_ignored ? 'animated' : 'ignored';
 			$ref_errors->add( $type, Error_Handler::get_error_message( $type ), array( 'file_name' => $file_name ) );
 			return $this->no_smushit( $attachment_id, $ref_errors );
 		}

@@ -21,7 +21,7 @@ $lossy_description                 = $is_pro ? esc_html__( 'Optimize images up t
 												: esc_html__( 'Optimize images up to 2x more than regular smush with our multi-pass lossy compression.', 'wp-smushit' );
 $lossy_action_label                = $is_pro ? __( 'Enable Ultra Smush', 'wp-smushit' ) : __( 'Enable Super Smush', 'wp-smushit' );
 // Pro features.
-$total_cdn_locations = Admin::CDN_POP_LOCATIONS;
+$total_cdn_locations = Admin::get_cdn_pop_locations();
 $upsell_url          = $this->get_utm_link(
 	array(
 		'utm_campaign' => 'smush_wizard',

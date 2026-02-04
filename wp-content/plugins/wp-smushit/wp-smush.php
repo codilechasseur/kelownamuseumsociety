@@ -13,7 +13,7 @@
  * Plugin Name:       Smush
  * Plugin URI:        https://wpmudev.com/project/wp-smush-pro/
  * Description:       Reduce image file sizes, improve performance and boost your SEO using the free <a href="https://wpmudev.com/">WPMU DEV</a> WordPress Smush API.
- * Version:           3.23.2
+ * Version:           3.23.3
  * Requires at least: 6.4
  * Requires PHP:      7.4
  * Author:            WPMU DEV
@@ -51,7 +51,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 if ( ! defined( 'WP_SMUSH_VERSION' ) ) {
-	define( 'WP_SMUSH_VERSION', '3.23.2' );
+	define( 'WP_SMUSH_VERSION', '3.23.3' );
 }
 // Used to define body class.
 if ( ! defined( 'WP_SHARED_UI_VERSION' ) ) {
@@ -335,6 +335,9 @@ if ( ! class_exists( 'WP_Smush' ) ) {
 				return;
 			}
 
+			// Get namespace from the full class name.
+			$namespace = substr( $class, 0, strrpos( $class, '\\' ) );
+
 			// Get the relative class name.
 			$relative_class = substr( $class, $len );
 
@@ -346,7 +349,35 @@ if ( ! class_exists( 'WP_Smush' ) ) {
 			if ( file_exists( $file ) ) {
 				/* @noinspection PhpIncludeInspection */
 				require $file;
+			} else if (
+					in_array( $class, $this->shimmed(), true ) ||
+					in_array( $namespace, $this->shimmed(), true )
+			) {
+				// Define a shim class inline to prevent errors.
+				class_alias( '\\Smush\\Core\\Shim', $class );
 			}
+		}
+
+		private function shimmed() {
+			return array(
+					'Smush\Core\Membership\Membership_Pro',
+					'Smush\Core\LCP',
+					'Smush\Core\CDN',
+					'Smush\Core\Modules\CDN',
+					'Smush\Core\Avif',
+					'Smush\Core\Webp',
+					'Smush\Core\Modules\WebP',
+					'Smush\Core\Next_Gen',
+					'Smush\Core\S3',
+					'Smush\Core\Integrations\S3',
+					'Smush\Core\Integrations\NextGen', // The class and the namespace are the same.
+					'Smush\Core\Integrations\Nextgen',
+					'Smush\Core\Png2Jpg',
+					'Smush\Core\Modules\Png2jpg',
+					'Smush\Core\Resize\Auto_Resizing_Controller',
+					'Smush\Core\Resize\Auto_Resizing_Transform',
+					'Smush\Core\Image_Dimensions',
+			);
 		}
 
 		/**

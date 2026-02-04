@@ -24,12 +24,12 @@ if ( ! defined( 'WPINC' ) ) {
  * Class Admin
  */
 class Admin {
-	const PLUGIN_DISCOUNT_PERCENT = 80;
-	const CDN_POP_LOCATIONS       = 123;
-	const REVIEW_PROMPTS_OPTION_KEY = 'wp-smush-review_prompt_next_show';
-	const REVIEW_PROMPTS_MIN_IMAGES = 10;
-	const REVIEW_PROMPTS_OPTIMIZED_IMAGES_THRESHOLD = 100;
-	const REVIEW_PROMPTS_OPTIMIZATION_FAILED_PERCENT_THRESHOLD = 10;
+	private static $plugin_discount_percent = 80;
+	private static $cdn_pop_locations = 123;
+	private static $review_prompts_option_key = 'wp-smush-review_prompt_next_show';
+	private static $review_prompts_min_images = 10;
+	private static $review_prompts_optimized_images_threshold = 100;
+	private static $review_prompts_optimization_failed_percent_threshold = 10;
 
 	/**
 	 * Plugin pages.
@@ -62,7 +62,7 @@ class Admin {
 	 *
 	 * @param Media_Library $media_lib  Media uploads library.
 	 */
-	public function __construct( Media_Library $media_lib ) {
+	public function __construct( $media_lib ) {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
 		add_action( 'admin_menu', array( $this, 'add_menu_pages' ) );
@@ -102,6 +102,19 @@ class Admin {
 		add_action( 'admin_footer-plugins.php', array( $this, 'load_deactivation_survey_modal' ) );
 
 		add_action( 'all_admin_notices', array( $this, 'maybe_show_review_prompts' ) );
+	}
+
+	public static function get_cdn_pop_locations() {
+		return self::$cdn_pop_locations;
+	}
+
+	/**
+	 * Get review_prompts_option_key.
+	 *
+	 * @return mixed
+	 */
+	public static function get_review_prompts_option_key() {
+		return self::$review_prompts_option_key;
 	}
 
 	/**
@@ -333,7 +346,7 @@ class Admin {
 				$this->pages['bulk'] = new Pages\Bulk( 'smush-bulk', __( 'Bulk Smush', 'wp-smushit' ), 'smush' );
 			}
 
-			if ( Abstract_Page::should_render( Settings::LAZY_PRELOAD_MODULE_NAME ) ) {
+			if ( Abstract_Page::should_render( Settings::get_lazy_preload_module_name() ) ) {
 				$pro_feature_ripple_effect   = Abstract_Page::should_show_new_feature_hotspot() ? '<span class="smush-new-feature-dot"></span>' : '';
 				$this->pages['lazy-preload'] = new Pages\Lazy_Preload( 'smush-lazy-preload', __( 'Lazy Load & Preload', 'wp-smushit' ) . $pro_feature_ripple_effect, 'smush' );
 			}
@@ -641,7 +654,7 @@ class Admin {
 
 	private function generate_bulk_limit_message_for_free( $remaining_count ) {
 		$dont_limit = WP_Smush::get_instance()->core()->mod->bg_optimization->can_use_background();
-		if ( $dont_limit || $remaining_count < Core::MAX_FREE_BULK ) {
+		if ( $dont_limit || $remaining_count < Core::get_max_free_bulk() ) {
 			return '';
 		}
 
@@ -656,7 +669,7 @@ class Admin {
 		return sprintf(
 			/* translators: 1: max free bulk limit, 2: opening a tag, 3: closing a tag. */
 			esc_html__( 'Free users can only Bulk Smush %1$d images at one time. Skip limits, save time. Bulk Smush unlimited images — %2$sGet Smush Pro%3$s', 'wp-smushit' ),
-			Core::MAX_FREE_BULK,
+			Core::get_max_free_bulk(),
 			'<a class="smush-upsell-link" target="_blank" href="' . $upgrade_url . '">',
 			'</a>'
 		);
@@ -814,7 +827,7 @@ class Admin {
 	}
 
 	public function get_plugin_discount() {
-		return self::PLUGIN_DISCOUNT_PERCENT . '%';
+		return self::$plugin_discount_percent . '%';
 	}
 
 	public function load_deactivation_survey_modal() {
@@ -849,7 +862,7 @@ class Admin {
 		</style>
 		<?php
 
-		$next_review_prompt = get_option( self::REVIEW_PROMPTS_OPTION_KEY, array() );
+		$next_review_prompt = get_option( self::$review_prompts_option_key, array() );
 		if ( ! empty( $next_review_prompt['type'] ) ) {
 			return 'all_optimized' === $next_review_prompt['type'] ? $this->get_all_optimized_images_notice() : $this->get_remind_later_notice();
 		}
@@ -857,13 +870,13 @@ class Admin {
 		$global_stats = Global_Stats::get();
 
 		$optimized_count = $global_stats->get_total_optimizable_items_count() - $global_stats->get_remaining_count();
-		if ( $optimized_count >= self::REVIEW_PROMPTS_OPTIMIZED_IMAGES_THRESHOLD ) {
+		if ( $optimized_count >= self::$review_prompts_optimized_images_threshold ) {
 			return $this->get_optimized_images_notice( $optimized_count );
 		}
 
 		// Store the prompt state to continue showing the notice when new images are uploaded on small sites.
 		update_option(
-			self::REVIEW_PROMPTS_OPTION_KEY,
+			self::$review_prompts_option_key,
 			array(
 				'time' => time() - 1,
 				'type' => 'all_optimized',
@@ -890,16 +903,16 @@ class Admin {
 		$global_stats = Global_Stats::get();
 
 		$image_count = $global_stats->get_image_attachment_count();
-		if ( $image_count < self::REVIEW_PROMPTS_MIN_IMAGES ) {
+		if ( $image_count < self::$review_prompts_min_images ) {
 			return false;
 		}
 
 		$percent_failed = $global_stats->get_optimization_failed_percent();
-		if ( $percent_failed >= self::REVIEW_PROMPTS_OPTIMIZATION_FAILED_PERCENT_THRESHOLD ) {
+		if ( $percent_failed >= self::$review_prompts_optimization_failed_percent_threshold ) {
 			return false;
 		}
 
-		$next_review_prompt = get_option( self::REVIEW_PROMPTS_OPTION_KEY, array() );
+		$next_review_prompt = get_option( self::$review_prompts_option_key, array() );
 		$current_time       = isset( $_GET['smush-current-time'] ) ? (int) $_GET['smush-current-time'] : time();
 		if ( ! empty( $next_review_prompt['time'] ) ) {
 			return $current_time >= (int) $next_review_prompt['time'];
@@ -913,7 +926,7 @@ class Admin {
 
 		$optimized_count = $global_stats->get_total_optimizable_items_count() - $global_stats->get_remaining_count();
 
-		return $optimized_count >= self::REVIEW_PROMPTS_OPTIMIZED_IMAGES_THRESHOLD;
+		return $optimized_count >= self::$review_prompts_optimized_images_threshold;
 	}
 
 	/**
