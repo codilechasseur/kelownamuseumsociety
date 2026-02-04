@@ -1,0 +1,24 @@
+Version 2.0.1:
+- Fixed: Lightbox content not showing issues when content set on outside
+- Fixed: Lightbox content position issues
+- Fixed: Border issues when content set on outside
+
+Version 2.0.0:
+- Improved: License issue with nonce check resolved
+- Improved: CSS selector specificity issue handled
+- Improved: Dynamic gallery item through media category
+- Improved: Multiselect category option which will be ordered
+- Improved: Toggle for hide all option in filtering mode
+- Improved: Caption and Description Position (Outside-Top,Bottom)
+- Improved: Image Orientation (Landscape, Portrait)
+- Improved: Icon on hover state added
+- Improved: Pagination option added
+- Improved: Page change scroll to top
+- Improved: Load more button hidden without content
+- Fixed: Row setting for image item in responsive mode on VB issue resolved
+- Fixed: Switching to view mode on VB handled properly
+- Fixed: Blinking & JS related issues handled
+- Fixed: PHP Warning
+
+Version 1.0.0:
+- Module Added: Initial Release. 

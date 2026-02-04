@@ -1,0 +1,5256 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Divi Events Calendar\n"
+"POT-Creation-Date: 2023-04-26 20:17+0500\n"
+"PO-Revision-Date: 2023-04-26 20:58+0500\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.3\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: divi-event-calendar-module.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+"X-Poedit-SearchPathExcluded-1: node_modules\n"
+
+#: divi-event-calendar-module.php:70
+msgid ""
+"Divi Events Calendar requires The Events Calendar to be installed and "
+"active. You can download "
+msgstr ""
+
+#: divi-event-calendar-module.php:72 divi-event-calendar-module.php:73
+msgid "The Events Calendar"
+msgstr ""
+
+#: divi-event-calendar-module.php:74
+msgid " here"
+msgstr ""
+
+#: divi-event-calendar-module.php:505
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2778
+#: includes/modules/EventCarousel/EventCarousel.php:2230
+#: includes/modules/EventDisplay/EventAjax.php:2141
+#: includes/modules/EventDisplay/EventDisplay.php:6123
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:57
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1069
+#: includes/modules/EventPage/EventPage.php:3498
+msgid "Organizer"
+msgstr ""
+
+#: divi-event-calendar-module.php:507
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2780
+#: includes/modules/EventCarousel/EventCarousel.php:2496
+#: includes/modules/EventDisplay/EventAjax.php:2654
+#: includes/modules/EventDisplay/EventDisplay.php:6637
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:674
+#: includes/modules/EventPage/EventPage.php:3876
+msgid "Venue"
+msgstr ""
+
+#: divi-event-calendar-module.php:510 divi-event-calendar-module.php:602
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2786
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2861
+#: includes/modules/EventCarousel/EventCarousel.php:2521
+#: includes/modules/EventDisplay/EventAjax.php:2685
+#: includes/modules/EventDisplay/EventDisplay.php:6675
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:768
+#: includes/modules/EventPage/EventPage.php:3905
+msgid "Location"
+msgstr ""
+
+#: divi-event-calendar-module.php:512
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2788
+#: includes/modules/EventCarousel/EventCarousel.php:2544
+#: includes/modules/EventDisplay/EventAjax.php:2711
+#: includes/modules/EventDisplay/EventDisplay.php:6704
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:55
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1110
+#: includes/modules/EventPage/EventPage.php:3970
+msgid "Category"
+msgstr ""
+
+#: divi-event-calendar-module.php:514
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2790
+#: includes/modules/EventCarousel/EventCarousel.php:2245
+#: includes/modules/EventDisplay/EventAjax.php:2165
+#: includes/modules/EventDisplay/EventDisplay.php:6151
+#: includes/modules/EventPage/EventPage.php:3588
+msgid "Price"
+msgstr ""
+
+#: divi-event-calendar-module.php:555
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2845
+#: includes/modules/EventDisplay/EventAjax.php:2023
+#: includes/modules/EventDisplay/EventDisplay.php:5950
+#: includes/modules/EventPage/EventPage.php:3420
+msgid "Virtual Event"
+msgstr ""
+
+#: divi-event-calendar-module.php:560
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2850
+#: includes/modules/EventDisplay/EventAjax.php:2028
+#: includes/modules/EventDisplay/EventDisplay.php:5955
+msgid "Hybrid Event"
+msgstr ""
+
+#: divi-event-calendar-module.php:566
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2813
+#: includes/modules/EventDisplay/EventDisplay.php:5996
+#: includes/modules/EventDisplay/EventDisplay.php:7568
+#: includes/modules/EventPage/EventPage.php:3386
+#: includes/modules/EventPage/EventPage.php:4552
+msgid "View Events Website"
+msgstr ""
+
+#: divi-event-calendar-module.php:574 divi-event-calendar-module.php:620
+#: divi-event-calendar-module.php:628 divi-event-calendar-module.php:636
+#: divi-event-calendar-module.php:644
+#: includes/modules/EventDisplay/EventAjax.php:2434
+#: includes/modules/EventDisplay/EventAjax.php:2444
+#: includes/modules/EventDisplay/EventDisplay.php:6419
+#: includes/modules/EventDisplay/EventDisplay.php:6429
+#: includes/modules/EventPage/EventPage.php:3741
+#: includes/modules/EventPage/EventPage.php:3749
+#: includes/modules/EventPage/EventPage.php:3820
+#: includes/modules/EventPage/EventPage.php:3828
+msgid "All Day Event"
+msgstr ""
+
+#: divi-event-calendar-module.php:575
+msgid "all-day"
+msgstr ""
+
+#: divi-event-calendar-module.php:578
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2835
+#: includes/modules/EventDisplay/EventAjax.php:1937
+#: includes/modules/EventDisplay/EventDisplay.php:5934
+#: includes/modules/EventDisplay/EventDisplay.php:7793
+#: includes/modules/EventPage/EventPage.php:3438
+msgid "postponed"
+msgstr ""
+
+#: divi-event-calendar-module.php:582
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2839
+#: includes/modules/EventDisplay/EventAjax.php:1942
+#: includes/modules/EventDisplay/EventDisplay.php:5939
+#: includes/modules/EventDisplay/EventDisplay.php:7798
+#: includes/modules/EventPage/EventPage.php:3434
+msgid "canceled"
+msgstr ""
+
+#: divi-event-calendar-module.php:614
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2905
+#: includes/modules/EventCarousel/EventCarousel.php:2313
+#: includes/modules/EventDisplay/EventAjax.php:2290
+#: includes/modules/EventDisplay/EventDisplay.php:6275
+#: includes/modules/EventPage/EventPage.php:3657
+msgid "Website"
+msgstr ""
+
+#: divi-event-calendar-module.php:648
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2782
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2897
+#: includes/modules/EventCarousel/EventCarousel.php:2331
+#: includes/modules/EventDisplay/EventAjax.php:2317
+#: includes/modules/EventDisplay/EventAjax.php:2607
+#: includes/modules/EventDisplay/EventDisplay.php:6302
+#: includes/modules/EventDisplay/EventDisplay.php:6592
+#: includes/modules/EventPage/EventPage.php:3382
+msgid "Date"
+msgstr ""
+
+#: divi-event-calendar-module.php:650
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2784
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2899
+#: includes/modules/EventCarousel/EventCarousel.php:2330
+#: includes/modules/EventDisplay/EventAjax.php:2316
+#: includes/modules/EventDisplay/EventDisplay.php:6301
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1247
+#: includes/modules/EventPage/EventPage.php:3381
+msgid "Time"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:15
+msgid "Events Calendar"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:63
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:223
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:356
+#: includes/modules/EventCarousel/EventCarousel.php:53
+#: includes/modules/EventDisplay/EventDisplay.php:186
+msgid "Events"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:64
+msgid ""
+"Add and customize the border for the upcoming events with all the standard "
+"border settings."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:81
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:358
+msgid "Navigation Buttons"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:82
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:98
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:116
+msgid ""
+"Add and customize the border for the calendar month navigation with all the "
+"standard border settings."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:97
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:359
+msgid "View Buttons"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:115
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:360
+msgid "Tooltip"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:131
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:361
+msgid "Details Image"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:132
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:149
+msgid ""
+"Add and customize the border for the Details image with all the standard "
+"border settings."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:148
+msgid "Calendar Thumbnail"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:166
+msgid "Heading"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:167
+msgid ""
+"Customize and style the calendar Heading text with all the standard font and "
+"text settings."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:182
+msgid "View Button"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:183
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:194
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:252
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:263
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:275
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:802
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:825
+#: includes/modules/EventCarousel/EventCarousel.php:416
+#: includes/modules/EventDisplay/EventDisplay.php:1262
+#: includes/modules/EventPage/EventPage.php:639
+msgid "Choose to show or hide the event time zone."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:193
+msgid "Navigation Button"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:203
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:354
+msgid "Days of the Week"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:204
+msgid ""
+"Customize and style the days of the week text with all the standard font and "
+"text settings."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:213
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:355
+msgid "Calendar Days"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:214
+msgid ""
+"Customize and style the days on the calendar number text with all the "
+"standard font and text settings."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:224
+msgid ""
+"Customize and style the upcoming events text with all the standard font and "
+"text settings."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:235
+msgid "Details Title"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:236
+msgid ""
+"Customize and style the Details title text with all the standard font and "
+"text settings."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:251
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:338
+#: includes/modules/EventCarousel/EventCarousel.php:215
+#: includes/modules/EventDisplay/EventDisplay.php:138
+#: includes/modules/EventDisplay/EventDisplay.php:188
+#: includes/modules/EventDisplay/EventDisplay.php:582
+#: includes/modules/EventPage/EventPage.php:42
+#: includes/modules/EventPage/EventPage.php:264
+msgid "Details"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:262
+msgid "Details Excerpt"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:274
+#: includes/modules/EventDisplay/EventDisplay.php:592
+msgid "Details Labels"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:293
+msgid "Navigation Button Box Shadow Settings"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:294
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:307
+#: includes/modules/EventCarousel/EventCarousel.php:159
+#: includes/modules/EventDisplay/EventDisplay.php:463
+msgid ""
+"Add and customize the box shadow for the event featured image with all the "
+"standard box shadow settings."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:306
+msgid "View Buttons Box Shadow Settings"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:330
+#: includes/modules/EventCarousel/EventCarousel.php:25
+#: includes/modules/EventDisplay/EventDisplay.php:121
+#: includes/modules/EventPage/EventPage.php:38
+msgid "Content"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:334
+msgid "Views"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:346
+#: includes/modules/EventPage/EventPage.php:46
+msgid "Links"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:353
+msgid "Heading Text"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:357
+msgid "Thumbnails In Calendar Days"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:362
+#: includes/modules/EventPage/EventPage.php:68
+msgid "Details Labels Text"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:363
+msgid "Details Title Text"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:364
+#: includes/modules/EventPage/EventPage.php:67
+msgid "Details Text"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:365
+msgid "Details Excerpt Text"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:368
+#: includes/modules/EventCarousel/EventCarousel.php:45
+#: includes/modules/EventDisplay/EventDisplay.php:175
+#: includes/modules/EventFilter/EventFilter.php:37
+msgid "Admin Label"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:391
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1317
+#: includes/modules/EventDisplay/EventDisplay.php:852
+#: includes/modules/EventDisplay/EventDisplay.php:1021
+msgid "Dynamic Events"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:395
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:460
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:477
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:495
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:513
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:532
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:578
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:596
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:615
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:633
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:648
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:677
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:695
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:714
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:745
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:779
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:799
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:822
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:845
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:868
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:903
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:926
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:944
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:967
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:985
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1008
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1024
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1047
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1065
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1088
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1106
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1124
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1147
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1165
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1184
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1202
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1277
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1296
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1428
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1450
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1523
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1545
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1927
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1944
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1959
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1974
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2013
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2029
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2045
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2061
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2108
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2148
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2185
+#: includes/modules/EventCarousel/EventCarousel.php:306
+#: includes/modules/EventCarousel/EventCarousel.php:333
+#: includes/modules/EventCarousel/EventCarousel.php:350
+#: includes/modules/EventCarousel/EventCarousel.php:366
+#: includes/modules/EventCarousel/EventCarousel.php:381
+#: includes/modules/EventCarousel/EventCarousel.php:397
+#: includes/modules/EventCarousel/EventCarousel.php:413
+#: includes/modules/EventCarousel/EventCarousel.php:434
+#: includes/modules/EventCarousel/EventCarousel.php:449
+#: includes/modules/EventCarousel/EventCarousel.php:465
+#: includes/modules/EventCarousel/EventCarousel.php:484
+#: includes/modules/EventCarousel/EventCarousel.php:503
+#: includes/modules/EventCarousel/EventCarousel.php:518
+#: includes/modules/EventCarousel/EventCarousel.php:538
+#: includes/modules/EventCarousel/EventCarousel.php:554
+#: includes/modules/EventCarousel/EventCarousel.php:571
+#: includes/modules/EventCarousel/EventCarousel.php:589
+#: includes/modules/EventCarousel/EventCarousel.php:740
+#: includes/modules/EventCarousel/EventCarousel.php:1016
+#: includes/modules/EventCarousel/EventCarousel.php:1036
+#: includes/modules/EventCarousel/EventCarousel.php:1050
+#: includes/modules/EventCarousel/EventCarousel.php:1064
+#: includes/modules/EventCarousel/EventCarousel.php:1077
+#: includes/modules/EventCarousel/EventCarousel.php:1131
+#: includes/modules/EventCarousel/EventCarousel.php:1167
+#: includes/modules/EventCarousel/EventCarousel.php:1182
+#: includes/modules/EventDisplay/EventDisplay.php:823
+#: includes/modules/EventDisplay/EventDisplay.php:1025
+#: includes/modules/EventDisplay/EventDisplay.php:1040
+#: includes/modules/EventDisplay/EventDisplay.php:1093
+#: includes/modules/EventDisplay/EventDisplay.php:1109
+#: includes/modules/EventDisplay/EventDisplay.php:1124
+#: includes/modules/EventDisplay/EventDisplay.php:1155
+#: includes/modules/EventDisplay/EventDisplay.php:1192
+#: includes/modules/EventDisplay/EventDisplay.php:1209
+#: includes/modules/EventDisplay/EventDisplay.php:1242
+#: includes/modules/EventDisplay/EventDisplay.php:1259
+#: includes/modules/EventDisplay/EventDisplay.php:1279
+#: includes/modules/EventDisplay/EventDisplay.php:1300
+#: includes/modules/EventDisplay/EventDisplay.php:1315
+#: includes/modules/EventDisplay/EventDisplay.php:1339
+#: includes/modules/EventDisplay/EventDisplay.php:1359
+#: includes/modules/EventDisplay/EventDisplay.php:1382
+#: includes/modules/EventDisplay/EventDisplay.php:1402
+#: includes/modules/EventDisplay/EventDisplay.php:1425
+#: includes/modules/EventDisplay/EventDisplay.php:1445
+#: includes/modules/EventDisplay/EventDisplay.php:1465
+#: includes/modules/EventDisplay/EventDisplay.php:1485
+#: includes/modules/EventDisplay/EventDisplay.php:1508
+#: includes/modules/EventDisplay/EventDisplay.php:1528
+#: includes/modules/EventDisplay/EventDisplay.php:1551
+#: includes/modules/EventDisplay/EventDisplay.php:1574
+#: includes/modules/EventDisplay/EventDisplay.php:1593
+#: includes/modules/EventDisplay/EventDisplay.php:1612
+#: includes/modules/EventDisplay/EventDisplay.php:1627
+#: includes/modules/EventDisplay/EventDisplay.php:1647
+#: includes/modules/EventDisplay/EventDisplay.php:1688
+#: includes/modules/EventDisplay/EventDisplay.php:1705
+#: includes/modules/EventDisplay/EventDisplay.php:1734
+#: includes/modules/EventDisplay/EventDisplay.php:1766
+#: includes/modules/EventDisplay/EventDisplay.php:1801
+#: includes/modules/EventDisplay/EventDisplay.php:1838
+#: includes/modules/EventDisplay/EventDisplay.php:1869
+#: includes/modules/EventDisplay/EventDisplay.php:1901
+#: includes/modules/EventDisplay/EventDisplay.php:1916
+#: includes/modules/EventDisplay/EventDisplay.php:1931
+#: includes/modules/EventDisplay/EventDisplay.php:1949
+#: includes/modules/EventDisplay/EventDisplay.php:2020
+#: includes/modules/EventDisplay/EventDisplay.php:2039
+#: includes/modules/EventDisplay/EventDisplay.php:2058
+#: includes/modules/EventDisplay/EventDisplay.php:2077
+#: includes/modules/EventDisplay/EventDisplay.php:2097
+#: includes/modules/EventDisplay/EventDisplay.php:2115
+#: includes/modules/EventDisplay/EventDisplay.php:2364
+#: includes/modules/EventDisplay/EventDisplay.php:2431
+#: includes/modules/EventDisplay/EventDisplay.php:2660
+#: includes/modules/EventDisplay/EventDisplay.php:2679
+#: includes/modules/EventDisplay/EventDisplay.php:2872
+#: includes/modules/EventDisplay/EventDisplay.php:2893
+#: includes/modules/EventDisplay/EventDisplay.php:2914
+#: includes/modules/EventDisplay/EventDisplay.php:2936
+#: includes/modules/EventDisplay/EventDisplay.php:3077
+#: includes/modules/EventDisplay/EventDisplay.php:3093
+#: includes/modules/EventDisplay/EventDisplay.php:3109
+#: includes/modules/EventDisplay/EventDisplay.php:3154
+#: includes/modules/EventDisplay/EventDisplay.php:3170
+#: includes/modules/EventDisplay/EventDisplay.php:3205
+#: includes/modules/EventDisplay/EventDisplay.php:3245
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:94
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:155
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:193
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:218
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:269
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1311
+#: includes/modules/EventFilter/EventFilter.php:240
+#: includes/modules/EventFilter/EventFilter.php:256
+#: includes/modules/EventFilter/EventFilter.php:346
+#: includes/modules/EventPage/EventPage.php:362
+#: includes/modules/EventPage/EventPage.php:389
+#: includes/modules/EventPage/EventPage.php:406
+#: includes/modules/EventPage/EventPage.php:422
+#: includes/modules/EventPage/EventPage.php:443
+#: includes/modules/EventPage/EventPage.php:465
+#: includes/modules/EventPage/EventPage.php:490
+#: includes/modules/EventPage/EventPage.php:523
+#: includes/modules/EventPage/EventPage.php:539
+#: includes/modules/EventPage/EventPage.php:554
+#: includes/modules/EventPage/EventPage.php:587
+#: includes/modules/EventPage/EventPage.php:620
+#: includes/modules/EventPage/EventPage.php:636
+#: includes/modules/EventPage/EventPage.php:656
+#: includes/modules/EventPage/EventPage.php:677
+#: includes/modules/EventPage/EventPage.php:706
+#: includes/modules/EventPage/EventPage.php:721
+#: includes/modules/EventPage/EventPage.php:737
+#: includes/modules/EventPage/EventPage.php:752
+#: includes/modules/EventPage/EventPage.php:766
+#: includes/modules/EventPage/EventPage.php:778
+#: includes/modules/EventPage/EventPage.php:790
+#: includes/modules/EventPage/EventPage.php:804
+#: includes/modules/EventPage/EventPage.php:818
+#: includes/modules/EventPage/EventPage.php:832
+#: includes/modules/EventPage/EventPage.php:847
+#: includes/modules/EventPage/EventPage.php:861
+#: includes/modules/EventPage/EventPage.php:876
+#: includes/modules/EventPage/EventPage.php:892
+#: includes/modules/EventPage/EventPage.php:907
+#: includes/modules/EventPage/EventPage.php:922
+#: includes/modules/EventPage/EventPage.php:942
+#: includes/modules/EventPage/EventPage.php:957
+#: includes/modules/EventPage/EventPage.php:973
+#: includes/modules/EventPage/EventPage.php:988
+#: includes/modules/EventPage/EventPage.php:1007
+#: includes/modules/EventPage/EventPage.php:1023
+#: includes/modules/EventPage/EventPage.php:1042
+#: includes/modules/EventPage/EventPage.php:1062
+#: includes/modules/EventPage/EventPage.php:1078
+#: includes/modules/EventPage/EventPage.php:1093
+#: includes/modules/EventPage/EventPage.php:1119
+#: includes/modules/EventPage/EventPage.php:1135
+#: includes/modules/EventPage/EventPage.php:1151
+#: includes/modules/EventPage/EventPage.php:1167
+#: includes/modules/EventPage/EventPage.php:1183
+#: includes/modules/EventPage/EventPage.php:1199
+#: includes/modules/EventPage/EventPage.php:1215
+#: includes/modules/EventPage/EventPage.php:1231
+#: includes/modules/EventPage/EventPage.php:1247
+#: includes/modules/EventPage/EventPage.php:1263
+#: includes/modules/EventPage/EventPage.php:1281
+#: includes/modules/EventPage/EventPage.php:1321
+#: includes/modules/EventPage/EventPage.php:1341
+#: includes/modules/EventPage/EventPage.php:1469
+#: includes/modules/EventPage/EventPage.php:1818
+#: includes/modules/EventPage/EventPage.php:1907
+#: includes/modules/EventPage/EventPage.php:1987
+#: includes/modules/EventPage/EventPage.php:2027
+#: includes/modules/EventPage/EventPage.php:2061
+#: includes/modules/EventPage/EventPage.php:2117
+#: includes/modules/EventPage/EventPage.php:2155
+#: includes/modules/EventSubscriber/EventSubscriber.php:91
+#: includes/modules/EventTicket/EventTicket.php:58
+#: includes/modules/EventTicket/EventTicket.php:87
+#: includes/modules/EventTicket/EventTicket.php:108
+#: includes/modules/EventTicket/EventTicket.php:129
+#: includes/modules/EventTicket/EventTicket.php:150
+#: includes/modules/EventTicket/EventTicket.php:170
+#: includes/modules/EventTicket/EventTicket.php:191
+#: includes/modules/EventTicket/EventTicket.php:213
+#: includes/modules/EventTicket/EventTicket.php:234
+msgid "No"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:396
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:461
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:478
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:496
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:514
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:533
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:579
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:597
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:616
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:634
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:649
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:678
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:696
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:715
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:746
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:780
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:800
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:823
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:846
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:869
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:904
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:927
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:945
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:968
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:986
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1009
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1025
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1048
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1066
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1089
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1107
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1125
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1148
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1166
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1185
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1203
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1278
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1297
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1429
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1451
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1524
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1546
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1928
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1945
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1960
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1975
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2014
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2030
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2046
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2062
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2109
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2149
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2186
+#: includes/modules/EventCarousel/EventCarousel.php:307
+#: includes/modules/EventCarousel/EventCarousel.php:334
+#: includes/modules/EventCarousel/EventCarousel.php:351
+#: includes/modules/EventCarousel/EventCarousel.php:367
+#: includes/modules/EventCarousel/EventCarousel.php:382
+#: includes/modules/EventCarousel/EventCarousel.php:398
+#: includes/modules/EventCarousel/EventCarousel.php:414
+#: includes/modules/EventCarousel/EventCarousel.php:435
+#: includes/modules/EventCarousel/EventCarousel.php:450
+#: includes/modules/EventCarousel/EventCarousel.php:466
+#: includes/modules/EventCarousel/EventCarousel.php:485
+#: includes/modules/EventCarousel/EventCarousel.php:504
+#: includes/modules/EventCarousel/EventCarousel.php:519
+#: includes/modules/EventCarousel/EventCarousel.php:539
+#: includes/modules/EventCarousel/EventCarousel.php:555
+#: includes/modules/EventCarousel/EventCarousel.php:572
+#: includes/modules/EventCarousel/EventCarousel.php:590
+#: includes/modules/EventCarousel/EventCarousel.php:741
+#: includes/modules/EventCarousel/EventCarousel.php:1017
+#: includes/modules/EventCarousel/EventCarousel.php:1037
+#: includes/modules/EventCarousel/EventCarousel.php:1051
+#: includes/modules/EventCarousel/EventCarousel.php:1065
+#: includes/modules/EventCarousel/EventCarousel.php:1078
+#: includes/modules/EventCarousel/EventCarousel.php:1130
+#: includes/modules/EventCarousel/EventCarousel.php:1166
+#: includes/modules/EventCarousel/EventCarousel.php:1183
+#: includes/modules/EventDisplay/EventDisplay.php:824
+#: includes/modules/EventDisplay/EventDisplay.php:1026
+#: includes/modules/EventDisplay/EventDisplay.php:1041
+#: includes/modules/EventDisplay/EventDisplay.php:1094
+#: includes/modules/EventDisplay/EventDisplay.php:1110
+#: includes/modules/EventDisplay/EventDisplay.php:1125
+#: includes/modules/EventDisplay/EventDisplay.php:1156
+#: includes/modules/EventDisplay/EventDisplay.php:1193
+#: includes/modules/EventDisplay/EventDisplay.php:1210
+#: includes/modules/EventDisplay/EventDisplay.php:1243
+#: includes/modules/EventDisplay/EventDisplay.php:1260
+#: includes/modules/EventDisplay/EventDisplay.php:1280
+#: includes/modules/EventDisplay/EventDisplay.php:1301
+#: includes/modules/EventDisplay/EventDisplay.php:1316
+#: includes/modules/EventDisplay/EventDisplay.php:1340
+#: includes/modules/EventDisplay/EventDisplay.php:1360
+#: includes/modules/EventDisplay/EventDisplay.php:1383
+#: includes/modules/EventDisplay/EventDisplay.php:1403
+#: includes/modules/EventDisplay/EventDisplay.php:1426
+#: includes/modules/EventDisplay/EventDisplay.php:1446
+#: includes/modules/EventDisplay/EventDisplay.php:1466
+#: includes/modules/EventDisplay/EventDisplay.php:1486
+#: includes/modules/EventDisplay/EventDisplay.php:1509
+#: includes/modules/EventDisplay/EventDisplay.php:1529
+#: includes/modules/EventDisplay/EventDisplay.php:1552
+#: includes/modules/EventDisplay/EventDisplay.php:1575
+#: includes/modules/EventDisplay/EventDisplay.php:1594
+#: includes/modules/EventDisplay/EventDisplay.php:1613
+#: includes/modules/EventDisplay/EventDisplay.php:1628
+#: includes/modules/EventDisplay/EventDisplay.php:1648
+#: includes/modules/EventDisplay/EventDisplay.php:1689
+#: includes/modules/EventDisplay/EventDisplay.php:1706
+#: includes/modules/EventDisplay/EventDisplay.php:1735
+#: includes/modules/EventDisplay/EventDisplay.php:1767
+#: includes/modules/EventDisplay/EventDisplay.php:1802
+#: includes/modules/EventDisplay/EventDisplay.php:1839
+#: includes/modules/EventDisplay/EventDisplay.php:1870
+#: includes/modules/EventDisplay/EventDisplay.php:1902
+#: includes/modules/EventDisplay/EventDisplay.php:1917
+#: includes/modules/EventDisplay/EventDisplay.php:1932
+#: includes/modules/EventDisplay/EventDisplay.php:1950
+#: includes/modules/EventDisplay/EventDisplay.php:2021
+#: includes/modules/EventDisplay/EventDisplay.php:2040
+#: includes/modules/EventDisplay/EventDisplay.php:2059
+#: includes/modules/EventDisplay/EventDisplay.php:2078
+#: includes/modules/EventDisplay/EventDisplay.php:2098
+#: includes/modules/EventDisplay/EventDisplay.php:2116
+#: includes/modules/EventDisplay/EventDisplay.php:2365
+#: includes/modules/EventDisplay/EventDisplay.php:2430
+#: includes/modules/EventDisplay/EventDisplay.php:2661
+#: includes/modules/EventDisplay/EventDisplay.php:2680
+#: includes/modules/EventDisplay/EventDisplay.php:2873
+#: includes/modules/EventDisplay/EventDisplay.php:2894
+#: includes/modules/EventDisplay/EventDisplay.php:2915
+#: includes/modules/EventDisplay/EventDisplay.php:2935
+#: includes/modules/EventDisplay/EventDisplay.php:3078
+#: includes/modules/EventDisplay/EventDisplay.php:3094
+#: includes/modules/EventDisplay/EventDisplay.php:3110
+#: includes/modules/EventDisplay/EventDisplay.php:3155
+#: includes/modules/EventDisplay/EventDisplay.php:3171
+#: includes/modules/EventDisplay/EventDisplay.php:3206
+#: includes/modules/EventDisplay/EventDisplay.php:3246
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:93
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:154
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:192
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:217
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:268
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1310
+#: includes/modules/EventFilter/EventFilter.php:241
+#: includes/modules/EventFilter/EventFilter.php:257
+#: includes/modules/EventFilter/EventFilter.php:347
+#: includes/modules/EventPage/EventPage.php:363
+#: includes/modules/EventPage/EventPage.php:390
+#: includes/modules/EventPage/EventPage.php:407
+#: includes/modules/EventPage/EventPage.php:423
+#: includes/modules/EventPage/EventPage.php:444
+#: includes/modules/EventPage/EventPage.php:466
+#: includes/modules/EventPage/EventPage.php:491
+#: includes/modules/EventPage/EventPage.php:524
+#: includes/modules/EventPage/EventPage.php:540
+#: includes/modules/EventPage/EventPage.php:555
+#: includes/modules/EventPage/EventPage.php:588
+#: includes/modules/EventPage/EventPage.php:621
+#: includes/modules/EventPage/EventPage.php:637
+#: includes/modules/EventPage/EventPage.php:657
+#: includes/modules/EventPage/EventPage.php:678
+#: includes/modules/EventPage/EventPage.php:707
+#: includes/modules/EventPage/EventPage.php:722
+#: includes/modules/EventPage/EventPage.php:738
+#: includes/modules/EventPage/EventPage.php:753
+#: includes/modules/EventPage/EventPage.php:767
+#: includes/modules/EventPage/EventPage.php:779
+#: includes/modules/EventPage/EventPage.php:791
+#: includes/modules/EventPage/EventPage.php:805
+#: includes/modules/EventPage/EventPage.php:819
+#: includes/modules/EventPage/EventPage.php:833
+#: includes/modules/EventPage/EventPage.php:848
+#: includes/modules/EventPage/EventPage.php:862
+#: includes/modules/EventPage/EventPage.php:877
+#: includes/modules/EventPage/EventPage.php:893
+#: includes/modules/EventPage/EventPage.php:908
+#: includes/modules/EventPage/EventPage.php:923
+#: includes/modules/EventPage/EventPage.php:943
+#: includes/modules/EventPage/EventPage.php:958
+#: includes/modules/EventPage/EventPage.php:974
+#: includes/modules/EventPage/EventPage.php:989
+#: includes/modules/EventPage/EventPage.php:1008
+#: includes/modules/EventPage/EventPage.php:1024
+#: includes/modules/EventPage/EventPage.php:1043
+#: includes/modules/EventPage/EventPage.php:1063
+#: includes/modules/EventPage/EventPage.php:1079
+#: includes/modules/EventPage/EventPage.php:1094
+#: includes/modules/EventPage/EventPage.php:1120
+#: includes/modules/EventPage/EventPage.php:1136
+#: includes/modules/EventPage/EventPage.php:1152
+#: includes/modules/EventPage/EventPage.php:1168
+#: includes/modules/EventPage/EventPage.php:1184
+#: includes/modules/EventPage/EventPage.php:1200
+#: includes/modules/EventPage/EventPage.php:1216
+#: includes/modules/EventPage/EventPage.php:1232
+#: includes/modules/EventPage/EventPage.php:1248
+#: includes/modules/EventPage/EventPage.php:1264
+#: includes/modules/EventPage/EventPage.php:1282
+#: includes/modules/EventPage/EventPage.php:1322
+#: includes/modules/EventPage/EventPage.php:1342
+#: includes/modules/EventPage/EventPage.php:1470
+#: includes/modules/EventPage/EventPage.php:1819
+#: includes/modules/EventPage/EventPage.php:1908
+#: includes/modules/EventPage/EventPage.php:1988
+#: includes/modules/EventPage/EventPage.php:2028
+#: includes/modules/EventPage/EventPage.php:2062
+#: includes/modules/EventPage/EventPage.php:2118
+#: includes/modules/EventPage/EventPage.php:2156
+#: includes/modules/EventSubscriber/EventSubscriber.php:92
+#: includes/modules/EventTicket/EventTicket.php:59
+#: includes/modules/EventTicket/EventTicket.php:88
+#: includes/modules/EventTicket/EventTicket.php:109
+#: includes/modules/EventTicket/EventTicket.php:130
+#: includes/modules/EventTicket/EventTicket.php:151
+#: includes/modules/EventTicket/EventTicket.php:171
+#: includes/modules/EventTicket/EventTicket.php:192
+#: includes/modules/EventTicket/EventTicket.php:214
+#: includes/modules/EventTicket/EventTicket.php:235
+msgid "Yes"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:398
+msgid ""
+"Choose to turn on or off dynamic content for the module, which allows you to "
+"place the module in a Divi Theme Builder layout to dynamically display "
+"events for the current category or page."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:415
+msgid "Default View"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:416
+msgid "Choose which view is set by default."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:420
+msgid "Month View"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:421
+msgid "Week View"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:422
+msgid "Days View"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:423
+msgid "List View"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:434
+msgid "List View Range"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:435
+msgid ""
+"Choose the default time range per page for showing events in the list view."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:439
+msgid "Week"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:440
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:65
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1024
+msgid "Month"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:441
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:992
+msgid "Year"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:456
+msgid "Show Thumbnails In Calendar"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:463
+msgid ""
+"Choose to show or hide the event image thumbnails in the month view of the "
+"calendar."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:473
+msgid "Show Month View Button"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:480
+msgid "Choose to show or hide the button that toggles the month view."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:491
+msgid "Show Week View Button"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:498
+msgid "Choose to show or hide the button that toggles the week view."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:509
+msgid "Show Day View Button"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:516
+msgid "Choose to show or hide the button that toggles the day view."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:528
+msgid "Show List View Button"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:535
+msgid "Choose to show or hide the button that toggles the list view."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:546
+msgid "Same Day Event Order"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:547
+msgid ""
+"Choose the criteria for showing the order of events in a single day grid "
+"from top to bottom. "
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:551
+msgid "Start Time"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:552
+msgid "Duration"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:553
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1252
+msgid "All Day"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:554
+#: includes/modules/EventCarousel/EventCarousel.php:205
+#: includes/modules/EventDisplay/EventDisplay.php:568
+msgid "Title"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:561
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:763
+#: includes/modules/EventCarousel/EventCarousel.php:689
+#: includes/modules/EventPage/EventPage.php:600
+msgid "Time Format"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:564
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:766
+#: includes/modules/EventCarousel/EventCarousel.php:692
+#: includes/modules/EventDisplay/EventDisplay.php:1225
+#: includes/modules/EventDisplay/EventDisplay.php:1883
+#: includes/modules/EventPage/EventPage.php:603
+#: includes/modules/EventPage/EventPage.php:1426
+msgid ""
+"By default, the module will use the the same time format that you have set "
+"in WordPress Settings>General. However, if you would like to override those, "
+"you can input the appropriate PHP time format here."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:574
+msgid "Show Event Time"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:581
+msgid "Choose to show or hide the upcoming event time above the title."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:592
+msgid "Hide Time For All Day Events"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:599
+msgid "Choose to hide the time for all day events."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:611
+msgid "Hide Time For Multi-Day Events"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:618
+msgid "Choose to hide the time for events that span more than one day."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:629
+#: includes/modules/EventCarousel/EventCarousel.php:1178
+#: includes/modules/EventDisplay/EventDisplay.php:1036
+#: includes/modules/EventFilter/EventFilter.php:342
+msgid "Use Locally Hosted Files (GDPR)"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:636
+#: includes/modules/EventCarousel/EventCarousel.php:1185
+#: includes/modules/EventDisplay/EventDisplay.php:1043
+#: includes/modules/EventFilter/EventFilter.php:349
+msgid ""
+"A content delivery network (CDN) is hosting some files required for this "
+"module to function in an effort to provide the best performance as possible. "
+"However, due to GDPR laws you may be required to use locally hosted files "
+"instead. In this case, you can enable this setting to disable the CDN and "
+"activate the locally hosted code in the plugin instead."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:644
+msgid "Show Tooltip"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:651
+msgid "Choose to show or hide the entire tooltip."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:673
+msgid "Show Image"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:680
+#: includes/modules/EventCarousel/EventCarousel.php:353
+#: includes/modules/EventDisplay/EventDisplay.php:1096
+#: includes/modules/EventPage/EventPage.php:526
+msgid "Choose to show or hide the event featured image."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:691
+#: includes/modules/EventCarousel/EventCarousel.php:362
+#: includes/modules/EventDisplay/EventDisplay.php:1105
+#: includes/modules/EventPage/EventPage.php:535
+msgid "Show Title"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:698
+#: includes/modules/EventCarousel/EventCarousel.php:369
+#: includes/modules/EventDisplay/EventDisplay.php:1112
+#: includes/modules/EventPage/EventPage.php:542
+msgid "Choose to show or hide the event title."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:710
+#: includes/modules/EventCarousel/EventCarousel.php:377
+#: includes/modules/EventDisplay/EventDisplay.php:1120
+#: includes/modules/EventPage/EventPage.php:550
+msgid "Show Date"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:717
+#: includes/modules/EventCarousel/EventCarousel.php:384
+#: includes/modules/EventDisplay/EventDisplay.php:1127
+#: includes/modules/EventPage/EventPage.php:557
+msgid "Choose to show or hide the event date."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:728
+#: includes/modules/EventCarousel/EventCarousel.php:673
+#: includes/modules/EventPage/EventPage.php:566
+msgid "Date Format"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:731
+#: includes/modules/EventCarousel/EventCarousel.php:676
+#: includes/modules/EventDisplay/EventDisplay.php:1139
+#: includes/modules/EventDisplay/EventDisplay.php:1174
+#: includes/modules/EventDisplay/EventDisplay.php:1748
+#: includes/modules/EventDisplay/EventDisplay.php:1781
+#: includes/modules/EventDisplay/EventDisplay.php:1820
+#: includes/modules/EventDisplay/EventDisplay.php:1852
+#: includes/modules/EventPage/EventPage.php:569
+msgid ""
+"By default, the module will use the the same date format that you have set "
+"in WordPress Settings>General. However, if you would like to override those, "
+"you can input the appropriate PHP date format here."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:741
+#: includes/modules/EventCarousel/EventCarousel.php:393
+#: includes/modules/EventDisplay/EventDisplay.php:1205
+#: includes/modules/EventPage/EventPage.php:583
+msgid "Show Time"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:748
+#: includes/modules/EventCarousel/EventCarousel.php:400
+#: includes/modules/EventDisplay/EventDisplay.php:1195
+#: includes/modules/EventDisplay/EventDisplay.php:1212
+#: includes/modules/EventDisplay/EventDisplay.php:1245
+#: includes/modules/EventPage/EventPage.php:590
+#: includes/modules/EventPage/EventPage.php:623
+msgid "Choose to show or hide the event time."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:775
+#: includes/modules/EventDisplay/EventDisplay.php:1238
+#: includes/modules/EventPage/EventPage.php:616
+msgid "Show End Time"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:782
+msgid "Choose to show or hide the event end time."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:795
+#: includes/modules/EventCarousel/EventCarousel.php:409
+#: includes/modules/EventDisplay/EventDisplay.php:1255
+#: includes/modules/EventPage/EventPage.php:632
+msgid "Show Time Zone"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:818
+#: includes/modules/EventDisplay/EventDisplay.php:1275
+#: includes/modules/EventPage/EventPage.php:652
+msgid "Show Time Zone Abbrivation"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:841
+#: includes/modules/EventCarousel/EventCarousel.php:430
+#: includes/modules/EventDisplay/EventDisplay.php:1296
+#: includes/modules/EventPage/EventPage.php:872
+msgid "Show Venue"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:848
+#: includes/modules/EventCarousel/EventCarousel.php:437
+#: includes/modules/EventDisplay/EventDisplay.php:1303
+#: includes/modules/EventPage/EventPage.php:879
+msgid "Choose to show or hide the event venue."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:864
+#: includes/modules/EventCarousel/EventCarousel.php:445
+#: includes/modules/EventDisplay/EventDisplay.php:1311
+#: includes/modules/EventPage/EventPage.php:673
+msgid "Show Location"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:871
+#: includes/modules/EventCarousel/EventCarousel.php:452
+#: includes/modules/EventDisplay/EventDisplay.php:1318
+#: includes/modules/EventPage/EventPage.php:680
+msgid "Choose to show or hide the event location."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:899
+#: includes/modules/EventDisplay/EventDisplay.php:1335
+#: includes/modules/EventPage/EventPage.php:702
+msgid "Show Location Street Address"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:906
+#: includes/modules/EventDisplay/EventDisplay.php:1342
+msgid "Choose to show or hide the event location street address."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:922
+#: includes/modules/EventDisplay/EventDisplay.php:1355
+#: includes/modules/EventPage/EventPage.php:717
+msgid "Show Comma After Location Street Address"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:929
+#: includes/modules/EventDisplay/EventDisplay.php:1362
+#: includes/modules/EventPage/EventPage.php:724
+msgid "Choose to show or hide the comma after the location street address."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:940
+#: includes/modules/EventDisplay/EventDisplay.php:1378
+#: includes/modules/EventPage/EventPage.php:733
+msgid "Show Location Locality"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:947
+#: includes/modules/EventDisplay/EventDisplay.php:1385
+msgid "Choose to show or hide the event location locality."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:963
+#: includes/modules/EventDisplay/EventDisplay.php:1398
+#: includes/modules/EventPage/EventPage.php:748
+msgid "Show Comma After Location Locality"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:970
+#: includes/modules/EventDisplay/EventDisplay.php:1405
+#: includes/modules/EventPage/EventPage.php:755
+msgid "Choose to show or hide the comma after the location locality."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:981
+msgid "Show Location State"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:988
+msgid "Choose to show or hide the event location State."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1004
+#: includes/modules/EventDisplay/EventDisplay.php:1441
+#: includes/modules/EventPage/EventPage.php:774
+msgid "Show Comma After Location State/Province"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1011
+#: includes/modules/EventDisplay/EventDisplay.php:1448
+#: includes/modules/EventPage/EventPage.php:781
+msgid "Choose to show or hide the comma after the location state/province."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1020
+#: includes/modules/EventDisplay/EventDisplay.php:1461
+#: includes/modules/EventPage/EventPage.php:786
+msgid "Show Location Postal Code"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1027
+#: includes/modules/EventDisplay/EventDisplay.php:1468
+msgid "Choose to show or hide the event location postal code."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1043
+#: includes/modules/EventDisplay/EventDisplay.php:1481
+#: includes/modules/EventPage/EventPage.php:800
+msgid "Show Comma After Location Postal Code"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1050
+#: includes/modules/EventDisplay/EventDisplay.php:1488
+#: includes/modules/EventPage/EventPage.php:807
+msgid "Choose to show or hide the comma after the location postal code."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1061
+#: includes/modules/EventDisplay/EventDisplay.php:1504
+#: includes/modules/EventPage/EventPage.php:814
+msgid "Show Location Country"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1068
+#: includes/modules/EventDisplay/EventDisplay.php:1511
+msgid "Choose to show or hide the event location country."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1084
+#: includes/modules/EventDisplay/EventDisplay.php:1524
+#: includes/modules/EventPage/EventPage.php:828
+msgid "Show Comma After Location Country"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1091
+#: includes/modules/EventPage/EventPage.php:835
+msgid "Choose to show or hide the comma after the location country."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1102
+#: includes/modules/EventDisplay/EventDisplay.php:1547
+#: includes/modules/EventPage/EventPage.php:843
+msgid "Show Postal Code Before Locality"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1109
+#: includes/modules/EventDisplay/EventDisplay.php:1554
+#: includes/modules/EventPage/EventPage.php:850
+msgid ""
+"Choose to change the order of the location items to move the postal code in "
+"front of the locality."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1120
+#: includes/modules/EventCarousel/EventCarousel.php:461
+#: includes/modules/EventDisplay/EventDisplay.php:1570
+#: includes/modules/EventPage/EventPage.php:918
+msgid "Show Organizer"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1127
+msgid "Choose to show or hide the event Organizer."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1143
+#: includes/modules/EventCarousel/EventCarousel.php:480
+#: includes/modules/EventDisplay/EventDisplay.php:1589
+#: includes/modules/EventPage/EventPage.php:984
+msgid "Show Price"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1150
+#: includes/modules/EventCarousel/EventCarousel.php:487
+#: includes/modules/EventDisplay/EventDisplay.php:1596
+#: includes/modules/EventPage/EventPage.php:991
+msgid "Choose to show or hide the event price."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1161
+#: includes/modules/EventCarousel/EventCarousel.php:499
+#: includes/modules/EventDisplay/EventDisplay.php:1608
+#: includes/modules/EventPage/EventPage.php:1003
+msgid "Show Category"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1168
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1205
+#: includes/modules/EventCarousel/EventCarousel.php:541
+#: includes/modules/EventDisplay/EventDisplay.php:1650
+#: includes/modules/EventPage/EventPage.php:1065
+msgid "Choose to show or hide the event excerpt."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1180
+#: includes/modules/EventCarousel/EventCarousel.php:514
+#: includes/modules/EventDisplay/EventDisplay.php:1623
+#: includes/modules/EventPage/EventPage.php:1038
+msgid "Show Website"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1187
+#: includes/modules/EventCarousel/EventCarousel.php:521
+#: includes/modules/EventDisplay/EventDisplay.php:1630
+#: includes/modules/EventPage/EventPage.php:1045
+msgid "Choose to show or hide the event website URL."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1198
+#: includes/modules/EventCarousel/EventCarousel.php:534
+#: includes/modules/EventDisplay/EventDisplay.php:1643
+#: includes/modules/EventDisplay/EventDisplay.php:1662
+#: includes/modules/EventPage/EventPage.php:1058
+msgid "Show Excerpt"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1252
+#: includes/modules/EventDisplay/EventDisplay.php:1966
+#: includes/modules/EventPage/EventPage.php:1299
+msgid "Show Labels/Icons"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1253
+#: includes/modules/EventCarousel/EventCarousel.php:607
+#: includes/modules/EventDisplay/EventDisplay.php:1967
+#: includes/modules/EventPage/EventPage.php:1300
+msgid ""
+"Choose to add labels or icons before each event item. This setting is best "
+"used with the option to stack event details."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1257
+#: includes/modules/EventCarousel/EventCarousel.php:611
+#: includes/modules/EventDisplay/EventDisplay.php:952
+#: includes/modules/EventDisplay/EventDisplay.php:1971
+#: includes/modules/EventPage/EventPage.php:1304
+msgid "None"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1258
+#: includes/modules/EventCarousel/EventCarousel.php:612
+#: includes/modules/EventDisplay/EventDisplay.php:1972
+#: includes/modules/EventPage/EventPage.php:1305
+msgid "Labels"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1259
+#: includes/modules/EventCarousel/EventCarousel.php:613
+#: includes/modules/EventDisplay/EventDisplay.php:1973
+#: includes/modules/EventPage/EventPage.php:1306
+msgid "Icons"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1260
+#: includes/modules/EventDisplay/EventDisplay.php:1974
+#: includes/modules/EventPage/EventPage.php:1307
+msgid "Labels And Icons"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1273
+#: includes/modules/EventDisplay/EventDisplay.php:2656
+#: includes/modules/EventPage/EventPage.php:1317
+msgid "Stack Labels/Icons"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1280
+#: includes/modules/EventDisplay/EventDisplay.php:2663
+#: includes/modules/EventPage/EventPage.php:1324
+msgid ""
+"Choose to stack each of the labels/icons on their own lines above the event "
+"detail instead of on the left."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1292
+#: includes/modules/EventDisplay/EventDisplay.php:2675
+#: includes/modules/EventPage/EventPage.php:1337
+msgid "Show Colon After Labels"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1299
+#: includes/modules/EventDisplay/EventDisplay.php:2682
+#: includes/modules/EventPage/EventPage.php:1344
+msgid "Choose to show a colon after the labels text."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1311
+#: includes/modules/EventDisplay/EventDisplay.php:846
+msgid "Event Selection"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1312
+#: includes/modules/EventDisplay/EventDisplay.php:847
+msgid ""
+"All Events is the default setting to display all events. Dynamic Events "
+"allows you to place the module in a Divi Theme Builder layout to dynamically "
+"display events based on the template assignment. Related Events is used on "
+"the single event pages to hide the current event and show other events "
+"related to the current event. Featured Events shows only featured events in "
+"the feed. Custom Events Selection gives you full control to use checkmarks "
+"to select events based on specific criteria like category, organizer, venue, "
+"and date range."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1316
+#: includes/modules/EventDisplay/EventDisplay.php:851
+msgid "All Events"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1319
+#: includes/modules/EventDisplay/EventDisplay.php:854
+msgid "Featured Events"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1320
+#: includes/modules/EventDisplay/EventDisplay.php:855
+msgid "Custom Events Selection"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1334
+#: includes/modules/EventDisplay/EventDisplay.php:865
+msgid "Categories"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1346
+#: includes/modules/EventDisplay/EventDisplay.php:876
+msgid ""
+"Customize which events show in the feed by category. All events will show by "
+"default unless one or more categories are selected."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1356
+#: includes/modules/EventDisplay/EventDisplay.php:887
+msgid "Organizers"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1360
+msgid ""
+"Customize which events show in the feed by category. All events will show by "
+"default unless one or more organizer are selected."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1370
+#: includes/modules/EventDisplay/EventDisplay.php:902
+msgid "Venues"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1374
+msgid ""
+"Customize which events show in the feed by category. All events will show by "
+"default unless one or more veneues are selected."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1384
+#: includes/modules/EventDisplay/EventDisplay.php:916
+msgid "Series"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1388
+#: includes/modules/EventDisplay/EventDisplay.php:906
+#: includes/modules/EventDisplay/EventDisplay.php:920
+msgid ""
+"Customize which events show in the feed by venue. All events will show by "
+"default unless one or more venues are selected."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1400
+msgid "Number Of Events Per Day"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1404
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1994
+#: includes/modules/EventDisplay/EventDisplay.php:3060
+msgid "Default"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1405
+msgid "1"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1406
+msgid "2"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1407
+msgid "3"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1408
+msgid "4"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1409
+msgid "5"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1410
+msgid "6"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1411
+msgid "7"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1412
+msgid "8"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1413
+msgid "9"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1414
+msgid "10"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1416
+msgid ""
+"Set the maximum number of events that show each day in the month calendar "
+"view."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1424
+msgid "Limit Loading Of Past/Future Events"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1431
+msgid ""
+"Choose to limit how far in the past and future events should load in the "
+"calendar."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1446
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1519
+msgid "Hide Past Events"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1453
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1526
+msgid "Choose to hide past events from showing in the calendar."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1468
+msgid "Number Of Past Months To Load"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1471
+msgid ""
+"Enter a number of months to set the limit on how far in the past events "
+"should load and show in the calendar."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1483
+msgid "Number Of Future Months To Load"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1486
+msgid ""
+"Enter a number of months to set the limit on how far in the future events "
+"should load and show in the calendar."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1499
+msgid "Limit Navigation Range"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1500
+msgid ""
+"Choose to prevent the user from navigating or viewing months beyond the "
+"selected number of past or future months limit."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1504
+msgid "Disable Navigation"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1505
+msgid "Hide Months Beyond Range"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1541
+#: includes/modules/EventDisplay/EventDisplay.php:2016
+msgid "Only Show Featured Events"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1548
+msgid "Choose to only show featured events in the calendar."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1559
+msgid "Day of the Week Name"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1560
+msgid ""
+"Choose whether the days of the week should be abbreviated to show the full "
+"name."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1564
+msgid "Abbreviated"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1565
+msgid "Full Name"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1576
+msgid "Days of Week Background Color"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1577
+msgid "Add a background color to the days of the week."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1587
+msgid "Calendars Days Background Color"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1588
+msgid "Add a background color to the days on the calendar."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1598
+msgid "Current Calendar Day Background Color"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1599
+msgid "Set the background color for the current day on the calendar."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1610
+msgid "Current Calendar Day Text Color"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1611
+msgid "Set the text color for the current day on the calendar."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1621
+msgid "Past Calendar Days Background Color"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1622
+msgid "Set the background color for the past days on the calendar."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1632
+msgid "Past Calendar Days Text Color"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1633
+msgid "Set the text color for the past days on the calendar."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1643
+msgid "Events Background Color"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1644
+msgid "Set the background color for the upcoming events."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1653
+msgid "Navigation Button Background Color"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1654
+msgid "Set the background color for the calendar navigation."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1664
+msgid "Navigation Button Text Color"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1665
+msgid "Set the text color for the calendar navigation."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1676
+msgid "View Buttons Background Color"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1677
+msgid "Set the background color for the view buttons."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1687
+msgid "View Buttons Text Color"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1688
+msgid "Set the text color for the view buttons."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1699
+msgid "Current View Button Background Color"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1700
+msgid "Set the background color for the current view button."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1713
+msgid "Current View Button Text Color"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1714
+msgid "Set the text color for the current view button."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1723
+msgid "Background Color"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1724
+msgid "Set the background color for the calendar Details."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1736
+#: includes/modules/EventCarousel/EventCarousel.php:824
+#: includes/modules/EventDisplay/EventDisplay.php:2473
+#: includes/modules/EventPage/EventPage.php:1544
+msgid "Details Link Color"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1737
+#: includes/modules/EventCarousel/EventCarousel.php:838
+#: includes/modules/EventCarousel/EventCarousel.php:851
+#: includes/modules/EventDisplay/EventDisplay.php:2474
+#: includes/modules/EventPage/EventPage.php:1545
+msgid "Choose a color for the link text in the event details."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1749
+#: includes/modules/EventDisplay/EventDisplay.php:2487
+#: includes/modules/EventPage/EventPage.php:1584
+msgid "Details Icon Color"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1750
+#: includes/modules/EventDisplay/EventDisplay.php:2488
+#: includes/modules/EventPage/EventPage.php:1585
+msgid "Choose a color for the icons in the event details."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1762
+msgid "Events Margin"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1764
+msgid "Adjust the spacing around the outside of the upcoming events."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1771
+msgid "Events Padding"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1773
+msgid "Adjust the spacing around the inside of the upcoming events."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1781
+msgid "Days of the Week Padding"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1783
+msgid "Adjust the spacing around the inside of the days of the week"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1791
+msgid "Calendar Days Padding"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1793
+msgid "Adjust the spacing around the inside of the days of the week."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1800
+msgid "Navigation Buttons Margin"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1802
+msgid "Adjust the spacing around the outside of the navigation buttons."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1809
+msgid "Navigation Buttons Padding"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1811
+msgid "Adjust the spacing around the inside of the navigation buttons."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1818
+msgid "View Buttons Margin"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1820
+msgid "Adjust the spacing around the outside of the View buttons."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1827
+msgid "View Buttons Padding"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1829
+msgid "Adjust the spacing around the inside of the View buttons."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1836
+msgid "Calendar Days Border Width"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1838
+msgid "Set the border width for the days on the calendar."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1846
+msgid "Calendar Days Border Color"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1847
+msgid "Choose a border color for the days on the calendar."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1857
+msgid "Days of Week Border Width"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1859
+msgid "Set the border width for the days of the week."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1867
+msgid "Days of Week Border Color"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1868
+msgid "Choose a border color for the days of the week."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1878
+msgid "Disable Days Of The Week"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1882
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1906
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1217
+msgid "Sunday"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1883
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1907
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1218
+msgid "Monday"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1884
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1908
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1219
+msgid "Tuesday"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1885
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1909
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1220
+msgid "Wednesday"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1886
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1910
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1221
+msgid "Thursday"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1887
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1911
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1222
+msgid "Friday"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1888
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1912
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1223
+msgid "Saturday"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1890
+msgid ""
+"Choose which days of the week to show or hide in the calendar. All days show "
+"by default. Selecting a day will disable it from showing in the calendar."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1902
+msgid "Week Starts On"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1914
+msgid ""
+"Choose which day of the week should be the first day in the calendar view."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1923
+#: includes/modules/EventDisplay/EventDisplay.php:2035
+msgid "Show Canceled And Postponed Events"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1930
+msgid ""
+"Choose to show canceled and postponed events in the calendar. A badge will "
+"be displayed on the event."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1940
+#: includes/modules/EventDisplay/EventDisplay.php:2054
+msgid "Show Virtual Events"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1947
+msgid ""
+"Choose to show virtual events in the calendar. A badge will be displayed on "
+"the event."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1955
+#: includes/modules/EventDisplay/EventDisplay.php:2073
+msgid "Show Hybrid Events"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1962
+msgid ""
+"Choose to show hybrid events in the calendar. A badge will be displayed on "
+"the event."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1970
+#: includes/modules/EventDisplay/EventDisplay.php:2111
+msgid "Show Recurring Events"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1977
+msgid "Choose to show all recurring events in the calendar. "
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1989
+#: includes/modules/EventDisplay/EventDisplay.php:3055
+msgid "Single Event Page Links"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1990
+#: includes/modules/EventDisplay/EventDisplay.php:3056
+msgid "Choose to disable or replace the links to the single event page."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1995
+#: includes/modules/EventDisplay/EventDisplay.php:3061
+msgid "Disable Links"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1996
+#: includes/modules/EventDisplay/EventDisplay.php:3062
+msgid "Replace With Custom Link"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:1997
+#: includes/modules/EventDisplay/EventDisplay.php:3063
+msgid "Redirect To Website Link"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2008
+msgid "Disable Event Calendar Title Link"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2009
+msgid ""
+"Choose to disable the event calendar title from linking to the single event "
+"page."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2024
+#: includes/modules/EventDisplay/EventDisplay.php:3072
+msgid "Disable Event Title Link"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2025
+#: includes/modules/EventDisplay/EventDisplay.php:3073
+msgid ""
+"Choose to disable the event title from linking to the single event page."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2040
+#: includes/modules/EventDisplay/EventDisplay.php:3088
+msgid "Disable Event Image Link"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2041
+#: includes/modules/EventDisplay/EventDisplay.php:3089
+msgid ""
+"Choose to disable the event featured image from linking to the single event "
+"page."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2056
+#: includes/modules/EventDisplay/EventDisplay.php:3104
+msgid "Disable Event Button Link"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2057
+#: includes/modules/EventDisplay/EventDisplay.php:3105
+msgid ""
+"Choose to disable the event more info button from linking to the single "
+"event pages."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2072
+#: includes/modules/EventDisplay/EventDisplay.php:3120
+msgid "Custom Single Event Page Link URL"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2075
+#: includes/modules/EventDisplay/EventDisplay.php:3123
+msgid ""
+"Enter a custom URL to use instead of the default single event page link."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2087
+#: includes/modules/EventDisplay/EventDisplay.php:3132
+msgid "Custom Single Event Page Link Target"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2088
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2251
+#: includes/modules/EventDisplay/EventDisplay.php:3133
+#: includes/modules/EventPage/EventPage.php:1966
+msgid ""
+"Choose whether the custom single event page link opens in the same window or "
+"new tab."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2092
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2127
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2169
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2205
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2255
+#: includes/modules/EventDisplay/EventDisplay.php:3137
+#: includes/modules/EventDisplay/EventDisplay.php:3186
+#: includes/modules/EventDisplay/EventDisplay.php:3226
+#: includes/modules/EventDisplay/EventDisplay.php:3266
+#: includes/modules/EventDisplay/EventDisplay.php:3321
+#: includes/modules/EventPage/EventPage.php:1970
+#: includes/modules/EventPage/EventPage.php:2008
+#: includes/modules/EventPage/EventPage.php:2045
+#: includes/modules/EventPage/EventPage.php:2082
+#: includes/modules/EventPage/EventPage.php:2099
+#: includes/modules/EventPage/EventPage.php:2138
+#: includes/modules/EventPage/EventPage.php:2178
+#: includes/modules/EventSubscriber/EventSubscriber.php:128
+msgid "In The Same Window"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2093
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2128
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2170
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2206
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2256
+#: includes/modules/EventDisplay/EventDisplay.php:3138
+#: includes/modules/EventDisplay/EventDisplay.php:3187
+#: includes/modules/EventDisplay/EventDisplay.php:3227
+#: includes/modules/EventDisplay/EventDisplay.php:3267
+#: includes/modules/EventDisplay/EventDisplay.php:3322
+#: includes/modules/EventPage/EventPage.php:1971
+#: includes/modules/EventPage/EventPage.php:2009
+#: includes/modules/EventPage/EventPage.php:2046
+#: includes/modules/EventPage/EventPage.php:2083
+#: includes/modules/EventPage/EventPage.php:2100
+#: includes/modules/EventPage/EventPage.php:2139
+#: includes/modules/EventPage/EventPage.php:2179
+msgid "In A New Tab"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2104
+#: includes/modules/EventDisplay/EventDisplay.php:3165
+#: includes/modules/EventPage/EventPage.php:2151
+msgid "Enable Category Links"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2111
+#: includes/modules/EventDisplay/EventDisplay.php:3166
+#: includes/modules/EventPage/EventPage.php:2158
+msgid ""
+"Choose to add links to the categories to link to their own archive pages."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2122
+#: includes/modules/EventDisplay/EventDisplay.php:3181
+#: includes/modules/EventPage/EventPage.php:2173
+msgid "Category Links Target"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2123
+msgid ""
+"Choose whether the category page links open in the same window or new tab."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2144
+#: includes/modules/EventDisplay/EventDisplay.php:3201
+#: includes/modules/EventPage/EventPage.php:1983
+msgid "Enable Organizer Links"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2151
+#: includes/modules/EventDisplay/EventDisplay.php:3208
+#: includes/modules/EventPage/EventPage.php:1990
+msgid ""
+"Choose to add links to the organizers to link to their own archive pages."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2164
+#: includes/modules/EventDisplay/EventDisplay.php:3221
+#: includes/modules/EventPage/EventPage.php:2003
+msgid "Organizer Links Target"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2165
+#: includes/modules/EventDisplay/EventDisplay.php:3222
+#: includes/modules/EventPage/EventPage.php:2004
+msgid "Choose whether the organizer links open in the same window or new tab."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2181
+#: includes/modules/EventDisplay/EventDisplay.php:3241
+#: includes/modules/EventPage/EventPage.php:2057
+msgid "Enable Venue Links"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2188
+#: includes/modules/EventDisplay/EventDisplay.php:3248
+#: includes/modules/EventPage/EventPage.php:2064
+msgid "Choose to add links to the venues to link to their own archive pages."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2200
+#: includes/modules/EventDisplay/EventDisplay.php:3261
+#: includes/modules/EventPage/EventPage.php:2077
+msgid "Venue Links Target"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2201
+#: includes/modules/EventDisplay/EventDisplay.php:3262
+#: includes/modules/EventPage/EventPage.php:2078
+msgid "Choose whether the venue links open in the same window or new tab."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2217
+#: includes/modules/EventDisplay/EventDisplay.php:3281
+#: includes/modules/EventPage/EventPage.php:1930
+msgid "Website Link"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2218
+#: includes/modules/EventDisplay/EventDisplay.php:3282
+#: includes/modules/EventPage/EventPage.php:1931
+msgid "Choose an option for displaying the website link."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2222
+#: includes/modules/EventDisplay/EventDisplay.php:3286
+#: includes/modules/EventPage/EventPage.php:1935
+msgid "Show Default Text"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2223
+#: includes/modules/EventDisplay/EventDisplay.php:3287
+#: includes/modules/EventPage/EventPage.php:1936
+msgid "Show URL"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2224
+#: includes/modules/EventDisplay/EventDisplay.php:3288
+#: includes/modules/EventPage/EventPage.php:1937
+msgid "Show Custom Text"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2235
+#: includes/modules/EventDisplay/EventDisplay.php:3300
+#: includes/modules/EventPage/EventPage.php:1949
+msgid "Custom Website Link Text"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2238
+#: includes/modules/EventDisplay/EventDisplay.php:3303
+#: includes/modules/EventPage/EventPage.php:1952
+msgid "Enter custom text for the website link."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2250
+#: includes/modules/EventDisplay/EventDisplay.php:3316
+#: includes/modules/EventPage/EventPage.php:1965
+msgid "Website Link Target"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2272
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2311
+#: includes/modules/EventDisplay/EventDisplay.php:2840
+msgid "Image Aspect Ratio"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2273
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2312
+#: includes/modules/EventDisplay/EventDisplay.php:2841
+msgid "Set the aspect ratio of the event featured image."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2277
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2316
+#: includes/modules/EventDisplay/EventDisplay.php:2845
+msgid "Square 1:1"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2278
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2317
+#: includes/modules/EventDisplay/EventDisplay.php:2846
+msgid "Landscape 16:9"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2279
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2318
+#: includes/modules/EventDisplay/EventDisplay.php:2847
+#: includes/modules/EventDisplay/EventDisplay.php:2848
+msgid "Landscape 4:3"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2280
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2319
+#: includes/modules/EventDisplay/EventDisplay.php:2849
+msgid "Landscape 3:2"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2281
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2320
+#: includes/modules/EventDisplay/EventDisplay.php:2850
+msgid "Portrait 9:16"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2282
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2321
+#: includes/modules/EventDisplay/EventDisplay.php:2851
+msgid "Portrait 3:4"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2283
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2322
+#: includes/modules/EventDisplay/EventDisplay.php:2852
+msgid "Portrait 2:3"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2284
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2323
+#: includes/modules/EventDisplay/EventDisplay.php:2853
+msgid "Original As Uploaded"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2299
+msgid "Tooltip Image Alignment"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2306
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2345
+#: includes/modules/EventCarousel/EventCarousel.php:975
+#: includes/modules/EventDisplay/EventDisplay.php:2647
+#: includes/modules/EventFilter/EventFilter.php:74
+#: includes/modules/EventPage/EventPage.php:1776
+msgid "Choose to align the event featured image to the left, center, or right."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2338
+msgid "Calendar Thumbnail Alignment"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2351
+#: includes/modules/EventCarousel/EventCarousel.php:996
+#: includes/modules/EventDisplay/EventDisplay.php:2821
+#: includes/modules/EventPage/EventPage.php:1797
+msgid "Image Width"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2352
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2368
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2384
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2401
+#: includes/modules/EventDisplay/EventDisplay.php:2822
+#: includes/modules/EventPage/EventPage.php:1798
+msgid "Manually set a fixed width for the event featured image."
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2367
+msgid "Image Height"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2383
+msgid "Calendar Thumbnail Width"
+msgstr ""
+
+#: includes/modules/DiviEventCalendar/DiviEventCalendar.php:2400
+msgid "Calendar Thumbnail Height"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:15
+msgid "Events Carousel"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:29
+#: includes/modules/EventDisplay/EventDisplay.php:125
+msgid "Elements"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:33
+msgid "Carousel Options"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:37
+#: includes/modules/EventCarousel/EventCarousel.php:245
+#: includes/modules/EventDisplay/EventDisplay.php:148
+#: includes/modules/EventDisplay/EventDisplay.php:750
+msgid "More Info Button"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:41
+#: includes/modules/EventCarousel/EventCarousel.php:1193
+#: includes/modules/EventDisplay/EventDisplay.php:158
+#: includes/modules/EventDisplay/EventDisplay.php:693
+#: includes/modules/EventDisplay/EventDisplay.php:2166
+msgid "No Results Message"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:52
+#: includes/modules/EventDisplay/EventDisplay.php:129
+#: includes/modules/EventDisplay/EventDisplay.php:2244
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:30
+#: includes/modules/EventFilter/EventFilter.php:25
+msgid "Layout"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:54
+#: includes/modules/EventDisplay/EventDisplay.php:187
+msgid "Image"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:55
+msgid "Carousel"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:105
+#: includes/modules/EventDisplay/EventDisplay.php:261
+msgid "Image Border"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:124
+msgid "Navigation Border"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:138
+#: includes/modules/EventDisplay/EventDisplay.php:280
+msgid "Event Border"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:158
+#: includes/modules/EventDisplay/EventDisplay.php:462
+msgid "Image Box Shadow Settings"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:169
+#: includes/modules/EventDisplay/EventDisplay.php:476
+msgid "Event Box Shadow Settings"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:170
+#: includes/modules/EventDisplay/EventDisplay.php:477
+#: includes/modules/EventDisplay/EventDisplay.php:511
+#: includes/modules/EventDisplay/EventDisplay.php:523
+#: includes/modules/EventDisplay/EventDisplay.php:535
+msgid ""
+"Add and customize the box shadow for the individual events with all the "
+"standard box shadow settings."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:206
+#: includes/modules/EventDisplay/EventDisplay.php:569
+msgid ""
+"Customize and style the event title text with all the standard font and text "
+"settings."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:225
+#: includes/modules/EventDisplay/EventDisplay.php:143
+#: includes/modules/EventDisplay/EventDisplay.php:611
+msgid "Excerpt"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:226
+#: includes/modules/EventDisplay/EventDisplay.php:612
+#: includes/modules/EventDisplay/EventDisplay.php:622
+#: includes/modules/EventDisplay/EventDisplay.php:640
+#: includes/modules/EventDisplay/EventDisplay.php:654
+#: includes/modules/EventDisplay/EventDisplay.php:667
+#: includes/modules/EventDisplay/EventDisplay.php:680
+msgid ""
+"Customize and style the event excerpt text with all the standard font and "
+"text settings."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:234
+#: includes/modules/EventDisplay/EventDisplay.php:740
+#: includes/modules/EventPage/EventPage.php:289
+msgid "Sizing"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:246
+#: includes/modules/EventDisplay/EventDisplay.php:751
+#: includes/modules/EventDisplay/EventDisplay.php:761
+#: includes/modules/EventSubscriber/EventSubscriber.php:49
+#: includes/modules/EventSubscriber/EventSubscriber.php:59
+msgid "Enable this feature to customize the appearance of the button"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:263
+#: includes/modules/EventCarousel/EventCarousel.php:267
+msgid ""
+"Rows can be aligned to the left, right or center. By default, rows are "
+"centered within their parent section."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:302
+#: includes/modules/EventDisplay/EventDisplay.php:819
+#: includes/modules/EventPage/EventPage.php:358
+#: includes/modules/EventSubscriber/EventSubscriber.php:87
+#: includes/modules/EventTicket/EventTicket.php:54
+msgid "Use Event Calendar Short Code"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:314
+#: includes/modules/EventDisplay/EventDisplay.php:831
+#: includes/modules/EventPage/EventPage.php:370
+#: includes/modules/EventSubscriber/EventSubscriber.php:99
+#: includes/modules/EventTicket/EventTicket.php:66
+msgid "Use Event Calendar Short Code "
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:318
+#: includes/modules/EventDisplay/EventDisplay.php:835
+#: includes/modules/EventPage/EventPage.php:374
+#: includes/modules/EventSubscriber/EventSubscriber.php:103
+#: includes/modules/EventTicket/EventTicket.php:70
+msgid "shortcode_param"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:321
+#: includes/modules/EventDisplay/EventDisplay.php:838
+#: includes/modules/EventPage/EventPage.php:377
+#: includes/modules/EventSubscriber/EventSubscriber.php:106
+#: includes/modules/EventTicket/EventTicket.php:73
+msgid "Total number of events to show."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:329
+#: includes/modules/EventPage/EventPage.php:385
+msgid "Dynamic Event Content"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:336
+#: includes/modules/EventPage/EventPage.php:392
+msgid ""
+"Choose to turn on or off dynamic content for the module, which allows you to "
+"place the module in a Divi Theme Builder layout to dynamically display event "
+"categories for the current category or page. This will also work on the "
+"single event pages and for the Theme Builder search results page!"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:346
+#: includes/modules/EventDisplay/EventDisplay.php:1089
+#: includes/modules/EventPage/EventPage.php:519
+msgid "Show Featured Image"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:468
+#: includes/modules/EventDisplay/EventDisplay.php:1577
+#: includes/modules/EventPage/EventPage.php:925
+msgid "Choose to show or hide the event organizer."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:506
+#: includes/modules/EventDisplay/EventDisplay.php:1615
+#: includes/modules/EventPage/EventPage.php:1010
+msgid "Choose to show or hide the event category."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:550
+#: includes/modules/EventDisplay/EventDisplay.php:1684
+#: includes/modules/EventPage/EventPage.php:1074
+msgid "Show More Info Button"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:557
+#: includes/modules/EventDisplay/EventDisplay.php:1691
+#: includes/modules/EventPage/EventPage.php:1081
+msgid "Choose to show or hide the event more info button."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:567
+#: includes/modules/EventDisplay/EventDisplay.php:1927
+#: includes/modules/EventPage/EventPage.php:1259
+msgid "Show Prepositions & Dividers"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:574
+#: includes/modules/EventDisplay/EventDisplay.php:1934
+#: includes/modules/EventPage/EventPage.php:1266
+msgid ""
+"Choose to show or hide the prepositions and dividers in the event details. "
+"This setting is best used with the option to stack event details."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:585
+#: includes/modules/EventDisplay/EventDisplay.php:1945
+#: includes/modules/EventPage/EventPage.php:1277
+msgid "Stack Event Details"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:592
+#: includes/modules/EventDisplay/EventDisplay.php:1952
+#: includes/modules/EventPage/EventPage.php:1284
+msgid ""
+"Choose to stack each of the event details on their own lines instead of "
+"showing them in the default sentence format."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:606
+msgid "Show Labels Or Icons"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:626
+#: includes/modules/EventDisplay/EventDisplay.php:1999
+#: includes/modules/EventPage/EventPage.php:1358
+msgid "Events Count"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:629
+#: includes/modules/EventDisplay/EventDisplay.php:2002
+#: includes/modules/EventPage/EventPage.php:1361
+msgid ""
+"Choose the total number of events to show in the feed. Remember, you can use "
+"pagination options as well for the website visitor to load more events."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:641
+#: includes/modules/EventPage/EventPage.php:1374
+msgid "Included Categories"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:654
+#: includes/modules/EventPage/EventPage.php:1386
+msgid "Choose which event categories you would like to show in the feed."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:706
+#: includes/modules/EventDisplay/EventDisplay.php:2154
+#: includes/modules/EventPage/EventPage.php:1439
+msgid "Excerpt Length"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:709
+#: includes/modules/EventDisplay/EventDisplay.php:2157
+#: includes/modules/EventPage/EventPage.php:1442
+msgid ""
+"If you are showing the event excerpt, this setting allows you to set a "
+"specific character limit for the text. The WordPress default is 270 "
+"characters."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:721
+#: includes/modules/EventDisplay/EventDisplay.php:2177
+#: includes/modules/EventPage/EventPage.php:1450
+msgid "Events Offset Number"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:724
+#: includes/modules/EventDisplay/EventDisplay.php:2180
+#: includes/modules/EventPage/EventPage.php:1453
+msgid ""
+"Choose how many events you want to skip in the feed. This is helpful if you "
+"want to feature one event at the top in a different module or style, then "
+"add a second module and start with the second event by inputting the number "
+"1."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:736
+#: includes/modules/EventPage/EventPage.php:1465
+msgid "Only Show Past Events"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:743
+#: includes/modules/EventPage/EventPage.php:1472
+msgid ""
+"Choose to use the module to show an archive of past events instead of "
+"upcoming events."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:755
+#: includes/modules/EventPage/EventPage.php:1484
+msgid "Columns"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:756
+#: includes/modules/EventPage/EventPage.php:1485
+msgid ""
+"Choose the number of columns you want to use to display your events. Note "
+"that the number of columns is sometimes dependent on the alignment options "
+"chosen."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:760
+#: includes/modules/EventDisplay/EventDisplay.php:2296
+#: includes/modules/EventDisplay/EventDisplay.php:2320
+#: includes/modules/EventDisplay/EventDisplay.php:2343
+#: includes/modules/EventPage/EventPage.php:1489
+msgid "1 Column"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:761
+#: includes/modules/EventDisplay/EventDisplay.php:2297
+#: includes/modules/EventDisplay/EventDisplay.php:2321
+#: includes/modules/EventDisplay/EventDisplay.php:2344
+#: includes/modules/EventPage/EventPage.php:1490
+msgid "2 Columns"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:762
+#: includes/modules/EventDisplay/EventDisplay.php:2298
+#: includes/modules/EventDisplay/EventDisplay.php:2322
+#: includes/modules/EventPage/EventPage.php:1491
+msgid "3 Columns"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:763
+#: includes/modules/EventDisplay/EventDisplay.php:2299
+#: includes/modules/EventDisplay/EventDisplay.php:2323
+#: includes/modules/EventPage/EventPage.php:1492
+msgid "4 Columns"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:780
+#: includes/modules/EventDisplay/EventDisplay.php:2380
+#: includes/modules/EventPage/EventPage.php:1506
+msgid "Alignment"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:781
+#: includes/modules/EventDisplay/EventDisplay.php:2381
+#: includes/modules/EventPage/EventPage.php:1507
+msgid ""
+"Choose the alignment of the event featured image and details. Note that the "
+"alignment is sometimes dependent on the number of columns chosen."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:785
+#: includes/modules/EventPage/EventPage.php:1511
+msgid "Image Left, Details Right"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:786
+#: includes/modules/EventDisplay/EventDisplay.php:2386
+#: includes/modules/EventPage/EventPage.php:1512
+msgid "Image Top,  Details  Bottom"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:787
+#: includes/modules/EventPage/EventPage.php:1513
+msgid "Image Right, Details Left"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:811
+#: includes/modules/EventDisplay/EventDisplay.php:2404
+#: includes/modules/EventPage/EventPage.php:1533
+msgid "Event Background Color"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:812
+#: includes/modules/EventDisplay/EventDisplay.php:2405
+#: includes/modules/EventPage/EventPage.php:1534
+msgid "Set a color for the background of the individual events."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:825
+msgid "You can pick unique background colors for Events."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:837
+msgid "Icon Color Picker"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:850
+msgid "Label Color Picker"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:863
+msgid "Navigation Background Color"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:864
+msgid "You can pick unique background colors for Event Carousel Arrows."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:877
+#: includes/modules/EventDisplay/EventDisplay.php:2515
+#: includes/modules/EventPage/EventPage.php:1612
+msgid "Event Margin"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:880
+#: includes/modules/EventDisplay/EventDisplay.php:2518
+#: includes/modules/EventPage/EventPage.php:1615
+msgid "Adjust the spacing around the outside of the individual events."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:891
+#: includes/modules/EventDisplay/EventDisplay.php:2529
+#: includes/modules/EventPage/EventPage.php:1626
+msgid "Event Padding"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:894
+#: includes/modules/EventDisplay/EventDisplay.php:2532
+#: includes/modules/EventPage/EventPage.php:1629
+msgid "Adjust the spacing around the inside of the individual events."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:948
+#: includes/modules/EventDisplay/EventDisplay.php:2617
+#: includes/modules/EventPage/EventPage.php:1746
+msgid "More Info Button Text"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:951
+#: includes/modules/EventDisplay/EventDisplay.php:2620
+#: includes/modules/EventDisplay/EventDisplay.php:2985
+#: includes/modules/EventDisplay/EventDisplay.php:3004
+#: includes/modules/EventDisplay/EventDisplay.php:3022
+#: includes/modules/EventPage/EventPage.php:1749
+#: includes/modules/EventPage/EventPage.php:1839
+#: includes/modules/EventPage/EventPage.php:1848
+#: includes/modules/EventPage/EventPage.php:1866
+#: includes/modules/EventPage/EventPage.php:1876
+#: includes/modules/EventPage/EventPage.php:1886
+#: includes/modules/EventPage/EventPage.php:1896
+msgid "Enter custom text for the button."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:960
+#: includes/modules/EventDisplay/EventDisplay.php:2632
+#: includes/modules/EventDisplay/EventDisplay.php:2977
+#: includes/modules/EventDisplay/EventDisplay.php:2999
+#: includes/modules/EventDisplay/EventDisplay.php:3017
+#: includes/modules/EventPage/EventPage.php:1761
+#: includes/modules/EventSubscriber/EventSubscriber.php:158
+msgid "Button Text"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:963
+#: includes/modules/EventDisplay/EventDisplay.php:2635
+#: includes/modules/EventDisplay/EventDisplay.php:2994
+#: includes/modules/EventDisplay/EventDisplay.php:3012
+#: includes/modules/EventDisplay/EventDisplay.php:3031
+#: includes/modules/EventPage/EventPage.php:1764
+#: includes/modules/EventPage/EventPage.php:1856
+#: includes/modules/EventSubscriber/EventSubscriber.php:161
+msgid "Post button."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:968
+#: includes/modules/EventDisplay/EventDisplay.php:2640
+#: includes/modules/EventPage/EventPage.php:1769
+msgid "Image Alignment"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:980
+#: includes/modules/EventDisplay/EventDisplay.php:2694
+#: includes/modules/EventPage/EventPage.php:1781
+msgid "Image Margin"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:982
+#: includes/modules/EventDisplay/EventDisplay.php:2696
+#: includes/modules/EventDisplay/EventDisplay.php:2721
+#: includes/modules/EventPage/EventPage.php:1783
+msgid "Adjust the spacing around the outside of the event featured image."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:988
+#: includes/modules/EventDisplay/EventDisplay.php:2706
+#: includes/modules/EventPage/EventPage.php:1789
+msgid "Image Padding"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:990
+#: includes/modules/EventDisplay/EventDisplay.php:2708
+#: includes/modules/EventDisplay/EventDisplay.php:2733
+#: includes/modules/EventPage/EventPage.php:1791
+msgid "Adjust the spacing around the inside of the event featured image."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:1012
+#: includes/modules/EventDisplay/EventDisplay.php:2868
+#: includes/modules/EventPage/EventPage.php:1814
+msgid "Align To Bottom"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:1019
+#: includes/modules/EventDisplay/EventDisplay.php:2875
+#: includes/modules/EventPage/EventPage.php:1821
+msgid "Choose to align the button to the bottom."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:1032
+msgid "Show Navigation Arrows"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:1041
+msgid ""
+"Choose to show or hide the carousel next and previous navigation arrows."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:1046
+msgid "Show Navigation Dots"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:1055
+msgid "Choose to show or hide the carousel navigation dots."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:1060
+msgid "Mouse Drag"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:1070
+msgid "Enable the ability to drag the carousel slides using a mouse."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:1073
+msgid "Touch Drag"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:1083
+msgid "Enable the ability to drag the carousel slides on touch screens."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:1086
+msgid "Navigation Font size"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:1087
+msgid "Manually set the font size for navigation link."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:1102
+msgid "Navigation Arrow Color"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:1103
+msgid "Set a color for the carousel next and previous navigation arrows."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:1110
+msgid "Dot Navigation Color"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:1111
+msgid "Set a color for the carousel navigation dots."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:1118
+msgid "Active Dot Navigation Color"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:1119
+msgid "Set a color for the carousel navigation active dot."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:1126
+msgid "Autoplay"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:1140
+msgid ""
+"When enabled, carousel will start rotating automatically without the visitor "
+"needing to click the next and previous arrows."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:1143
+msgid "Autoplay Speed"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:1154
+msgid ""
+"Set the speed for the carousel automatic rotation in milliseconds. The "
+"higher the number the longer the pause between rotations."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:1162
+msgid "Continue Autoplay On Hover"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:1175
+msgid "Choose to contine the carousel rotation even on mouse hover."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:1196
+#: includes/modules/EventDisplay/EventDisplay.php:2169
+msgid "Enter custom text to show for the no results message."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:1198
+#: includes/modules/EventDisplay/EventDisplay.php:2171
+msgid "There are no upcoming events at this time."
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:2233
+#: includes/modules/EventDisplay/EventAjax.php:2152
+#: includes/modules/EventDisplay/EventDisplay.php:6137
+#: includes/modules/EventPage/EventPage.php:3512
+msgid " by "
+msgstr "  "
+
+#: includes/modules/EventCarousel/EventCarousel.php:2233
+#: includes/modules/EventDisplay/EventAjax.php:2658
+#: includes/modules/EventDisplay/EventAjax.php:2688
+#: includes/modules/EventDisplay/EventDisplay.php:6641
+msgid "true"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:2499
+#: includes/modules/EventPage/EventPage.php:3881
+msgid "at"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:2524
+#: includes/modules/EventDisplay/EventAjax.php:2688
+#: includes/modules/EventPage/EventPage.php:3912
+msgid "in"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:2601
+#: includes/modules/EventDisplay/EventAjax.php:2806
+#: includes/modules/EventDisplay/EventDisplay.php:6807
+#: includes/modules/EventPage/EventPage.php:4186
+#, php-format
+msgid "View All %s"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:2622
+msgid "&laquo; Older Entries"
+msgstr ""
+
+#: includes/modules/EventCarousel/EventCarousel.php:2624
+msgid "Next Entries &raquo;"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventAjax.php:2584
+#: includes/modules/EventDisplay/EventAjax.php:2594
+#: includes/modules/EventDisplay/EventDisplay.php:6569
+#: includes/modules/EventDisplay/EventDisplay.php:6579
+msgid " All Day Event "
+msgstr ""
+
+#: includes/modules/EventDisplay/EventAjax.php:2658
+#: includes/modules/EventDisplay/EventDisplay.php:6641
+msgid "at "
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:102
+#: includes/modules/EventDisplay/EventDisplay.php:103
+msgid "Events Feed"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:133
+msgid "Callout Box"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:153
+#: includes/modules/EventDisplay/EventDisplay.php:704
+#: includes/modules/EventDisplay/EventDisplay.php:718
+msgid "Pagination"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:162
+msgid "Google Calendar Button"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:166
+msgid "ICAL Export Button"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:171
+#: includes/modules/EventFilter/EventFilter.php:33
+msgid "Connection"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:189
+#: includes/modules/EventDisplay/EventDisplay.php:313
+msgid "Callout"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:190
+#: includes/modules/EventDisplay/EventDisplay.php:329
+#: includes/modules/EventDisplay/EventDisplay.php:602
+msgid "Month Seperator"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:195
+#: includes/modules/EventDisplay/EventDisplay.php:344
+msgid "Paged Pagination"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:199
+#: includes/modules/EventDisplay/EventDisplay.php:358
+msgid "Numeric Pagination"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:296
+msgid "Details "
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:297
+msgid ""
+"Add and customize the border for the event details with all the standard "
+"border settings."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:314
+#: includes/modules/EventDisplay/EventDisplay.php:330
+#: includes/modules/EventDisplay/EventDisplay.php:345
+#: includes/modules/EventDisplay/EventDisplay.php:359
+msgid ""
+"Add and customize the border for the event callout box with all the standard "
+"border settings."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:393
+#: includes/modules/EventDisplay/EventDisplay.php:415
+msgid "Filter Border"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:437
+msgid "Active Filter Border"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:488
+msgid "Details Box Shadow Settings"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:489
+msgid ""
+"Add and customize the box shadow for the event details with all the standard "
+"box shadow settings."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:498
+msgid "Callout Box Shadow Settings"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:499
+msgid ""
+"Add and customize the box shadow for the event callout box with all the "
+"standard box shadow settings."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:510
+msgid "Filter Box Shadow Settings"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:522
+msgid "Filter Dropdown Box Shadow Settings"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:534
+msgid "Active Filter Box Shadow Settings"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:621
+msgid "Callout Date"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:639
+msgid "Callout Month"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:653
+msgid "Callout Day Of The Week"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:666
+msgid "Callout Year"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:679
+msgid "Callout Time"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:694
+msgid ""
+"Customize and style the event results message text with all the standard "
+"font and text settings."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:705
+#: includes/modules/EventDisplay/EventDisplay.php:719
+msgid ""
+"Customize and style the event pagination text with all the standard font and "
+"text settings."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:730
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:80
+msgid "Label"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:731
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:365
+msgid ""
+"Customize and style the lable text with all the standard font and text "
+"settings."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:760
+#: includes/modules/EventSubscriber/EventSubscriber.php:58
+msgid "alignment of era"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:783
+msgid "Load More Button Pagination"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:812
+#: includes/modules/EventFilter/EventFilter.php:335
+msgid "Connection ID"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:815
+#: includes/modules/EventFilter/EventFilter.php:338
+msgid ""
+"Enter a module connection identification keyword to link the functionality "
+"of multiple modules together."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:853
+msgid "Related Events"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:891
+msgid ""
+"Customize which events show in the feed by organizer. All events will show "
+"by default unless one or more organizers are selected."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:947
+msgid "Date Selection Type"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:948
+#: includes/modules/EventDisplay/EventDisplay.php:1053
+msgid "Choose to show either future or past events in the feed."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:953
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:820
+msgid "Date Range"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:954
+msgid "Relative Date"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:968
+msgid "Date Range Start"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:972
+msgid "Choose a start date to customize which events show in the feed."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:983
+msgid "Date Range End"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:987
+msgid "Choose a End date to customize which events show in the feed."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:999
+msgid "Events Happening By Relative Date"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1000
+msgid ""
+"Choose to display events based on when the event is happening relative to "
+"the current date."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1005
+msgid "Today"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1006
+msgid "This Week"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1007
+msgid "This Month"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1028
+msgid ""
+"Choose to turn on or off dynamic content which allows you to place the "
+"module in a Divi Theme Builder layout to dynamically display events based on "
+"the template assignment."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1052
+msgid "Events Status"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1057
+msgid "Future"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1058
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:850
+msgid "Past"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1059
+msgid "Both Past & Future"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1067
+msgid "Cutoff Point For Ongoing Events"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1068
+msgid "Choose the point for ongoing events in the feed."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1072
+msgid "Show Ongoing Events Until End Date/Time Is Reached "
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1073
+msgid "Hide Events If Start Date/Time Is Already Reached"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1136
+msgid "Details Date Format"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1151
+msgid "Shorten Multi-Day Dates"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1158
+msgid "Choose to only show the month and year of multi-day events once."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1171
+msgid "Details Start Date Format"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1188
+msgid "Show End Date"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1222
+msgid "Details Time Format"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1282
+#: includes/modules/EventPage/EventPage.php:659
+msgid "Choose to abbreviate the event time zone."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1421
+#: includes/modules/EventPage/EventPage.php:762
+msgid "Show Location State/Province"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1428
+#: includes/modules/EventPage/EventPage.php:769
+msgid "Choose to show or hide the event location state/province."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1531
+#: includes/modules/EventPage/EventPage.php:821
+msgid "Choose to show or hide the event location country in the tooltip."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1658
+msgid "Excerpt Content"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1663
+msgid "Show Description"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1671
+msgid "Choose which content to show in the except."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1701
+msgid "Show Callout Box"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1708
+msgid "Choose to show or hide the callout box."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1730
+msgid "Show Callout Box Date"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1737
+msgid "Choose to show or hide the  callout box date."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1745
+msgid "Callout Box Date Format"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1762
+msgid "Show Callout Box Month"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1769
+msgid "Choose to show or hide the  callout month."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1778
+msgid "Callout Box Month Format"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1797
+msgid "Show Callout Box Day of the Week"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1804
+msgid "Choose to show or hide the  callout box day of the week."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1817
+msgid "Callout Box Day of the Week Format"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1834
+msgid "Show Callout Box Year"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1841
+msgid "Choose to show or hide the  callout box year."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1849
+msgid "Callout Box year Format"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1865
+msgid "Show Callout Box Time"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1872
+msgid "Choose to show or hide the  callout box time."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1880
+msgid "Callout Box Time Format"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1897
+msgid "Show Google Calendar"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1904
+msgid ""
+"Choose to show or hide the button to add the event to your Google Calendar."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1912
+msgid "Show Ical Export"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1919
+msgid "Choose to show or hide the button to export the event Apple iCal."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1985
+msgid "Events Order"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1986
+msgid "Choose the order of events in the feed."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1990
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:751
+msgid "Descending"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:1991
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:753
+msgid "Ascending"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2023
+msgid "Choose to show or hide the featured events in the feed."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2042
+#: includes/modules/EventDisplay/EventDisplay.php:2100
+msgid ""
+"Choose to show canceled and postponed events in the feed. A badge will be "
+"displayed on the event."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2061
+msgid ""
+"Choose to show virtual events in the feed. A badge will be displayed on the "
+"event."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2080
+msgid ""
+"Choose to show hybrid events in the feed. A badge will be displayed on the "
+"event."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2093
+msgid "Show Virtual And Hybrid Events"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2118
+msgid "Choose to show all recurring events in the feed."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2129
+msgid "Limit Number Of Recurring Events To Show In Series"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2132
+msgid ""
+"Enter a number to set the maximum limit of events from each recurring events "
+"series to show in the feed at one time."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2194
+msgid "Past/Future Cutoff"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2195
+msgid "Choose the start and end date  of events in the feed."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2199
+#: includes/modules/EventDisplay/EventDisplay.php:2213
+msgid "Start Date"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2200
+#: includes/modules/EventDisplay/EventDisplay.php:2228
+msgid "End Date"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2216
+#: includes/modules/EventDisplay/EventDisplay.php:2231
+#, php-format
+msgid ""
+"This is the date the countdown timer is counting down to. Your countdown "
+"timer is based on your timezone settings in your <a href=\"%1$s\" target="
+"\"_blank\" title=\"WordPress General Settings\">WordPress General Settings</"
+"a>"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2245
+msgid "Choose the type of layout you want to use to display your events."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2249
+msgid "Grid"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2250
+msgid "List"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2251
+msgid "Cover"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2265
+msgid "List Type"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2266
+msgid ""
+"Choose which items to include in your list layout. Each item creates a "
+"separate column within each event. The items show in order from left to "
+"right."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2270
+msgid "Image, Details"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2271
+msgid "Callout, Image, Details"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2272
+msgid "Callout, Image, Details, Button"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2273
+msgid "Details, Image"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2274
+msgid "Callout, Details, Image"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2275
+msgid "Callout, Details, Image, Button"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2291
+#: includes/modules/EventDisplay/EventDisplay.php:2315
+#: includes/modules/EventDisplay/EventDisplay.php:2338
+msgid "Number of Columns"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2292
+#: includes/modules/EventDisplay/EventDisplay.php:2316
+#: includes/modules/EventDisplay/EventDisplay.php:2339
+msgid "Choose the number of columns for the events layout on each device."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2360
+msgid "Show Events By Month With Headings"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2367
+msgid ""
+"Choose to group the events by month with headings showing the month and year."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2416
+msgid "Details Background Color"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2417
+msgid "Set a color for the background of the event details."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2426
+msgid "Show Image Overlay"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2433
+msgid "Choose to show an overlay color over the event featured image."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2444
+msgid "Image Overlay Color"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2445
+msgid "Set a color for the image overlay."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2459
+msgid "Callout Background Color"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2460
+msgid "Set a color for the background of the event callout box."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2500
+msgid "Details Label Color"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2501
+msgid "Choose a color for the label text in the event details."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2622
+msgid "More Info"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2719
+msgid "Month Seperator Margin"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2731
+msgid "Month Seperator Padding"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2743
+#: includes/modules/EventDisplay/EventDisplay.php:2756
+msgid "Details Margin"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2745
+#: includes/modules/EventDisplay/EventDisplay.php:2758
+msgid "Adjust the spacing around the outside of the event details."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2768
+msgid "Numeric Padding"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2770
+#: includes/modules/EventDisplay/EventDisplay.php:3360
+#: includes/modules/EventDisplay/EventDisplay.php:3368
+msgid "Adjust the spacing around the inside of the numeric pagination."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2777
+#: includes/modules/EventDisplay/EventDisplay.php:2788
+msgid "Details Padding"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2779
+#: includes/modules/EventDisplay/EventDisplay.php:2790
+msgid "Adjust the spacing around the inside of the event details."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2803
+msgid "Callout Margin"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2805
+msgid "Adjust the spacing around the outside of the event callout box."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2812
+msgid "Callout Padding"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2814
+msgid "Adjust the spacing around the inside of the event callout box."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2889
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:150
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:264
+msgid "Make Fullwidth"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2896
+msgid "Choose to make the more info button fullwidth."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2910
+msgid "Equal Height"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2917
+msgid "Choose to a equal heights of events."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2931
+msgid "Show Pagination"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2938
+msgid "Choose to use pagination for showing additional events."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2948
+msgid "Pagination Type"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2952
+msgid "Paged"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2953
+msgid "Numeric"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2954
+msgid "Load More Button"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2958
+msgid ""
+"Choose a method of pagination you would like to use to load additional "
+"events. You can choose to use a standard Paged pagination or a Load More "
+"Button."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2963
+msgid "Number Of Events To Load"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2966
+msgid ""
+"Choose the number of events that load each time the load more button is "
+"clicked."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2980
+msgid "Load More"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:2991
+msgid "Load More Text"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3002
+#: includes/modules/EventPage/EventPage.php:1864
+#: includes/modules/EventSubscriber/EventSubscriber.php:275
+msgid "Google Calendar"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3009
+msgid "google caledar Text"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3020
+msgid "Ical Export"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3028
+msgid "ICAL Text"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3036
+#: includes/modules/EventDisplay/EventDisplay.php:3039
+msgid "Date Time Seprator"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3044
+#: includes/modules/EventDisplay/EventDisplay.php:3047
+msgid "Time Range Seprator"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3149
+msgid "Make Entire Event Clickable"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3150
+msgid ""
+"Choose to make the entire event clickable instead of just the title, image, "
+"and button"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3182
+msgid "Choose whether the category links open in the same window or new tab."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3317
+msgid "Choose whether the website link opens in the same window or new tab."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3333
+msgid "Pagination Alignment"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3340
+msgid "Choose to align the pagination to the left, center, or right."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3347
+msgid "Paged pagination Background Color"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3348
+msgid "Set a color for the background of the paged pagination."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3358
+msgid "Paged Padding"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3366
+msgid "Paged Margin"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3374
+msgid "First & Last Button Background Color"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3375
+msgid ""
+"Set a color for the background of the first and last pagination buttons."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3385
+msgid "First & Last Button Text Color"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3386
+msgid "Set a color for the text of the first and last pagination buttons."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3397
+msgid "Page Number Background Color"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3398
+msgid "Set a color for the background of the pagination page numbers."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3408
+msgid "Page Number Text Color"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3409
+msgid "Set a color for the text of the pagination page numbers."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3420
+msgid "Current Page Number Background Color"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3421
+msgid "Set a color for the background of the pagination current page number."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3431
+msgid "Current Page Number Text Color"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3432
+msgid "Set a color for the text of the pagination current page number."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3441
+msgid "Previous Events Link Custom Text"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3445
+msgid "Enter custom text for the previous events pagination link."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3456
+msgid "Next Events Link Custom Text"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:3460
+msgid "Enter custom text for the next events pagination link."
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:6679
+msgid "in "
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:6844
+msgid "&laquo; "
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:6880
+msgid "Page"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:6881
+msgid "First"
+msgstr ""
+
+#: includes/modules/EventDisplay/EventDisplay.php:6882
+msgid "Last"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:12
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:23
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:49
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:364
+#: includes/modules/EventFilter/EventFilter.php:410
+msgid "Filter"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:13
+msgid "Add Filter"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:16
+msgid "Filter Settings"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:31
+msgid "Filter Text"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:50
+msgid ""
+"Here you can choose to add any of the available filters and rearrange them "
+"as needed."
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:53
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:652
+msgid "Search"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:54
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1314
+msgid "Recurring"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:56
+msgid "Tag "
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:58
+msgid "Venue "
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:59
+msgid "City "
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:60
+msgid "Country "
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:61
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:946
+msgid "State/Province"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:62
+msgid "Location "
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:63
+msgid "Cost "
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:64
+msgid "Year "
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:66
+msgid "Day "
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:67
+msgid "Status "
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:68
+msgid "Time "
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:69
+msgid "Date Range "
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:70
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:735
+msgid "Order By"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:71
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:833
+msgid "Future/Past"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:83
+msgid "Enter custom text for the filter name that displays on the frontend."
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:89
+msgid "Show Dropdown Options In Alphabetical Order"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:96
+msgid "Choose to show the filter dropdown options in alphabetical order."
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:122
+msgid "Selection Method"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:123
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:172
+msgid ""
+"Choose to allow filtering by selecting only single items or by selecting "
+"multiple items with checkboxes."
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:128
+msgid "Single"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:129
+msgid "Multi"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:157
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:271
+msgid ""
+"Choose to show the filter item as 100% width of the content area. Otherwise, "
+"it will show inline."
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:171
+msgid "Which Options To Show"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:177
+msgid "Relevent Future Data"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:178
+msgid "Relevent Past Data"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:179
+msgid "Relevent Past/Future Data"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:188
+msgid "Show Category Filter Inline"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:195
+msgid ""
+"Choose to show the event category filter options inline horizontally as "
+"buttons instead of a dropdown."
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:213
+msgid "Show Dropdown Icon"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:220
+msgid "Choose to show a dropdown icon on the filter item."
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:229
+msgid "Icon"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:236
+msgid "Choose an icon to display in event filters."
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:246
+msgid "Search Criteria"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:247
+msgid ""
+"Choose to search keywords by the event title only, or by any keywords in "
+"both the event title and event content."
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:251
+msgid "Title Only"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:252
+msgid "Both Title & Content"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:654
+msgid "Keyword"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:712
+msgid "Cost"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:786
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:802
+msgid "Physical"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:788
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:803
+msgid "Virtual"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:790
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:804
+msgid "Hybrid"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:849
+msgid "Upcoming"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:860
+msgid "City"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:908
+msgid "Country"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1029
+msgid "January"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1030
+msgid "February"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1031
+msgid "March"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1032
+msgid "April"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1033
+msgid "May"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1034
+msgid "June"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1035
+msgid "July"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1036
+msgid "August"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1037
+msgid "September"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1038
+msgid "October"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1039
+msgid "November"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1040
+msgid "December"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1172
+msgid "Tag"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1212
+msgid "Day"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1253
+msgid "Morning"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1254
+msgid "Afternoon"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1255
+msgid "Evening"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1256
+msgid "Night"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1281
+msgid "Scheduled"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1282
+msgid "Canceled"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1283
+msgid "Postponed"
+msgstr ""
+
+#: includes/modules/EventDisplayChild/EventDisplayChild.php:1285
+msgid "Status"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:9
+msgid "Events Filter"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:21
+msgid "Selection"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:46
+#: includes/modules/EventFilter/EventFilter.php:566
+msgid "Filters"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:47
+#: includes/modules/EventFilter/EventFilter.php:454
+#: includes/modules/EventFilter/EventFilter.php:591
+msgid "Active Filters"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:48
+#: includes/modules/EventFilter/EventFilter.php:432
+#: includes/modules/EventFilter/EventFilter.php:579
+msgid "Filters Dropdown"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:49
+msgid "Filters Dropdown Text"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:50
+#: includes/modules/EventFilter/EventFilter.php:607
+msgid "Collapse Filters"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:51
+#: includes/modules/EventFilter/EventFilter.php:555
+msgid "Reset Button"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:67
+msgid "Filters Alignment"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:80
+msgid "Filters Background Color"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:81
+msgid "Set a color for the background of the individual event filters."
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:91
+msgid "Filters Margin"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:93
+msgid "Adjust the spacing around the outside of the event filter."
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:100
+msgid "Filters Padding"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:102
+msgid "Adjust the spacing around the inside of the event filter."
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:108
+msgid "Active Filters Background Color"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:109
+msgid "Set a color for the background of the individual active event filters."
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:120
+msgid "Filters Dropdown Background Color"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:121
+msgid "Set a color for the background of the event filters dropdown."
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:132
+msgid "Active Filters Margin"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:134
+msgid "Adjust the spacing around the outside of the active event filters."
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:141
+msgid "Active Filters Padding"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:143
+msgid "Adjust the spacing around the inside of the active event filters."
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:160
+msgid "Filters Dropdown Padding"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:162
+msgid "Adjust the spacing around the inside of the event filters dropdown."
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:172
+msgid "Filter Layout"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:173
+msgid "Choose the layout orientation of the filters."
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:177
+msgid "Horizontal"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:204
+msgid "Filters Dropdown Scrollbar Color"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:205
+msgid "Set a color for the background of the event filters dropdown scrollbar."
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:215
+msgid "Filters  Dropdown  Text Background Color"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:216
+msgid "Set a color for the background of the event filters dropdown text."
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:226
+msgid "Filters Text Dropdown Padding"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:228
+msgid ""
+"Adjust the spacing around the inside of the event filters dropdown text."
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:236
+msgid "Show Option To Collapse Filters"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:243
+msgid "Choose to show or hide the Collapse Filters."
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:252
+msgid "Collapse Filters By Default"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:259
+msgid "Set the default open or closed state for the collapse filter option."
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:268
+msgid "Collapse Filters Icon Color"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:269
+msgid "Set the color for the filter icon."
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:282
+msgid "Collapse Filters Icon Font Size"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:283
+msgid "Control the size of the icon by increasing or decreasing the font size."
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:411
+msgid ""
+"Customize and style the event filters with all the standard border settings."
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:455
+#: includes/modules/EventFilter/EventFilter.php:479
+msgid ""
+"Customize and style the active event filters with all the standard border "
+"settings."
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:478
+msgid "Filters Text"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:507
+msgid "Filters Box Shadow"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:508
+msgid ""
+"Customize and style the event filters with all the standard box shadow "
+"settings."
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:519
+msgid "Active Filters Box Shadow"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:520
+msgid ""
+"Customize and style the active event filters with all the standard box "
+"shadow settings."
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:530
+msgid "Filters Dropdown Box Shadow"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:531
+msgid ""
+"Customize and style the event filters dropdown with all the standard box "
+"shadow settings."
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:541
+msgid "Filters Dropdown Text Box Shadow"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:542
+msgid ""
+"Customize and style the event filters dropdown text with all the standard "
+"box shadow settings."
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:556
+#: includes/modules/EventFilter/EventFilter.php:580
+msgid ""
+"Customize and style the event filters dropdown text with all the standard "
+"font and text settings."
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:567
+msgid ""
+"Customize and style the event filters label text with all the standard font "
+"and text settings."
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:592
+msgid ""
+"Customize and style the active event filters label text with all the "
+"standard font and text settings."
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:608
+msgid ""
+"Customize and style the Placeholder  text with all the standard font and "
+"text settings."
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:624
+msgid "Filter Search Button"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:625
+msgid "Enable this feature to customize the appearance of the button."
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:992
+msgid "Show Filters"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:993
+msgid "Hide Filters"
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:1013
+msgid " Reset "
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:1014
+msgid " Today "
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:1015
+msgid " Tomorrow "
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:1016
+msgid " Next 7 Days "
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:1017
+msgid " Next 30 Days "
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:1018
+msgid " This Month "
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:1019
+msgid " Next Month "
+msgstr ""
+
+#: includes/modules/EventFilter/EventFilter.php:1020
+msgid " Custom Range "
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:16
+msgid "Events Page"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:28
+msgid "Notices"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:50
+msgid "Virtual Events"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:54
+msgid "Google Maps"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:58
+msgid "Add To Calendar Buttons"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:64
+msgid "Past Event Notice"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:65
+#: includes/modules/EventPage/EventPage.php:159
+#: includes/modules/EventPage/EventPage.php:237
+msgid "Event Status Notice"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:66
+msgid "Description Text"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:69
+msgid "Map"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:70
+#: includes/modules/EventPage/EventPage.php:299
+msgid "Add To Calendar Button"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:71
+msgid "Add To Calendar Links"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:72
+msgid "Virtual Event Button"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:129
+msgid "Map Border"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:130
+msgid ""
+"Add and customize the box shadow for the event location map with all the "
+"standard box border settings."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:144
+msgid "Pasts Events Notice"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:145
+msgid ""
+"Add and customize the border for the past events notice with all the "
+"standard border settings."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:160
+msgid ""
+"Add and customize the border for the past events message with all the "
+"standard border settings."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:179
+msgid "Map Box Shadow Settings"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:180
+msgid ""
+"Add and customize the box shadow for the event location map with all the "
+"standard box shadow settings."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:189
+msgid "Past Events Notice Box Shadow Settings"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:190
+msgid ""
+"Add and customize the box shadow for the past events notice with all the "
+"standard box shadow settings."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:211
+msgid "Description"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:224
+msgid "Past Events Notice"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:250
+msgid "Details Label"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:277
+msgid "Add To Calendar Link"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:323
+msgid "Zoom Button"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:402
+msgid "Show Past Event Notice"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:409
+msgid ""
+"Choose to show or hide the past event notice. If enabled, the notice will "
+"show in this module when the event has passed."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:418
+msgid "Show Event Status Notice"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:425
+msgid ""
+"Choose to show the event status as a notice if it is canceled or postponed."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:439
+msgid "Show Event Status Reason"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:446
+msgid "Choose to show the reason for the canceled or postponed event."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:461
+msgid "Show Virtual/Hybrid Event Notice"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:468
+msgid ""
+"Choose to show a notice if the event is marked as a virtual and/or hybrid "
+"event."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:486
+#: includes/modules/EventPage/EventPage.php:503
+msgid "Show Event Description"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:493
+msgid ""
+"Choose to show or hide the event description. The event description is the "
+"text written within the backend text editor of the single event pages using "
+"the classic WordPress editor. This Show Event Description setting is "
+"intended for simple text descriptions and is not recommended in most cases. "
+"Instead, you should use the Divi Post Content module, which is much more "
+"suited for showing content from pages build with Gutenberg or the Divi "
+"Builder."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:510
+msgid "Choose to show or hide the description of the event."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:709
+msgid ""
+"Choose to show or hide the event location street address in the tooltip."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:740
+msgid "Choose to show or hide the event location locality in the tooltip."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:793
+msgid "Choose to show or hide the event location postal code in the tooltip."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:857
+msgid "Show Google Map Link"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:864
+msgid "Choose to show or hide the event location Google Map link."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:888
+msgid "Show Venue Phone"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:895
+msgid "Choose to show or hide the event venue phone number."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:903
+msgid "Show Venue Website"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:910
+msgid "Choose to show or hide the event venue Website."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:938
+msgid "Show Organizer Phone"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:945
+msgid "Choose to show or hide the event organizer phone number."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:953
+msgid "Show Organizer Email"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:960
+msgid "Choose to show or hide the event organizer email address."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:969
+msgid "Show Organizer Website"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:976
+msgid "Choose to show or hide the event organizer website."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1019
+msgid "Show Tags"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1026
+msgid "Choose to show or hide the event tags."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1089
+msgid "Show Add To Calendar Button"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1096
+msgid "Choose to show or hide the add to calendar button and links."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1115
+msgid "Show Google Calendar Link"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1122
+msgid ""
+"Choose to show or hide the link for adding the event to the the visitor's "
+"Google Calendar."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1131
+msgid "Show Apple Calendar Link"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1138
+msgid ""
+"Choose to show or hide the link for adding the event to the the visitor's "
+"Apple Calendar."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1147
+msgid "Show Outlook Office Link"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1154
+#: includes/modules/EventPage/EventPage.php:1170
+msgid ""
+"Choose to show or hide the link for adding the event to the the visitor's "
+"Outlook calendar."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1163
+msgid "Show Outlook Live Link"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1179
+msgid "Show Google Map"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1186
+msgid ""
+"Choose to show or hide the event location map. Remember to have an active "
+"Google Maps API key entered in the Divi Theme Options."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1195
+msgid "Show Zoom Meeting"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1202
+msgid "Choose to show or hide the Zoom meeting video."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1211
+msgid "Show Webex Meeting"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1218
+msgid "Choose to show or hide the Webex meeting video."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1227
+msgid "Show Facebook Live Video"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1234
+msgid "Choose to show or hide the Facebook Live video."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1243
+msgid "Show YouTube Live Video"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1250
+msgid "Choose to show or hide the YouTube live video."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1377
+msgid "All Categories"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1378
+msgid "Current Category"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1407
+msgid "Google Maps API Key"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1410
+msgid ""
+"Enter your Google Maps API key. Please note that this is not necessary if "
+"you are using the default API key provided in The Events Calendar settings."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1423
+msgid "Add Custom Api key"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1557
+msgid "Past Events Notice Background Color"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1558
+#: includes/modules/EventPage/EventPage.php:1571
+msgid "Set a color for the background of the past events Notice."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1570
+msgid "Event Status Notice Background Color"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1640
+msgid "Past Events Message Margin"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1643
+#: includes/modules/EventPage/EventPage.php:1670
+#: includes/modules/EventPage/EventPage.php:1683
+msgid "Adjust the spacing around the outside of the past events message."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1654
+msgid "Past Events Message Padding"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1657
+msgid "Adjust the spacing around the inside of the past events message."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1667
+msgid "Event Status Notice Margin"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1680
+msgid "Event Status Notice Padding"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1834
+msgid "Add To Calendar Button Text"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1837
+msgid "Add To Calendar"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1844
+msgid "Virtual Event Button Text"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1847
+msgid "Watch Now"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1853
+msgid "Add To Calendar Text"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1861
+msgid "Google Calendar Link Text"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1871
+msgid "Apple Calendar Link Text"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1874
+msgid "Apple Calendar"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1881
+#: includes/modules/EventPage/EventPage.php:1891
+msgid "Outlook Calendar Link Text"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1884
+msgid "Outlook 365"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1894
+msgid "Outlook Live"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1902
+msgid "Use Grayscale Filter"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1903
+msgid ""
+"Apply a grayscale filter to change the event location map to black and white."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1918
+msgid "Grayscale Filter Amount (%)"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:1919
+msgid ""
+"Adjust the grayscale filter to change the color saturation of the event "
+"location map."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:2023
+msgid "Enable Organizer Email Address Link"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:2030
+msgid ""
+"Choose to add links to the organizer email addresses to link to their mailto "
+"URL."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:2040
+msgid "Organizer Website Link Target"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:2041
+msgid ""
+"Choose whether the organizer website link opens in the same window or a new "
+"tab."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:2094
+msgid "Venue Website Link Target"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:2095
+msgid ""
+"Choose whether the venue website link opens in the same window or a new tab."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:2113
+msgid "Location Address Links"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:2120
+msgid "Choose to add links to the location venue address link."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:2133
+msgid "Location Address Links Target"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:2134
+msgid ""
+"Choose whether the location venue address link open in the same window or "
+"new tab."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:2174
+msgid "Choose whether the category links open in the same window or a new tab."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:3411
+#: includes/modules/EventPage/EventPage.php:4265
+msgid "This event has passed."
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:3425
+msgid " Hybrid Event"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:3533
+msgid "Organizer Phone"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:3549
+msgid "Organizer Email"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:3562
+msgid "Organizer Website"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:3564
+#: includes/modules/EventPage/EventPage.php:4598
+msgid "View Organizer Website"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:3576
+msgid "Tags"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:3926
+msgid "Venue Google Map Link"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:3938
+msgid "Venue Phone"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:3950
+msgid "Venue Website"
+msgstr ""
+
+#: includes/modules/EventPage/EventPage.php:3952
+#: includes/modules/EventPage/EventPage.php:4677
+msgid "View Venue Website"
+msgstr ""
+
+#: includes/modules/EventSubscriber/EventSubscriber.php:15
+msgid "Events Subscribe"
+msgstr ""
+
+#: includes/modules/EventSubscriber/EventSubscriber.php:22
+#: includes/modules/EventSubscriber/EventSubscriber.php:48
+msgid "Event Subscribe Button"
+msgstr ""
+
+#: includes/modules/EventSubscriber/EventSubscriber.php:116
+msgid "Button Link URL"
+msgstr ""
+
+#: includes/modules/EventSubscriber/EventSubscriber.php:119
+msgid "Input the destination URL for your button."
+msgstr ""
+
+#: includes/modules/EventSubscriber/EventSubscriber.php:124
+msgid "Button Link Target"
+msgstr ""
+
+#: includes/modules/EventSubscriber/EventSubscriber.php:129
+msgid "In The New Tab"
+msgstr ""
+
+#: includes/modules/EventSubscriber/EventSubscriber.php:132
+msgid "Here you can choose whether or not your link opens in a new window"
+msgstr ""
+
+#: includes/modules/EventSubscriber/EventSubscriber.php:136
+msgid "Button"
+msgstr ""
+
+#: includes/modules/EventSubscriber/EventSubscriber.php:139
+msgid "Input your desired button text."
+msgstr ""
+
+#: includes/modules/EventSubscriber/EventSubscriber.php:147
+msgid "Button Alignment"
+msgstr ""
+
+#: includes/modules/EventSubscriber/EventSubscriber.php:148
+msgid "Align your button to the left, right or center of the module."
+msgstr ""
+
+#: includes/modules/EventSubscriber/EventSubscriber.php:154
+msgid "Here you can define the alignment of Button"
+msgstr ""
+
+#: includes/modules/EventSubscriber/EventSubscriber.php:272
+msgid "Subscribe to calendar"
+msgstr ""
+
+#: includes/modules/EventSubscriber/EventSubscriber.php:277
+msgid "iCalendar"
+msgstr ""
+
+#: includes/modules/EventSubscriber/EventSubscriber.php:279
+msgid " Outlook 365"
+msgstr ""
+
+#: includes/modules/EventSubscriber/EventSubscriber.php:281
+msgid " Outlook Live"
+msgstr ""
+
+#: includes/modules/EventSubscriber/EventSubscriber.php:282
+msgid "Export .ics file"
+msgstr ""
+
+#: includes/modules/EventSubscriber/EventSubscriber.php:283
+msgid "Export Outlook .ics file"
+msgstr ""
+
+#: includes/modules/EventTicket/EventTicket.php:16
+msgid "Events Ticket"
+msgstr ""
+
+#: includes/modules/EventTicket/EventTicket.php:83
+msgid "Show Event Tickets"
+msgstr ""
+
+#: includes/modules/EventTicket/EventTicket.php:90
+msgid "Display the event tickets information."
+msgstr ""
+
+#: includes/modules/EventTicket/EventTicket.php:104
+msgid "Show Event RSVP"
+msgstr ""
+
+#: includes/modules/EventTicket/EventTicket.php:111
+msgid "Display the event RSVP information."
+msgstr ""
+
+#: includes/modules/EventTicket/EventTicket.php:125
+msgid "Show User Confirmations"
+msgstr ""
+
+#: includes/modules/EventTicket/EventTicket.php:132
+msgid ""
+"Choose to display a list of events to which a specific user has confirmed "
+"attendance."
+msgstr ""
+
+#: includes/modules/EventTicket/EventTicket.php:146
+msgid "Show The Checkout"
+msgstr ""
+
+#: includes/modules/EventTicket/EventTicket.php:153
+msgid "Choose to display the checkout experience."
+msgstr ""
+
+#: includes/modules/EventTicket/EventTicket.php:166
+msgid "Show Success Message"
+msgstr ""
+
+#: includes/modules/EventTicket/EventTicket.php:173
+msgid "Choose to show the success message after successful checkout."
+msgstr ""
+
+#: includes/modules/EventTicket/EventTicket.php:187
+msgid "Show Attendees"
+msgstr ""
+
+#: includes/modules/EventTicket/EventTicket.php:194
+msgid "Choose to show a list of all confirmed event attendees."
+msgstr ""
+
+#: includes/modules/EventTicket/EventTicket.php:209
+msgid "Show Protected Content"
+msgstr ""
+
+#: includes/modules/EventTicket/EventTicket.php:216
+msgid "Choose to show protected content only to registered event attendees."
+msgstr ""
+
+#: includes/modules/EventTicket/EventTicket.php:229
+msgid "Show Attendee Registration"
+msgstr ""
+
+#: includes/modules/EventTicket/EventTicket.php:237
+msgid "Choose to show the attendee registration."
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Divi Events Calendar"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Easily display and style The Events Calendar with custom Divi modules!"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Pee-Aye Creative"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://peeayecreative.com"
+msgstr ""

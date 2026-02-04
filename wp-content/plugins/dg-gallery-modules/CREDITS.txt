@@ -1,0 +1,47 @@
+Development Credits And Associated Licenses
+===========================================
+
+Third Party Code Credits
+========================
+
+Swiper
+---------------
+- File Location: /assets/js/lib/swiper.min.js
+- Source: https://swiperjs.com/
+- License: MIT
+- License URI: https://opensource.org/licenses/MIT
+
+justifiedGallery
+---------------
+- File Location: /assets/js/lib/jquery.justifiedGallery.js
+- Source: http://miromannino.github.io/Justified-Gallery/
+- License: MIT
+- License URI: https://opensource.org/licenses/MIT
+
+Isotope
+---------------
+- File Location: /assets/js/lib/gallerylib.js
+- Source: https://isotope.metafizzy.co/
+- License: GPLv3
+- License URI: https://www.gnu.org/licenses/gpl-3.0.html
+
+Packery
+---------------
+- File Location: /assets/js/lib/packery.pkgd.js
+- Source: https://packery.metafizzy.co/
+- License: GPLv3
+- License URI: https://www.gnu.org/licenses/gpl-3.0.html
+
+imagesLoaded
+---------------
+- File Location: /assets/js/lib/imagesloaded.pkgd.min.js
+- Source: https://imagesloaded.desandro.com/
+- License: MIT
+- License URI: https://opensource.org/licenses/MIT
+
+lightgallery
+---------------
+- File Location: /assets/js/lib/lightgallery.js
+- Source: https://sachinchoolur.github.io/lightgallery.js/
+- License: GPLv3
+- License URI: https://www.gnu.org/licenses/gpl-3.0.html

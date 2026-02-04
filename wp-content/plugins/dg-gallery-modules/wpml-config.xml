@@ -1,0 +1,31 @@
+
+<wpml-config>
+    <shortcode-list>dggm_imagegallery, dggm_imagegalleryitem, dggm_justifiedgallery , dggm_packerygallery</shortcode-list>
+    <shortcodes>
+        <shortcode>
+            <tag>dggm_imagegallery</tag>
+            <attributes>
+                <attribute>load_more_text</attribute>
+                <attribute>filter_nav_all_button</attribute>
+            </attributes>
+        </shortcode>
+        <shortcode>
+            <tag>dggm_imagegalleryitem</tag>
+            <attributes>
+                <attribute>gallery_title</attribute>
+            </attributes>
+        </shortcode>
+        <shortcode>
+            <tag>dggm_justifiedgallery</tag>
+            <attributes>
+                <attribute>load_more_text</attribute>
+            </attributes>
+        </shortcode>
+        <shortcode>
+            <tag>dggm_packerygallery</tag>
+            <attributes>
+                <attribute>load_more_text</attribute>
+            </attributes>
+        </shortcode>
+    </shortcodes>
+</wpml-config>

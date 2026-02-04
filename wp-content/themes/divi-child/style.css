@@ -1,0 +1,32 @@
+/*
+ Theme Name:     Kelowna Museums Society
+ Theme URI:      https://www.kelownamuseums.ca
+ Description:    KMS Child Theme
+ Author:         By Jove Co.
+ Author URI:     https://byjoveco.com
+ Template:       Divi
+ Version:        1.0.0
+*/
+
+
+/* =Theme customization starts here
+------------------------------------------------------- */
+
+/*------------------------------------------------*/
+/*---------[ROW ALIGN BUTTONS TO BOTTOM]-----------*/
+/*------------------------------------------------*/
+
+
+        /* buttons fixed to the bottom */
+            .r_fixed_buttons .et_pb_with_border {
+                padding-bottom:30px;}
+            .r_fixed_buttons .et_pb_button_module_wrapper {
+                position: absolute!important;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                margin: auto;}
+
+#main-content .container {
+    padding-top: 0 !important;
+}
