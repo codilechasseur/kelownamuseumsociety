@@ -1,0 +1,52 @@
+name: Build and deploy
+
+on:
+  push:
+    branches: [ staging ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      SSH_PORT: 60004
+      SSH_HOST: 35.199.174.117
+      SSH_USERNAME: kelownamuseums
+      KINSTA_FOLDER: /www/kelownamuseums_269/ # Kinsta Root folder (end with "/")
+      THEME_FOLDER: wp-content/themes/divi-child
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+
+      - name: Copying files to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ env.SSH_HOST }}
+          port: ${{ env.SSH_PORT }}
+          username: ${{ env.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD_PRODUCTION }}
+          source: ".,!.git*,!.env,!${{ env.THEME_FOLDER }}/node_modules"
+          target: ${{ env.KINSTA_FOLDER }}public/releases/${{ github.sha }}
+          rm: ${{ contains(github.event.head_commit.message, 'purge') }}
+
+      - name: Symlinks
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.SSH_HOST }}
+          port: ${{ env.SSH_PORT }}
+          username: ${{ env.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD_PRODUCTION }}
+          script: |
+            rm -rf ${{ env.KINSTA_FOLDER }}public/releases/${{ github.sha }}/wp-content/uploads
+            ln -sfn ${{ env.KINSTA_FOLDER }}public/shared/uploads ${{ env.KINSTA_FOLDER }}public/releases/${{ github.sha }}/wp-content
+            cp ${{ env.KINSTA_FOLDER }}public/shared/wp-config.php ${{ env.KINSTA_FOLDER }}public/releases/${{ github.sha }}
+            ln -sfn ${{ env.KINSTA_FOLDER }}public/releases/${{ github.sha }} ${{ env.KINSTA_FOLDER }}public/current
+            cd ${{ env.KINSTA_FOLDER }}public/releases/${{ github.sha }}/wp-content && wp cache flush
+
+            # Cleanup old releases
+            cd ${{ env.KINSTA_FOLDER }}public/releases
+            ls -t | tail -n +6 | xargs rm -rf
