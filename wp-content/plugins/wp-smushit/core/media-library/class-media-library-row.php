@@ -553,9 +553,9 @@ class Media_Library_Row {
 
 	private function get_classic_optimizations() {
 		$ordered_optimizations = array(
-			Smush_Optimization::KEY,
-			Resize_Optimization::KEY,
-			Png2Jpg_Optimization::KEY,
+			Smush_Optimization::get_key(),
+			Resize_Optimization::get_key(),
+			Png2Jpg_Optimization::get_key(),
 		);
 
 		return array_map( array( $this->optimizer, 'get_optimization' ), $ordered_optimizations );
@@ -790,10 +790,10 @@ class Media_Library_Row {
 	private function get_next_level_smush_anchor_text() {
 		$required_level = $this->settings->get_lossy_level_setting();
 		switch ( $required_level ) {
-			case Settings::LEVEL_ULTRA_LOSSY:
+			case Settings::get_level_ultra_lossy():
 				return esc_html__( 'Ultra Smush', 'wp-smushit' );
 
-			case Settings::LEVEL_SUPER_LOSSY:
+			case Settings::get_level_super_lossy():
 				return esc_html__( 'Super Smush', 'wp-smushit' );
 
 			default:
@@ -808,7 +808,7 @@ class Media_Library_Row {
 		/**
 		 * @var $smush_optimization Smush_Optimization|null
 		 */
-		$smush_optimization = $this->optimizer->get_optimization( Smush_Optimization::KEY );
+		$smush_optimization = $this->optimizer->get_optimization( Smush_Optimization::get_key() );
 		return $smush_optimization;
 	}
 
@@ -848,7 +848,7 @@ class Media_Library_Row {
 	/**
 	 * @return bool
 	 */
-	private function is_nextgen_active(): bool {
+	private function is_nextgen_active() {
 		if ( $this->settings->is_cdn_active() ) {
 			return false;
 		}
@@ -865,9 +865,9 @@ class Media_Library_Row {
 		}
 
 		if ( $this->settings->is_avif_module_active() ) {
-			return $this->optimizer->get_optimization( Avif_Optimization::OPTIMIZATION_KEY );
+			return $this->optimizer->get_optimization( Avif_Optimization::get_key() );
 		} elseif ( $this->settings->is_webp_module_active() ) {
-			return $this->optimizer->get_optimization( Webp_Optimization::OPTIMIZATION_KEY );
+			return $this->optimizer->get_optimization( Webp_Optimization::get_key() );
 		}
 
 		return null;

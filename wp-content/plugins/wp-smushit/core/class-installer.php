@@ -35,7 +35,10 @@ class Installer {
 	 */
 	public static function smush_deactivated() {
 		if ( ! class_exists( '\\Smush\\Core\\Modules\\CDN_Controller' ) ) {
-			require_once __DIR__ . '/cdn/class-cdn-controller.php';
+			$cdn_controller_path = __DIR__ . '/cdn/class-cdn-controller.php';
+			if ( file_exists( $cdn_controller_path ) ) {
+				require_once $cdn_controller_path;
+			}
 		}
 
 		Cron_Controller::get_instance()->unschedule_cron();
@@ -426,7 +429,7 @@ class Installer {
 		} );
 	}
 
-	private static function for_each_public_site( callable $callback ) {
+	private static function for_each_public_site( $callback ) {
 		if ( ! is_multisite() ) {
 			return;
 		}

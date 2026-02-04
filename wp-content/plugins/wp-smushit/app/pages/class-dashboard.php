@@ -106,7 +106,7 @@ class Dashboard extends Abstract_Summary_Page implements Interface_Page {
 			);
 		}
 
-		if ( self::should_render( Settings::LAZY_PRELOAD_MODULE_NAME ) ) {
+		if ( self::should_render( Settings::get_lazy_preload_module_name() ) ) {
 			$this->add_meta_box(
 				'dashboard/lazy-preload',
 				__( 'Lazy Load & Preload', 'wp-smushit' ),

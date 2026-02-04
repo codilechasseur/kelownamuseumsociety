@@ -176,7 +176,7 @@ class Ajax {
 
 			// Update value in settings.
 			if ( 'lossy' === $name ) {
-				$settings['lossy'] = ! empty( $quick_settings->{$name} ) ? $highest_lossy_level : Settings::LEVEL_LOSSLESS;
+				$settings['lossy'] = ! empty( $quick_settings->{$name} ) ? $highest_lossy_level : Settings::get_level_lossless();
 			} elseif ( 'original' === $name ) {
 				$optimize_originals = ! empty( $quick_settings->{$name} );
 				$settings[ $name ]  = $optimize_originals;
@@ -233,7 +233,7 @@ class Ajax {
 
 			// Update value in settings.
 			if ( 'lossy' === $name ) {
-				$settings['lossy'] = $setting_enabled ? Settings::LEVEL_SUPER_LOSSY : Settings::LEVEL_LOSSLESS;
+				$settings['lossy'] = $setting_enabled ? Settings::get_level_super_lossy() : Settings::get_level_lossless();
 			} elseif ( 'compress_backup' === $name ) {
 				// If Smush originals is selected, enable backups.
 				$settings['original'] = $setting_enabled;
@@ -844,7 +844,7 @@ class Ajax {
 		}
 
 		update_option(
-			Admin::REVIEW_PROMPTS_OPTION_KEY,
+			Admin::get_review_prompts_option_key(),
 			array(
 				'time' => time() + WEEK_IN_SECONDS,
 				'type' => 'remind_later',

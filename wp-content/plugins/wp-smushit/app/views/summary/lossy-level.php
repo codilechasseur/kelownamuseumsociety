@@ -5,8 +5,8 @@ use Smush\Core\Membership\Membership;
 use Smush\Core\Hub_Connector;
 
 $lossy_level_setting = Settings::get_instance()->get_lossy_level_setting();
-$is_ultra_active     = Settings::LEVEL_ULTRA_LOSSY === $lossy_level_setting;
-$is_super_active     = Settings::LEVEL_SUPER_LOSSY === $lossy_level_setting;
+$is_ultra_active     = Settings::get_level_ultra_lossy() === $lossy_level_setting;
+$is_super_active     = Settings::get_level_super_lossy() === $lossy_level_setting;
 $is_pro              = WP_Smush::is_pro();
 $class_names         = array();
 if ( ! $is_pro ) {

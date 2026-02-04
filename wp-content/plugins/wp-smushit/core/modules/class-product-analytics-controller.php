@@ -145,7 +145,7 @@ class Product_Analytics_Controller {
 		}
 	}
 
-	private function maybe_track_feature_toggle( array $settings ) {
+	private function maybe_track_feature_toggle( $settings ) {
 		$has_tracked = false;
 		foreach ( $settings as $setting_key => $setting_value ) {
 			$handler = "track_{$setting_key}_feature_toggle";
@@ -216,7 +216,7 @@ class Product_Analytics_Controller {
 		return defined( 'WP_SMUSH_PARALLEL' ) && WP_SMUSH_PARALLEL ? 'Enabled' : 'Disabled';
 	}
 
-	private function get_smush_type(): string {
+	private function get_smush_type() {
 		if ( $this->settings->is_webp_module_active() ) {
 			return 'WebP';
 		}
@@ -231,12 +231,12 @@ class Product_Analytics_Controller {
 	private function get_current_lossy_level_label() {
 		$lossy_level = $this->settings->get_lossy_level_setting();
 		$smush_modes = array(
-			Settings::LEVEL_LOSSLESS    => 'Basic',
-			Settings::LEVEL_SUPER_LOSSY => 'Super',
-			Settings::LEVEL_ULTRA_LOSSY => 'Ultra',
+			Settings::get_level_lossless()    => 'Basic',
+			Settings::get_level_super_lossy() => 'Super',
+			Settings::get_level_ultra_lossy() => 'Ultra',
 		);
 		if ( ! isset( $smush_modes[ $lossy_level ] ) ) {
-			$lossy_level = Settings::LEVEL_LOSSLESS;
+			$lossy_level = Settings::get_level_lossless();
 		}
 
 		return $smush_modes[ $lossy_level ];
@@ -351,15 +351,15 @@ class Product_Analytics_Controller {
 			}
 		}
 
-		if ( isset( $settings[ Settings::NEXT_GEN_CDN_KEY ] ) ) {
-			$cdn_next_gen_conversions_mode = $this->settings->sanitize_cdn_next_gen_conversion_mode( $settings[ Settings::NEXT_GEN_CDN_KEY ] );
+		if ( isset( $settings[ Settings::get_next_gen_cdn_key() ] ) ) {
+			$cdn_next_gen_conversions_mode = $this->settings->sanitize_cdn_next_gen_conversion_mode( $settings[ Settings::get_next_gen_cdn_key() ] );
 			$cdn_next_gen_conversions      = array(
-				Settings::NONE_CDN_MODE => 'None',
-				Settings::WEBP_CDN_MODE => 'WebP',
-				Settings::AVIF_CDN_MODE => 'AVIF',
+				Settings::get_none_cdn_mode() => 'None',
+				Settings::get_webp_cdn_mode() => 'WebP',
+				Settings::get_avif_cdn_mode() => 'AVIF',
 			);
 			if ( ! isset( $cdn_next_gen_conversions[ $cdn_next_gen_conversions_mode ] ) ) {
-				$cdn_next_gen_conversions_mode = Settings::NONE_CDN_MODE;
+				$cdn_next_gen_conversions_mode = Settings::get_none_cdn_mode();
 			}
 
 			$cdn_properties['Next-Gen Conversions'] = $cdn_next_gen_conversions[ $cdn_next_gen_conversions_mode ];
@@ -847,7 +847,7 @@ class Product_Analytics_Controller {
 		$active_format_configuration = $this->next_gen_manager->get_active_format_configuration();
 		$next_gen_status_notice      = $this->get_next_gen_status_notice();
 		$next_gen_method             = 'avif_direct';
-		if ( Webp_Configuration::FORMAT_KEY === $active_format_configuration->get_format_key() ) {
+		if ( Webp_Configuration::get_format_key() === $active_format_configuration->get_format_key() ) {
 			// Directly check webp_direct_conversion option to identify webp method even webp module is disabled.
 			$direct_conversion_enabled = $this->settings->get( 'webp_direct_conversion' );
 			$next_gen_method           = $direct_conversion_enabled ? 'webp_direct' : 'webp_server';
@@ -1169,9 +1169,9 @@ class Product_Analytics_Controller {
 			'avif'             => $avif_module_activated,
 			'webp_direct'      => $webp_direct_activated,
 			'webp_server'      => $webp_server_activated,
-			'smush_basic'      => Settings::LEVEL_LOSSLESS === $lossy_level,
-			'smush_super'      => Settings::LEVEL_SUPER_LOSSY === $lossy_level,
-			'smush_ultra'      => Settings::LEVEL_ULTRA_LOSSY === $lossy_level,
+			'smush_basic'      => Settings::get_level_lossless() === $lossy_level,
+			'smush_super'      => Settings::get_level_super_lossy() === $lossy_level,
+			'smush_ultra'      => Settings::get_level_ultra_lossy() === $lossy_level,
 			's3_offload'       => $this->settings->is_s3_active(),
 			'wp_bakery'        => $this->settings->get( 'js_builder' ),
 			'gravity_forms'    => $this->settings->get( 'gform' ),
@@ -1334,7 +1334,7 @@ class Product_Analytics_Controller {
 	 *
 	 * @return array
 	 */
-	public function filter_bulk_restore_triggered_properties( array $properties ) {
+	public function filter_bulk_restore_triggered_properties( $properties ) {
 		return array_merge(
 			$properties,
 			array(

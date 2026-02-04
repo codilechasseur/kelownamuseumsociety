@@ -146,6 +146,10 @@ abstract class Abstract_Summary_Page extends Abstract_Page {
 	 * @since 2.8.6
 	 */
 	public function cdn_stats_ui() {
+		if ( ! CDN_Helper::get_instance()->is_cdn_active() ) {
+			return;
+		}
+
 		$status = CDN_Helper::get_instance()->get_cdn_status_string();
 		if ( 'disabled' === $status ) {
 			return;

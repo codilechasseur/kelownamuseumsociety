@@ -8,7 +8,7 @@ use Smush\Core\Settings;
 use WP_Smush;
 
 class Smush_Settings_UI_Controller extends Controller {
-	const ADVANCED_FIELDS = array(
+	private static $advanced_fields = array(
 		'resize',
 		'original',
 		'png_to_jpg',
@@ -472,11 +472,11 @@ class Smush_Settings_UI_Controller extends Controller {
 	}
 
 	private function get_basic_settings( $bulk_settings ) {
-		return array_diff( $bulk_settings, self::ADVANCED_FIELDS );
+		return array_diff( $bulk_settings, self::$advanced_fields );
 	}
 
 	public function render_advanced_settings( $bulk_settings ) {
-		$advanced_settings = array_intersect( $bulk_settings, self::ADVANCED_FIELDS );
+		$advanced_settings = array_intersect( $bulk_settings, self::$advanced_fields );
 		if ( empty( $advanced_settings ) ) {
 			return;
 		}

@@ -26,7 +26,7 @@ class Core extends Stats {
 	 *
 	 * @var int
 	 */
-	const STATUS_ANIMATED = 2;
+	private static $status_animated = 2;
 
 	/**
 	 * S3 module
@@ -147,7 +147,7 @@ class Core extends Stats {
 	 *
 	 * @var int
 	 */
-	const MAX_FREE_BULK = 50;
+	private static $max_free_bulk = 50;
 
 	/**
 	 * Initialize modules.
@@ -352,7 +352,7 @@ class Core extends Stats {
 					sprintf(
 					/* translators: 1 - Number of CDN PoP locations, 2 - opening a tag, 3 - closing a tag */
 						esc_html__( 'Activate CDN to bulk smush and serve animated GIF’s via %1$d worldwide locations. %2$sActivate CDN%3$s', 'wp-smushit' ),
-						Admin::CDN_POP_LOCATIONS,
+						Admin::get_cdn_pop_locations(),
 						'<a href="' . esc_url( network_admin_url( 'admin.php?page=smush-cdn' ) ) . '" />',
 						'</a>'
 					)
@@ -464,9 +464,9 @@ class Core extends Stats {
 		$bulk_sent_count = (int) get_transient( $transient_name );
 
 		// Check if bulk smush limit is less than limit.
-		if ( ! $bulk_sent_count || $bulk_sent_count < self::MAX_FREE_BULK ) {
+		if ( ! $bulk_sent_count || $bulk_sent_count < self::$max_free_bulk ) {
 			$continue = true;
-		} elseif ( $bulk_sent_count === self::MAX_FREE_BULK ) {
+		} elseif ( $bulk_sent_count === self::$max_free_bulk ) {
 			// If user has reached the limit, reset the transient.
 			$continue = false;
 			$reset    = true;
@@ -558,8 +558,8 @@ class Core extends Stats {
 		if ( false === $bulk_sent_count ) {
 			// Start transient at 0.
 			set_transient( $transient_name, 1, 200 );
-		} elseif ( $bulk_sent_count < self::MAX_FREE_BULK ) {
-			// If lte MAX_FREE_BULK images are sent, increment.
+		} elseif ( $bulk_sent_count < self::$max_free_bulk ) {
+			// If lte max_free_bulk images are sent, increment.
 			set_transient( $transient_name, $bulk_sent_count + 1, 200 );
 		}
 	}
@@ -589,4 +589,24 @@ class Core extends Stats {
 
 		return $resize_sizes['width'] > $resize_sizes['height'] ? $resize_sizes['width'] : $resize_sizes['height'];
 	}
+
+	/**
+	 * Get max_free_bulk.
+	 *
+	 * @return int
+	 */
+	public static function get_max_free_bulk() {
+		return self::$max_free_bulk;
+	}
+
+
+	/**
+	 * Get status_animated.
+	 *
+	 * @return int
+	 */
+	public static function get_status_animated() {
+		return self::$status_animated;
+	}
+
 }

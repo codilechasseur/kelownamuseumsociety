@@ -21,7 +21,7 @@ if ( ! defined( 'WPINC' ) ) {
 $default_settings = Settings::get_instance()->get_defaults();
 $custom_fields     = array(
 	'lossy'                    => 'bulk/lossy-level',
-	Settings::NEXT_GEN_CDN_KEY => 'cdn/next-gen-conversion-setting',
+	Settings::get_next_gen_cdn_key() => 'cdn/next-gen-conversion-setting',
 );
 ?>
 
