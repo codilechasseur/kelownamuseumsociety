@@ -242,7 +242,6 @@ function kms_dica_carousel_shortcode( $atts, $content = null ) {
 
 	return ob_get_clean();
 }
-add_shortcode( 'dica_divi_carousel', 'kms_dica_carousel_shortcode' );
 
 function kms_dica_carouselitem_shortcode( $atts, $content = null ) {
 	if ( empty( $GLOBALS['kms_dica_carousel_stack'] ) || ! is_array( $GLOBALS['kms_dica_carousel_stack'] ) ) {
@@ -272,4 +271,37 @@ function kms_dica_carouselitem_shortcode( $atts, $content = null ) {
 
 	return '';
 }
-add_shortcode( 'dica_divi_carouselitem', 'kms_dica_carouselitem_shortcode' );
+
+function kms_register_dica_carousel_shortcodes() {
+	add_shortcode( 'dica_divi_carousel', 'kms_dica_carousel_shortcode' );
+	add_shortcode( 'dica_divi_carouselitem', 'kms_dica_carouselitem_shortcode' );
+}
+add_action( 'init', 'kms_register_dica_carousel_shortcodes', 20 );
+
+function kms_fix_smart_quotes_for_shortcodes( $content ) {
+	return str_replace(
+		array( '“', '”', '‘', '’' ),
+		array( '"', '"', "'", "'" ),
+		$content
+	);
+}
+
+function kms_render_dica_shortcodes_from_plaintext( $content ) {
+	if ( ! is_string( $content ) || false === strpos( $content, '[dica_divi_carousel' ) ) {
+		return $content;
+	}
+
+	$fixed_content = kms_fix_smart_quotes_for_shortcodes( $content );
+
+	$regex = '/' . get_shortcode_regex( array( 'dica_divi_carousel' ) ) . '/s';
+
+	return preg_replace_callback(
+		$regex,
+		function ( $matches ) {
+			return do_shortcode( $matches[0] );
+		},
+		$fixed_content
+	);
+}
+add_filter( 'the_content', 'kms_render_dica_shortcodes_from_plaintext', 99 );
+add_filter( 'et_builder_render_layout', 'kms_render_dica_shortcodes_from_plaintext', 99 );
