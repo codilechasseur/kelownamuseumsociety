@@ -374,7 +374,11 @@ class Organizer_View extends List_View {
 			// When Post ID not set we fall back into name.
 			if ( empty( $post_id ) ) {
 				$organizers = tribe_organizers()->by( 'name', $post_name )->fields( 'ids' );
-				$post_id = $organizers->first();
+				$post_id    = $organizers->first();
+			}
+
+			if ( empty( $post_id ) ) {
+				return $args;
 			}
 
 			$args['organizer'] = $post_id;
@@ -418,12 +422,12 @@ class Organizer_View extends List_View {
 
 
 		if ( ! $is_taxonomy_page ) {
-			$organizer_id = reset( $post_ids );
+			$organizer_id = is_array( $post_ids ) && ! empty( $post_ids ) ? reset( $post_ids ) : 0;
+			$organizer    = $organizer_id ? tribe_get_organizer_object( $organizer_id ) : null;
 
-			if ( ! empty( $organizer_id ) ) {
-				$organizer = tribe_get_organizer_object( $organizer_id );
+			if ( $organizer instanceof \WP_Post && ! empty( $organizer->post_name ) ) {
+				$query_args[ Organizer::POSTTYPE ] = $organizer->post_name;
 			}
-			$query_args[ Organizer::POSTTYPE ] = $organizer->post_name;
 		} else {
 			$query_args['post_type'] = Organizer::POSTTYPE;
 			$query_args[ $organizer_category_controller->get_wp_slug() ] = $this->context->get( $organizer_category_controller->get_wp_slug() );
