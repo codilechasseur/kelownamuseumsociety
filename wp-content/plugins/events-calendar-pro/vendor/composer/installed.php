@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'the-events-calendar/events-pro',
-        'pretty_version' => 'dev-release/M26.chikorita',
-        'version' => 'dev-release/M26.chikorita',
-        'reference' => 'e3a2ef61f3b82821c08d188eb339a0ab4ebddaa7',
+        'pretty_version' => 'dev-release/M26.illumise',
+        'version' => 'dev-release/M26.illumise',
+        'reference' => '9eed8440a029351c9504bd64b0986351c7bee0ef',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -29,9 +29,9 @@
             'dev_requirement' => false,
         ),
         'the-events-calendar/events-pro' => array(
-            'pretty_version' => 'dev-release/M26.chikorita',
-            'version' => 'dev-release/M26.chikorita',
-            'reference' => 'e3a2ef61f3b82821c08d188eb339a0ab4ebddaa7',
+            'pretty_version' => 'dev-release/M26.illumise',
+            'version' => 'dev-release/M26.illumise',
+            'reference' => '9eed8440a029351c9504bd64b0986351c7bee0ef',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
