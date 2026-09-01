@@ -2283,7 +2283,7 @@ if ( ! function_exists( 'et_core_maybe_add_divi5_api_parameter' ) ) :
 /**
  * Adds the divi_5 parameter to API request data if Divi 5 updates are enabled or user is on Divi 5.
  *
- * @since ??
+ * @since 4.27.8
  *
  * @param array $api_data The API request data array to modify.
  * @return array Modified API data with divi_5 parameter added if applicable.

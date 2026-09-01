@@ -2031,7 +2031,7 @@ class ET_Core_SupportCenter {
 	/**
 	 * Define Standard role for the Divi Support user
 	 *
-	 * @since ?? Removed definition for the Divi Support 'elevated' role
+	 * @since 4.27.7 Removed definition for the Divi Support 'elevated' role
 	 * @since 3.22 Added filters to extend the list of capabilities for the ET Support User
 	 * @since 3.20
 	 */
@@ -2129,7 +2129,7 @@ class ET_Core_SupportCenter {
 	/**
 	 * Remove our Standard Support role
 	 *
-	 * @since ?? No longer attempt to remove the defunct Divi Support 'elevated' role
+	 * @since 4.27.7 No longer attempt to remove the defunct Divi Support 'elevated' role
 	 * @since 3.20
 	 */
 	public function support_user_remove_role() {
@@ -2140,7 +2140,7 @@ class ET_Core_SupportCenter {
 	/**
 	 * Set the ET Support User's role
 	 *
-	 * @since ?? Removed the 'et_support_elevated' role; using 'administrator' instead
+	 * @since 4.27.7 Removed the 'et_support_elevated' role; using 'administrator' instead
 	 * @since 3.20
 	 *
 	 * @param string $role

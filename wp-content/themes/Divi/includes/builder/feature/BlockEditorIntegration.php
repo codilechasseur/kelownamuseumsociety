@@ -167,11 +167,89 @@ class ET_Builder_Block_Editor_Integration {
 	}
 
 	/**
+	 * Register block editor integration styles and dummy editor_style blocks.
+	 *
+	 * Idempotent registration for Editor Canvas asset resolution via enqueue_block_assets
+	 * and Editor Admin via enqueue_block_editor_assets.
+	 *
+	 * @since 4.27.8
+	 *
+	 * @return void
+	 */
+	private function _register_block_editor_integration_assets() {
+		// Divi Layout Block.
+		if ( ! wp_style_is( 'et-block-divi-library-editor', 'registered' ) ) {
+			wp_register_style(
+				'et-block-divi-library-editor',
+				ET_BUILDER_URI . '/frontend-builder/assets/css/block-editor/divi-library-editor.css',
+				array(),
+				ET_BUILDER_VERSION
+			);
+		}
+
+		if ( ! wp_style_is( 'et-block-layout-editor', 'registered' ) ) {
+			wp_register_style(
+				'et-block-layout-editor',
+				ET_BUILDER_URI . '/frontend-builder/assets/css/block-editor/layout-editor.css',
+				array( 'et-block-divi-library-editor' ),
+				ET_BUILDER_VERSION
+			);
+		}
+
+		$layout_stylesheets_block = 'et-block-editor/et-block-layout-editor-stylesheets';
+
+		if ( ! WP_Block_Type_Registry::get_instance()->is_registered( $layout_stylesheets_block ) ) {
+			register_block_type(
+				$layout_stylesheets_block,
+				array(
+					'editor_style' => 'et-block-layout-editor',
+				)
+			);
+		}
+
+		// Divi Placeholder Block.
+		if ( ! wp_style_is( 'et-block-placeholder-editor', 'registered' ) ) {
+			wp_register_style(
+				'et-block-placeholder-editor',
+				ET_BUILDER_URI . '/frontend-builder/assets/css/block-editor/placeholder-editor.css',
+				// D5 uses `library-menu-styles` (ETlogos in D5's library_menu.css). D4 library_menu.css
+				// only ships ETmodules and has no logos font files — use et-core-admin for etbuilder @font-face.
+				array( 'et-core-admin' ),
+				ET_BUILDER_VERSION
+			);
+		}
+
+		$placeholder_stylesheets_block = 'et-block-editor/et-block-placeholder-editor-stylesheets';
+
+		if ( ! WP_Block_Type_Registry::get_instance()->is_registered( $placeholder_stylesheets_block ) ) {
+			register_block_type(
+				$placeholder_stylesheets_block,
+				array(
+					'editor_style' => 'et-block-placeholder-editor',
+				)
+			);
+		}
+
+		// Editor Canvas content width from Divi Settings from the sidebar.
+		if ( ! wp_script_is( 'et-gb-canvas-content-width', 'registered' ) ) {
+			wp_register_script(
+				'et-gb-canvas-content-width',
+				ET_BUILDER_URI . '/frontend-builder/build/gutenberg-canvas-content-width.js',
+				array(),
+				ET_BUILDER_VERSION,
+				true
+			);
+		}
+	}
+
+	/**
 	 * Enqueue our GB compatibility bundle.
 	 *
 	 * @return void
 	 */
 	public function enqueue_block_editor_assets() {
+		global $wp_version;
+
 		// Load script dependencies that is used by builder on top window. These dependencies
 		// happen to be the exact same scripts required by BFB top window's scripts.
 		et_bfb_enqueue_scripts_dependencies();
@@ -222,6 +300,8 @@ class ET_Builder_Block_Editor_Integration {
 
 		// Set helpers needed by our own Gutenberg bundle.
 		$gutenberg = array(
+			// WP 7.1+ enforced iframed editor canvas; used by editor.js limited-UI sync.
+			'enforcedIframedEditorCanvas' => version_compare( $wp_version, '7.1-alpha1', '>=' ),
 			'helpers'       => array(
 				'postID'             => $post_id,
 				'postType'           => $post_type,
@@ -318,27 +398,42 @@ class ET_Builder_Block_Editor_Integration {
 
 		ET_Cloud_App::load_js( true, true );
 
-		// Block Editor Styles.
-		// Divi Layout Block.
-		wp_register_style( 'et-block-divi-library-editor', ET_BUILDER_URI . '/frontend-builder/assets/css/block-editor/divi-library-editor.css', array(), ET_BUILDER_VERSION );
-		wp_register_style( 'et-block-layout-editor', ET_BUILDER_URI . '/frontend-builder/assets/css/block-editor/layout-editor.css', array( 'et-block-divi-library-editor' ), ET_BUILDER_VERSION );
+		$this->_register_block_editor_integration_assets();
 
-		register_block_type(
-			'et-block-editor/et-block-layout-editor-stylesheets',
-			array(
-				'editor_style' => 'et-block-layout-editor',
-			)
-		);
+		// WP < 7.1: parent editor screen may own content-width styles (non-iframed /
+		// mixed iframe editors). WP 7.1+ enforced iframed canvas loads the script only
+		// via enqueue_block_assets inside _wp_get_iframed_editor_assets().
+		if ( version_compare( $wp_version, '7.1-alpha1', '<' ) ) {
+			wp_enqueue_script( 'et-gb-canvas-content-width' );
+		}
+	}
 
-		// Divi Placeholder Block.
-		wp_register_style( 'et-block-placeholder-editor', ET_BUILDER_URI . '/frontend-builder/assets/css/block-editor/placeholder-editor.css', array( 'et-core-admin' ), ET_BUILDER_VERSION );
+	/**
+	 * Enqueue Editor Canvas assets for the block editor.
+	 *
+	 * Fires on enqueue_block_assets (WP 6.3+) so styles resolve inside
+	 * _wp_get_iframed_editor_assets(). Editor Admin assets remain on
+	 * enqueue_block_editor_assets.
+	 *
+	 * WordPress runs this hook on the parent editor screen and again when
+	 * collecting iframe HTML ({@see _wp_get_iframed_editor_assets()}). The
+	 * iframe pass sets `should_load_block_editor_scripts_and_styles` to false.
+	 *
+	 * @since 4.27.8
+	 *
+	 * @return void
+	 */
+	public function enqueue_block_assets() {
+		$this->_register_block_editor_integration_assets();
 
-		register_block_type(
-			'et-block-editor/et-block-placeholder-editor-stylesheets',
-			array(
-				'editor_style' => 'et-block-placeholder-editor',
-			)
-		);
+		$in_iframe_assets = ! wp_should_load_block_editor_scripts_and_styles();
+
+		// Iframe collector always has should_load_block_editor_scripts_and_styles forced
+		// false. Parent editor screen loads the script via enqueue_block_editor_assets
+		// on WP < 7.1 only.
+		if ( $in_iframe_assets ) {
+			wp_enqueue_script( 'et-gb-canvas-content-width' );
+		}
 	}
 
 	/**
@@ -706,7 +801,7 @@ class ET_Builder_Block_Editor_Integration {
 	 * @return void
 	 */
 	public function init_hooks() {
-		global $pagenow;
+		global $pagenow, $wp_version;
 
 		$edit_page_names = array( 'post.php', 'post-new.php' );
 		$is_editing_page = in_array( $pagenow, $edit_page_names, true );
@@ -715,6 +810,12 @@ class ET_Builder_Block_Editor_Integration {
 			// Load assets on post editing pages only.
 			if ( $is_editing_page ) {
 				add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_block_editor_assets' ), 4 );
+
+				// WP 6.3+: Editor Canvas styles via enqueue_block_assets (see block-editor-integration.php).
+				// Editor Admin stays on enqueue_block_editor_assets above.
+				if ( version_compare( $wp_version, '6.3', '>=' ) ) {
+					add_action( 'enqueue_block_assets', array( $this, 'enqueue_block_assets' ), 4 );
+				}
 			}
 			add_action( 'admin_print_scripts-edit.php', array( $this, 'add_new_button' ), 10 );
 			add_action( 'admin_init', array( $this, 'add_edit_link_filters' ) );
