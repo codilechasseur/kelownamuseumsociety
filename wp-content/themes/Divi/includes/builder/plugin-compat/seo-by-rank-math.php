@@ -46,7 +46,7 @@ class ET_Builder_Plugin_Compat_Rank_Math_SEO extends ET_Builder_Plugin_Compat_Ba
 	 * generation. It avoids errors caused by icons or unsupported elements being misinterpreted
 	 * as images.
 	 *
-	 * @since ??
+	 * @since 4.27.7
 	 *
 	 * @param string $content The raw post content containing potential Divi shortcodes.
 	 *

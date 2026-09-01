@@ -2110,7 +2110,9 @@ class PodsAdmin {
 		$is_demo = pods_is_demo();
 
 		// Handle reset dismiss separately.
-		if ( 'reset' === $callout_dismiss ) {
+		if ( 'reset' === $callout_dismiss && pods_is_admin() ) {
+			// Internal-only action.
+
 			// Reset callouts.
 			update_option( 'pods_callouts', [] );
 
@@ -3548,6 +3550,7 @@ class PodsAdmin {
 	public function admin_settings() {
 		// Add our custom callouts.
 		$this->handle_callouts_updates();
+		$this->maybe_handle_display_callback_notice_dismiss();
 
 		/**
 		 * Allow hooking into our settings page to set up hooks.
@@ -3555,6 +3558,8 @@ class PodsAdmin {
 		 * @since 2.8.0
 		 */
 		do_action( 'pods_admin_settings_init' );
+
+		add_action( 'pods_admin_before_settings', [ $this, 'show_display_callback_notice' ] );
 
 		// Add our custom callouts.
 		if ( $this->has_horizontal_callout() ) {
@@ -3564,6 +3569,66 @@ class PodsAdmin {
 		}
 
 		pods_view( PODS_DIR . 'ui/admin/settings.php', compact( array_keys( get_defined_vars() ) ) );
+	}
+
+	/**
+	 * Clear the cached disallowed display callbacks when the notice is dismissed.
+	 *
+	 * @since 3.3.9.2
+	 */
+	public function maybe_handle_display_callback_notice_dismiss() {
+		$dismiss = pods_v( 'pods_dismiss_display_callback_notice' );
+		$nonce   = pods_v( 'pods_dismiss_display_callback_notice_nonce' );
+
+		if ( ! $dismiss || ! $nonce ) {
+			return;
+		}
+
+		if ( false === wp_verify_nonce( $nonce, 'pods_dismiss_display_callback_notice' ) ) {
+			return;
+		}
+
+		if ( ! pods_is_admin( 'pods_settings' ) ) {
+			return;
+		}
+
+		pods_access_clear_disallowed_display_callbacks();
+	}
+
+	/**
+	 * Show an admin notice on the Pods Settings page listing detected disallowed display callbacks.
+	 *
+	 * @since 3.3.9.2
+	 */
+	public function show_display_callback_notice() {
+		if ( ! pods_is_truthy( pods_get_setting( 'show_display_callback_notices', '1' ) ) ) {
+			return;
+		}
+
+		$callbacks = pods_get_disallowed_display_callbacks();
+
+		if ( empty( $callbacks ) ) {
+			return;
+		}
+
+		$escaped_callbacks = array_map( 'esc_html', $callbacks );
+
+		$dismiss_link = add_query_arg( [
+			'pods_dismiss_display_callback_notice'       => '1',
+			'pods_dismiss_display_callback_notice_nonce' => wp_create_nonce( 'pods_dismiss_display_callback_notice' ),
+		] );
+
+		pods_message(
+			wpautop(
+				esc_html__( 'Disallowed display callbacks were detected on this site. These callbacks were blocked and were not run.', 'pods' )
+				. "\n\n" . '<strong>' . esc_html__( 'Disallowed callbacks:', 'pods' ) . '</strong> ' . implode( ', ', $escaped_callbacks )
+				. "\n\n" . esc_html__( 'Review your Display callbacks setting if you expected these functions to be allowed, or dismiss this notice after you have reviewed the list.', 'pods' )
+				. "\n\n" . '<a href="' . esc_url( $dismiss_link ) . '" class="button">' . esc_html__( 'Dismiss and clear list', 'pods' ) . '</a>'
+			),
+			'warning',
+			false,
+			false
+		);
 	}
 
 	/**
@@ -4143,7 +4208,7 @@ class PodsAdmin {
 		$methods = apply_filters( 'pods_admin_ajax_methods', $methods, $this );
 
 		if ( ! isset( $params->method ) || ! isset( $methods[ $params->method ] ) ) {
-			pods_error( __( 'Invalid AJAX request', 'pods' ), $this );
+			return pods_error( __( 'Invalid AJAX request method', 'pods' ), $this );
 		}
 
 		$defaults = [
@@ -4154,6 +4219,10 @@ class PodsAdmin {
 
 		$method = (object) array_merge( $defaults, (array) $methods[ $params->method ] );
 
+		if ( empty( $method->priv ) && empty( $method->custom_nonce ) ) {
+			return pods_error( __( 'Invalid AJAX request nonce handling', 'pods' ), $this );
+		}
+
 		if (
 			true !== $method->custom_nonce
 			&& (
@@ -4162,7 +4231,7 @@ class PodsAdmin {
 				|| false === wp_verify_nonce( $params->_wpnonce, 'pods-' . $params->method )
 			)
 		) {
-			pods_error( __( 'Unauthorized request', 'pods' ), $this );
+			return pods_error( __( 'Unauthorized form request', 'pods' ), $this );
 		}
 
 		// Cleaning up $params
@@ -4179,7 +4248,7 @@ class PodsAdmin {
 				// They have access to the custom priv.
 			} else {
 				// They do not have access.
-				pods_error( __( 'Access denied', 'pods' ), $this );
+				return pods_error( __( 'Access denied', 'pods' ), $this );
 			}
 		}
 
@@ -4199,7 +4268,7 @@ class PodsAdmin {
 			$output = (string) apply_filters( 'pods_api_migrate_run', $params );
 		} else {
 			if ( ! method_exists( $api, $method->name ) ) {
-				pods_error( __( 'API method does not exist', 'pods' ), $this );
+				return pods_error( __( 'API method does not exist', 'pods' ), $this );
 			} elseif ( 'save_pod' === $method->name ) {
 				if ( isset( $params->field_data_json ) && is_array( $params->field_data_json ) ) {
 					$params->fields = $params->field_data_json;
@@ -4242,7 +4311,7 @@ class PodsAdmin {
 				echo $output;
 			}
 		} else {
-			pods_error( __( 'There was a problem with your request.', 'pods' ) );
+			return pods_error( __( 'There was a problem with your request.', 'pods' ) );
 		}//end if
 
 		die();

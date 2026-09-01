@@ -777,7 +777,7 @@ class ET_Builder_Module_Contact_Form extends ET_Builder_Module_Type_WithSpamProt
 			esc_attr( $module_id ),
 			$this->module_classname( $render_slug ), // #5
 			esc_attr( $et_pb_contact_form_num ),
-			'on' === $use_redirect && '' !== $redirect_url ? sprintf( ' data-redirect_url="%1$s"', esc_attr( $redirect_url ) ) : '',
+			'on' === $use_redirect && '' !== $redirect_url ? sprintf( ' data-redirect_url="%1$s"', esc_url( $redirect_url ) ) : '',
 			$video_background,
 			$parallax_image_background,
 			esc_attr( $unique_id ), // #10

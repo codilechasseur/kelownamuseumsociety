@@ -8,7 +8,7 @@
 
 if ( ! defined( 'ET_BUILDER_PRODUCT_VERSION' ) ) {
 	// Note, this will be updated automatically during grunt release task.
-	define( 'ET_BUILDER_PRODUCT_VERSION', '4.27.6' );
+	define( 'ET_BUILDER_PRODUCT_VERSION', '4.27.8' );
 }
 
 if ( ! defined( 'ET_BUILDER_VERSION' ) ) {
@@ -4037,7 +4037,7 @@ if ( ! function_exists( 'et_pb_set_video_oembed_thumbnail_resolution' ) ) :
 			$high_res_image_src  = str_replace( 'hqdefault.jpg', 'maxresdefault.jpg', $image_src );
 			$protocol            = is_ssl() ? 'https://' : 'http://';
 			$processed_image_url = esc_url( str_replace( '//', $protocol, $high_res_image_src ), array( 'http', 'https' ) );
-			$response            = wp_remote_get( $processed_image_url, array( 'timeout' => 30 ) );
+			$response            = wp_safe_remote_get( $processed_image_url, array( 'timeout' => 30 ) );
 
 			// Youtube doesn't guarantee that high res image exists for any video, so we need to check whether it exists and fallback to default image in case of error.
 			if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {

@@ -1,3 +1,14 @@
+version 4.27.8 ( updated 08-19-2026 )
+- Fixed Theme Builder Shop page templates not rendering on the frontend with WooCommerce 11.0.
+- Fixed Divi block editor compatibility with WordPress 7.1's iframed editor canvas, including editor asset loading, content width settings in the sidebar, Placeholder block styling, header buttons when switching between Divi and the default editor, Layout block editor styling with library modal display, and D4 layout block live preview sizing in the editor canvas.
+
+version 4.27.7 ( updated 05-12-2026 )
+- Security Update: Fixed a stored XSS risk in Social Media Follow Skype URL handling by applying consistent URL escaping at render time. Props to Osvaldo Noe Gonzalez Del Rio (Os) for the responsible disclosure.
+- Security Update: Fixed an issue in D4 Contact Form redirects by blocking unsafe redirect URL schemes and enforcing URL-safe handling of redirect_url. Props to Osvaldo Noe Gonzalez Del Rio (Os) for the responsible disclosure.
+- Security Update: Fixed an issue where legacy Dynamic Content JSON could keep raw HTML enabled for users without unfiltered_html. Props to Osvaldo Noe Gonzalez Del Rio (Os) for the responsible disclosure.
+- Security Update: Fixed a blind SSRF vector in Divi 4 video thumbnail resolution checks by enforcing safe outbound HTTP requests. Props to Osvaldo Noe Gonzalez Del Rio (Os) for the responsible disclosure.
+- Security Update: Fixed a stored XSS vulnerability that made it possible for users with Contributor role or above to insert JavaScript code onto the page via the Video Slider module's shortcode. Props to Osvaldo Noe Gonzalez Del Rio (Os) for the responsible disclosure.
+
 version 4.27.6 ( updated 02-25-2026 )
 - Add the option to opt in to Divi 5 updates in the Divi Dashboard.
 - Added a new option in the Divi Dashboard to opt in to Divi 5 updates.

@@ -2420,6 +2420,8 @@ class Pods implements Iterator {
 			// Caching parameters.
 			'expires'             => null,
 			'cache_mode'          => 'cache',
+			// Other info
+			'from'                => null,
 		);
 
 		if ( is_array( $params ) ) {
@@ -2549,6 +2551,11 @@ class Pods implements Iterator {
 				$params->orderby[ $key ] = "{$field_name} {$dir}";
 			}//end foreach
 		}//end if
+
+		$params->fragment_info = pods_info_from_args( [
+			'item_id' => $this->id ? $this->id : null,
+			'pods'    => $this,
+		] );
 
 		$this->data->select( $params );
 
