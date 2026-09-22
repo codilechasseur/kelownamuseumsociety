@@ -1,0 +1,253 @@
+/* KMS Candidate Survey — public styles.
+   Everything is scoped to .kcs so it can sit inside a Divi Text/Code module.
+   Fonts are inherited from the theme (BC Sans via Divi). */
+
+.kcs {
+	--kcs-bg: transparent;
+	--kcs-surface: #fffdf8;
+	--kcs-surface-2: #f1eee5;
+	--kcs-ink: #221f1a;
+	--kcs-ink-soft: #55524a;
+	--kcs-ink-faint: #8b8778;
+	--kcs-line: #ddd7c6;
+	--kcs-accent: #983222;        /* site link/accent red */
+	--kcs-accent-soft: #f3e3df;
+	--kcs-accent2: #4f6b53;       /* orchard green */
+	--kcs-accent2-soft: #e6ebe0;
+	--kcs-gold: #b0842e;
+	--kcs-radius: 10px;
+	--kcs-sticky-top: 0px;        /* set by survey.js when the theme header is fixed */
+
+	color: var(--kcs-ink);
+	line-height: 1.5;
+	max-width: 880px;
+	margin: 0 auto;
+	box-sizing: border-box;
+}
+.kcs *, .kcs *::before, .kcs *::after { box-sizing: inherit; }
+
+.kcs a { color: var(--kcs-accent); }
+
+/* Header */
+.kcs-header { margin-bottom: 28px; }
+.kcs-eyebrow {
+	text-transform: uppercase;
+	letter-spacing: 0.09em;
+	font-size: 12.5px;
+	font-weight: 700;
+	color: var(--kcs-accent2);
+}
+.kcs .kcs-title {
+	font-size: clamp(28px, 4.5vw, 40px);
+	line-height: 1.15;
+	font-weight: 700;
+	margin: 6px 0 0;
+	padding: 0;
+	color: var(--kcs-ink);
+	text-wrap: balance;
+}
+.kcs .kcs-subhead {
+	color: var(--kcs-ink-soft);
+	margin: 10px 0 0;
+	padding: 0;
+	max-width: 62ch;
+	font-size: 16px;
+}
+
+/* Stats */
+.kcs-stats { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
+.kcs-stat {
+	background: var(--kcs-surface);
+	border: 1px solid var(--kcs-line);
+	border-radius: var(--kcs-radius);
+	padding: 10px 14px;
+	min-width: 110px;
+	flex: 1 1 110px;
+}
+.kcs-stat-num {
+	font-size: 24px;
+	font-weight: 700;
+	line-height: 1.2;
+	font-variant-numeric: tabular-nums;
+	color: var(--kcs-accent);
+}
+.kcs-stat-label {
+	font-size: 12px;
+	color: var(--kcs-ink-faint);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	margin-top: 2px;
+}
+
+/* Question list */
+.kcs-questions { margin-top: 30px; border-top: 1px solid var(--kcs-line); padding-top: 18px; }
+.kcs .kcs-questions-title {
+	font-size: 13px;
+	line-height: 1.4;
+	text-transform: uppercase;
+	letter-spacing: 0.07em;
+	color: var(--kcs-ink-faint);
+	font-weight: 700;
+	margin: 0 0 10px;
+	padding: 0;
+}
+.kcs .kcs-qlist { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.kcs .kcs-qitem { list-style: none; display: flex; gap: 10px; align-items: baseline; font-size: 15px; color: var(--kcs-ink-soft); margin: 0; padding: 0; }
+.kcs-qn { color: var(--kcs-accent); font-weight: 700; flex: none; }
+.kcs-qitem .kcs-qn { width: 1.8em; }
+
+/* Toolbar */
+.kcs-toolbar {
+	position: sticky;
+	top: var(--kcs-sticky-top);
+	background: #fff;
+	padding: 16px 0 12px;
+	margin-top: 26px;
+	display: flex;
+	gap: 10px;
+	flex-wrap: wrap;
+	align-items: center;
+	border-bottom: 1px solid var(--kcs-line);
+	z-index: 5;
+}
+.kcs .kcs-search {
+	flex: 1 1 220px;
+	min-width: 0;
+	background: var(--kcs-surface);
+	border: 1px solid var(--kcs-line);
+	border-radius: 8px;
+	padding: 9px 12px;
+	font-size: 15px;
+	color: var(--kcs-ink);
+	font-family: inherit;
+	line-height: 1.3;
+	margin: 0;
+}
+.kcs .kcs-search:focus-visible { outline: 2px solid var(--kcs-accent); outline-offset: 1px; }
+.kcs .kcs-btn {
+	background: var(--kcs-surface);
+	border: 1px solid var(--kcs-line);
+	border-radius: 8px;
+	padding: 9px 13px;
+	font-size: 14px;
+	line-height: 1.3;
+	font-weight: 600;
+	color: var(--kcs-ink-soft);
+	cursor: pointer;
+	font-family: inherit;
+	margin: 0;
+	text-transform: none;
+	letter-spacing: 0;
+}
+.kcs .kcs-btn:hover { border-color: var(--kcs-accent); color: var(--kcs-accent); background: var(--kcs-surface); }
+.kcs .kcs-btn:focus-visible { outline: 2px solid var(--kcs-accent); outline-offset: 1px; }
+.kcs-count { font-size: 13px; color: var(--kcs-ink-faint); white-space: nowrap; }
+
+/* Candidate list */
+.kcs .kcs-candidates { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 8px; }
+.kcs .kcs-item { list-style: none; margin: 0; padding: 0; }
+.kcs .kcs-item::before, .kcs .kcs-qitem::before { content: none; }
+.kcs .kcs-item[hidden] { display: none; }
+.kcs-candidate {
+	background: var(--kcs-surface);
+	border: 1px solid var(--kcs-line);
+	border-radius: var(--kcs-radius);
+	overflow: hidden;
+}
+.kcs .kcs-summary {
+	list-style: none;
+	cursor: pointer;
+	padding: 13px 16px;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	flex-wrap: wrap;
+}
+.kcs .kcs-summary::-webkit-details-marker { display: none; }
+.kcs .kcs-summary::marker { content: ""; }
+.kcs .kcs-summary:focus-visible { outline: 2px solid var(--kcs-accent); outline-offset: -2px; }
+
+.kcs-chev { flex: none; width: 18px; height: 18px; color: var(--kcs-ink-faint); transition: transform 0.15s ease; }
+.kcs-candidate[open] .kcs-chev { transform: rotate(90deg); color: var(--kcs-accent); }
+
+.kcs-dot { flex: none; width: 9px; height: 9px; border-radius: 50%; background: var(--kcs-line); }
+.kcs-dot.is-filled { background: var(--kcs-accent2); }
+
+.kcs-name { font-size: 17px; font-weight: 700; color: var(--kcs-ink); flex: 1 1 auto; }
+.kcs-party { font-size: 13px; color: var(--kcs-ink-faint); }
+.kcs-status-tag {
+	font-size: 11px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: var(--kcs-gold);
+	background: color-mix(in srgb, var(--kcs-gold) 16%, transparent);
+	border-radius: 5px;
+	padding: 2px 6px;
+}
+
+.kcs-body { padding: 14px 16px 18px; border-top: 1px solid var(--kcs-line); display: grid; gap: 16px; }
+.kcs .kcs-note { margin: 0; padding: 0; font-size: 14px; color: var(--kcs-ink-faint); font-style: italic; }
+
+.kcs-qa { display: grid; gap: 6px; }
+.kcs-q { font-size: 14px; font-weight: 600; color: var(--kcs-ink-soft); }
+.kcs-q .kcs-qn { margin-right: 6px; }
+
+.kcs-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	background: var(--kcs-accent2-soft);
+	color: var(--kcs-accent2);
+	border-radius: 999px;
+	padding: 4px 12px;
+	font-size: 14px;
+	line-height: 1.3;
+	font-weight: 600;
+	width: fit-content;
+}
+.kcs-chip.is-empty { background: var(--kcs-surface-2); color: var(--kcs-ink-faint); font-weight: 500; font-style: italic; }
+
+.kcs-followup {
+	font-size: 14.5px;
+	color: var(--kcs-ink-soft);
+	background: var(--kcs-surface-2);
+	border-radius: 8px;
+	padding: 10px 12px;
+	margin-top: 2px;
+	line-height: 1.55;
+}
+.kcs-followup.is-empty { color: var(--kcs-ink-faint); font-style: italic; }
+.kcs .kcs-followup p { margin: 0 0 0.7em; padding: 0; line-height: 1.55; }
+.kcs .kcs-followup p:last-child { margin-bottom: 0; }
+.kcs-fq {
+	display: block;
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	color: var(--kcs-ink-faint);
+	font-style: normal;
+	font-weight: 700;
+	margin-bottom: 4px;
+}
+
+.kcs .kcs-empty { text-align: center; color: var(--kcs-ink-faint); padding: 40px 12px; font-size: 15px; margin: 0; }
+.kcs .kcs-empty[hidden] { display: none; }
+
+.kcs-footer {
+	margin-top: 40px;
+	padding-top: 16px;
+	border-top: 1px solid var(--kcs-line);
+	font-size: 13px;
+	color: var(--kcs-ink-faint);
+}
+
+@media (max-width: 480px) {
+	.kcs-stats { gap: 8px; }
+	.kcs-stat { min-width: 90px; padding: 9px 11px; }
+	.kcs-count { flex-basis: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.kcs-chev { transition: none; }
+}
