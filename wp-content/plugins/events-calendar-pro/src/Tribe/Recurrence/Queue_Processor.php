@@ -297,8 +297,11 @@ class Tribe__Events__Pro__Recurrence__Queue_Processor {
 			$instance        = new Tribe__Events__Pro__Recurrence__Instance( $this->current_event_id, $date_duration, 0, $sequence_number );
 
 			if ( ! $instance->already_exists() ) {
-				$instance_post_id             = $instance->save();
-				$created[ $instance_post_id ] = get_post_meta( $instance_post_id, '_EventStartDate', true );
+				$instance_post_id = $instance->save();
+
+				if ( $instance_post_id ) {
+					$created[ $instance_post_id ] = get_post_meta( $instance_post_id, '_EventStartDate', true );
+				}
 			}
 
 			unset( $instances_to_create[ $date_duration['original_index'] ] );

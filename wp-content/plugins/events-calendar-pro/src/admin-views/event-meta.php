@@ -37,6 +37,8 @@ $events_label_singular = tribe_get_event_label_singular();
 								</label></div>
 						<?php endforeach ?>
 					<?php elseif ( 'checkbox' === $customField['type'] ): ?>
+						<?php /* With every box unchecked the group submits nothing, which the save routine cannot tell apart from a request that never carried the field. The `[]` suffix keeps this entry part of the same array whatever order the inputs appear in. */ ?>
+						<input type="hidden" name="<?php echo esc_attr( $customField['name'] ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase -- Reuses this template's own loop variable. ?>[]" value="" />
 						<?php foreach ( $options as $option ): ?>
 							<?php $values = explode( '|', $val ); ?>
 							<div>

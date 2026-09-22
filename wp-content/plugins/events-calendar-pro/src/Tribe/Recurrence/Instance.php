@@ -46,6 +46,8 @@ class Tribe__Events__Pro__Recurrence__Instance {
 	/**
 	 * Saves the recurrence instance and returns its post ID.
 	 *
+	 * @since 7.8.3 Returns 0 without writing meta when the instance could not be inserted.
+	 *
 	 * @return int|\WP_Error
 	 */
 	public function save() {
@@ -93,6 +95,26 @@ class Tribe__Events__Pro__Recurrence__Instance {
 			$post_to_save['guid'] = esc_url( add_query_arg( $query_args, $parent->guid ) );
 
 			$this->post_id = wp_insert_post( $post_to_save );
+
+			if ( is_wp_error( $this->post_id ) || ! $this->post_id ) {
+				do_action(
+					'tribe_log',
+					'error',
+					'Failed to insert a recurring event instance.',
+					[
+						'source'     => __CLASS__,
+						'slug'       => 'recurring-event-instance-insert-fail',
+						'error'      => is_wp_error( $this->post_id ) ? $this->post_id->get_error_message() : '',
+						'parent_id'  => $this->parent_id,
+						'start_date' => $this->db_formatted_start_date(),
+					]
+				);
+
+				// Callers index their results by this value, so a failure has to come back ID-shaped.
+				$this->post_id = 0;
+
+				return $this->post_id;
+			}
 
 			// save several queries by calling add_post_meta when we have a new post
 			add_post_meta( $this->post_id, '_EventStartDate', $this->db_formatted_start_date() );

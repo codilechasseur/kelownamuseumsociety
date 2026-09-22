@@ -1472,6 +1472,8 @@ class Tribe__Events__Pro__Recurrence__Meta {
 	 * @TODO: there's a great deal of duplication between this method and tribe_events_pro_admin.recurrence.update_rule_recurrence_text (events-recurrence.js)
 	 *        let's consider generating once (by JS?) and saving the result for re-use instead
 	 *
+	 * @since 7.8.3 Yearly rules with no months selected no longer end the request.
+	 *
 	 * @param array  $rule
 	 * @param string $start_date
 	 * @param int    $event_id
@@ -1605,6 +1607,8 @@ class Tribe__Events__Pro__Recurrence__Meta {
 				$month_day_description = '??????';
 			}
 		} elseif ( 'yearly' === $type ) {
+			$months = [];
+
 			// Select saves on a single field, and we have to explode it into an array for manipulation
 			if ( isset( $rule['custom']['year']['month'] ) ) {
 
