@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'KCS_VERSION', '1.0.0' );
+define( 'KCS_VERSION', '1.0.1' );
 define( 'KCS_DIR', __DIR__ );
 define( 'KCS_URL', content_url( 'mu-plugins/kms-candidate-survey' ) );
 define( 'KCS_POST_TYPE', 'kms_candidate' );
