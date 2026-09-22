@@ -4,8 +4,9 @@
  *
  * Stored in a single option (KCS_OPTION):
  *   eyebrow, heading, intro, footer_note   strings
+ *   style                                  plain | warm | warm-dark  (see kcs_style_options)
  *   question_count                         int, 1..KCS_MAX_QUESTIONS
- *   questions                              [ 1 => [ prompt, choices (newline list), followup ], ... ]
+ *   questions                              [ 1 => [ prompt (limited HTML), choices (newline list), followup ], ... ]
  *
  * Questions are keyed by a stable slot number (1..N). Candidate answers are stored
  * against the same slot number, so editing a question's wording never orphans answers.
@@ -25,9 +26,29 @@ function kcs_default_settings() {
 		'heading'        => 'Where City Council Candidates Stand on Arts & Culture',
 		'intro'          => 'Ahead of the 2026 civic election, every candidate for Kelowna City Council was asked four questions about supporting arts, culture and heritage in the city. Responses are listed below by candidate — expand a name to read their full answers.',
 		'footer_note'    => 'Compiled by Culture Vote Kelowna. Survey responses are presented as submitted by each candidate or their campaign.',
+		'style'          => 'plain',
 		'question_count' => 4,
 		'questions'      => array(),
 	);
+}
+
+/**
+ * Public page styles (value => label).
+ */
+function kcs_style_options() {
+	return array(
+		'plain'     => 'Plain (default) — white page, neutral sans-serif, ruled lists',
+		'warm'      => 'Warm — cream page, serif headings, rounded cards',
+		'warm-dark' => 'Warm dark — the warm style on a dark background',
+	);
+}
+
+/**
+ * The active page style key.
+ */
+function kcs_get_style() {
+	$settings = kcs_get_settings();
+	return array_key_exists( $settings['style'], kcs_style_options() ) ? $settings['style'] : 'plain';
 }
 
 /**
@@ -64,8 +85,8 @@ function kcs_get_questions() {
 			? $settings['questions'][ $slot ]
 			: array();
 
-		$prompt = isset( $raw['prompt'] ) ? trim( (string) $raw['prompt'] ) : '';
-		if ( '' === $prompt ) {
+		$prompt = isset( $raw['prompt'] ) ? kcs_sanitize_prompt( $raw['prompt'] ) : '';
+		if ( kcs_prompt_is_empty( $prompt ) ) {
 			continue;
 		}
 
@@ -96,6 +117,50 @@ function kcs_parse_choices( $text ) {
 }
 
 /**
+ * HTML allowed in a question prompt (matches the limited editor toolbar).
+ */
+function kcs_prompt_allowed_html() {
+	return array(
+		'p'      => array(),
+		'br'     => array(),
+		'strong' => array(),
+		'b'      => array(),
+		'em'     => array(),
+		'i'      => array(),
+		'u'      => array(),
+		'a'      => array(
+			'href'   => true,
+			'title'  => true,
+			'target' => true,
+			'rel'    => true,
+		),
+	);
+}
+
+/**
+ * Sanitize a question prompt: keep only the allowed inline HTML, drop empty paragraphs.
+ */
+function kcs_sanitize_prompt( $html ) {
+	$html = wp_kses( (string) $html, kcs_prompt_allowed_html() );
+	$html = preg_replace( '#<p>(\s|&nbsp;|<br\s*/?>)*</p>#i', '', $html );
+	return trim( $html );
+}
+
+/**
+ * Prompt HTML for display (safe; already sanitised on save, filtered again on output).
+ */
+function kcs_prompt_html( $html ) {
+	return wp_kses( (string) $html, kcs_prompt_allowed_html() );
+}
+
+/**
+ * Does the prompt contain any visible text?
+ */
+function kcs_prompt_is_empty( $html ) {
+	return '' === trim( wp_strip_all_tags( str_replace( '&nbsp;', ' ', (string) $html ) ) );
+}
+
+/**
  * Sanitize the whole option on save.
  */
 function kcs_sanitize_settings( $input ) {
@@ -109,6 +174,11 @@ function kcs_sanitize_settings( $input ) {
 		$clean[ $key ] = isset( $input[ $key ] ) ? sanitize_textarea_field( wp_unslash( $input[ $key ] ) ) : '';
 	}
 
+	$clean['style'] = isset( $input['style'] ) ? sanitize_key( wp_unslash( $input['style'] ) ) : 'plain';
+	if ( ! array_key_exists( $clean['style'], kcs_style_options() ) ) {
+		$clean['style'] = 'plain';
+	}
+
 	$clean['question_count'] = isset( $input['question_count'] ) ? (int) $input['question_count'] : 4;
 	$clean['question_count'] = max( 1, min( KCS_MAX_QUESTIONS, $clean['question_count'] ) );
 
@@ -118,7 +188,7 @@ function kcs_sanitize_settings( $input ) {
 		$q = isset( $raw_questions[ $slot ] ) && is_array( $raw_questions[ $slot ] ) ? $raw_questions[ $slot ] : array();
 
 		$clean['questions'][ $slot ] = array(
-			'prompt'   => isset( $q['prompt'] ) ? sanitize_textarea_field( wp_unslash( $q['prompt'] ) ) : '',
+			'prompt'   => isset( $q['prompt'] ) ? kcs_sanitize_prompt( wp_unslash( $q['prompt'] ) ) : '',
 			'choices'  => isset( $q['choices'] ) ? implode( "\n", kcs_parse_choices( wp_unslash( $q['choices'] ) ) ) : '',
 			'followup' => isset( $q['followup'] ) ? sanitize_text_field( wp_unslash( $q['followup'] ) ) : '',
 		);
@@ -197,6 +267,21 @@ function kcs_render_settings_page() {
 				</tr>
 			</table>
 
+			<h2>Appearance</h2>
+			<table class="form-table" role="presentation">
+				<tr>
+					<th scope="row"><label for="kcs-style">Page style</label></th>
+					<td>
+						<select id="kcs-style" name="<?php echo esc_attr( $opt ); ?>[style]">
+							<?php foreach ( kcs_style_options() as $value => $label ) : ?>
+								<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $settings['style'], $value ); ?>><?php echo esc_html( $label ); ?></option>
+							<?php endforeach; ?>
+						</select>
+						<p class="description">Applies wherever the shortcode is shown. The warm styles load their own fonts (Fraunces and Source Sans 3).</p>
+					</td>
+				</tr>
+			</table>
+
 			<h2>Questions</h2>
 			<table class="form-table" role="presentation">
 				<tr>
@@ -218,9 +303,32 @@ function kcs_render_settings_page() {
 					<legend><strong>Question <?php echo (int) $slot; ?></strong></legend>
 					<table class="form-table" role="presentation">
 						<tr>
-							<th scope="row"><label for="kcs-q<?php echo (int) $slot; ?>-prompt">Question</label></th>
-							<td><textarea id="kcs-q<?php echo (int) $slot; ?>-prompt" class="large-text" rows="2" name="<?php echo esc_attr( $base ); ?>[prompt]"><?php echo esc_textarea( $q['prompt'] ); ?></textarea>
-							<p class="description">Leave blank to skip this question on the public page.</p></td>
+							<th scope="row"><label for="kcs_q<?php echo (int) $slot; ?>_prompt">Question</label></th>
+							<td>
+							<?php
+							wp_editor(
+								$q['prompt'],
+								'kcs_q' . $slot . '_prompt',
+								array(
+									'textarea_name' => $base . '[prompt]',
+									'textarea_rows' => 3,
+									'media_buttons' => false,
+									'wpautop'       => false,
+									'teeny'         => true,
+									'quicktags'     => array( 'buttons' => 'strong,em,link' ),
+									'tinymce'       => array(
+										'toolbar1'       => 'bold,italic,link,unlink,undo,redo',
+										'toolbar2'       => '',
+										'wpautop'        => false,
+										'paste_as_text'  => true,
+										'valid_elements' => 'p,br,strong/b,em/i,u,a[href|title|target|rel]',
+										'forced_root_block' => 'p',
+									),
+								)
+							);
+							?>
+							<p class="description">Bold, italics, links and line breaks are kept; any other HTML is removed. Leave blank to skip this question on the public page.</p>
+							</td>
 						</tr>
 						<tr>
 							<th scope="row"><label for="kcs-q<?php echo (int) $slot; ?>-choices">Answer options</label></th>
@@ -245,10 +353,24 @@ function kcs_render_settings_page() {
 		var count = document.getElementById('kcs-question-count');
 		var rows = document.querySelectorAll('#kcs-questions .kcs-question');
 		if (!count) return;
+		function reinitEditor(row) {
+			// TinyMCE sizes itself on init; an editor initialised inside a hidden row
+			// comes up collapsed, so re-create it once the row is visible.
+			if (!window.tinymce || !window.tinyMCEPreInit) return;
+			row.querySelectorAll('textarea.wp-editor-area').forEach(function (ta) {
+				var id = ta.id, settings = tinyMCEPreInit.mceInit[id], ed = tinymce.get(id);
+				if (!settings || !ed || !ed.isHidden || ed.isHidden()) return;
+				if (ed.getContainer() && ed.getContainer().offsetHeight > 0) return;
+				ed.remove();
+				tinymce.init(settings);
+			});
+		}
 		function sync() {
 			var n = parseInt(count.value, 10) || 1;
 			rows.forEach(function (row) {
+				var wasHidden = row.hidden;
 				row.hidden = parseInt(row.getAttribute('data-slot'), 10) > n;
+				if (wasHidden && !row.hidden) reinitEditor(row);
 			});
 		}
 		count.addEventListener('input', sync);

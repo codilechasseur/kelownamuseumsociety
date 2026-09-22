@@ -29,3 +29,7 @@
 }
 .kcs-badge--yes { background: #e6ebe0; color: #3f5a43; }
 .kcs-badge--declined { background: #f3e3df; color: #8a2f21; }
+
+/* Question prompt HTML inside the meta box legend. */
+.kcs-meta-question legend p { display: inline; margin: 0; }
+.kcs-settings .kcs-question .wp-editor-wrap { max-width: 100%; }

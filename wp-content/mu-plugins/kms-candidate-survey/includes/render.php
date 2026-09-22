@@ -25,6 +25,13 @@ add_action( 'init', function () {
  */
 add_action( 'wp_enqueue_scripts', function () {
 	wp_register_style( 'kcs-survey', KCS_URL . '/assets/survey.css', array(), KCS_VERSION );
+	wp_register_style(
+		'kcs-fonts-warm',
+		'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600;700&display=swap',
+		array(),
+		null
+	);
+	wp_register_style( 'kcs-theme-warm', KCS_URL . '/assets/theme-warm.css', array( 'kcs-survey', 'kcs-fonts-warm' ), KCS_VERSION );
 	wp_register_script( 'kcs-survey', KCS_URL . '/assets/survey.js', array(), KCS_VERSION, true );
 
 	$post = get_post();
@@ -35,7 +42,24 @@ add_action( 'wp_enqueue_scripts', function () {
 
 function kcs_enqueue_assets() {
 	wp_enqueue_style( 'kcs-survey' );
+	if ( 'plain' !== kcs_get_style() ) {
+		wp_enqueue_style( 'kcs-theme-warm' );
+	}
 	wp_enqueue_script( 'kcs-survey' );
+}
+
+/**
+ * Classes for the .kcs root that select the page style.
+ */
+function kcs_style_classes() {
+	switch ( kcs_get_style() ) {
+		case 'warm':
+			return 'kcs-theme-warm';
+		case 'warm-dark':
+			return 'kcs-theme-warm kcs-dark';
+		default:
+			return 'kcs-theme-plain';
+	}
 }
 
 /**
@@ -141,7 +165,7 @@ function kcs_shortcode( $atts ) {
 
 	ob_start();
 	?>
-	<div class="kcs" id="<?php echo esc_attr( $id ); ?>">
+	<div class="kcs <?php echo esc_attr( kcs_style_classes() ); ?>" id="<?php echo esc_attr( $id ); ?>">
 
 		<?php if ( $yes( $atts['header'] ) ) : ?>
 		<header class="kcs-header">
@@ -170,7 +194,7 @@ function kcs_shortcode( $atts ) {
 			<h2 class="kcs-questions-title" id="<?php echo esc_attr( $id ); ?>-qh">The Questions</h2>
 			<ol class="kcs-qlist">
 				<?php foreach ( $questions as $slot => $q ) : ?>
-					<li class="kcs-qitem"><span class="kcs-qn">Q<?php echo (int) $slot; ?></span><span><?php echo esc_html( $q['prompt'] ); ?></span></li>
+					<li class="kcs-qitem"><span class="kcs-qn">Q<?php echo (int) $slot; ?></span><div class="kcs-qtext"><?php echo kcs_prompt_html( $q['prompt'] ); ?></div></li>
 				<?php endforeach; ?>
 			</ol>
 		</section>
@@ -197,15 +221,11 @@ function kcs_shortcode( $atts ) {
 					<details class="kcs-candidate" id="<?php echo esc_attr( $id . '-c' . $c['id'] ); ?>">
 						<summary class="kcs-summary">
 							<svg class="kcs-chev" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false"><path d="M7 4l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-							<span class="kcs-dot<?php echo $responded_flag ? ' is-filled' : ''; ?>" title="<?php echo esc_attr( $statuses[ $c['status'] ] ); ?>"></span>
 							<span class="kcs-name"><?php echo esc_html( $c['name'] ); ?></span>
 							<?php if ( '' !== $c['party'] ) : ?>
 								<span class="kcs-party"><?php echo esc_html( $c['party'] ); ?></span>
 							<?php endif; ?>
-							<?php if ( 'declined' === $c['status'] ) : ?>
-								<span class="kcs-status-tag">Declined</span>
-							<?php endif; ?>
-							<span class="screen-reader-text"><?php echo esc_html( $statuses[ $c['status'] ] ); ?></span>
+							<span class="kcs-status<?php echo $responded_flag ? ' is-responded' : ''; ?>"><?php echo esc_html( $statuses[ $c['status'] ] ); ?></span>
 						</summary>
 
 						<div class="kcs-body">
@@ -219,11 +239,11 @@ function kcs_shortcode( $atts ) {
 								$a = $c['answers'][ $slot ];
 								?>
 								<div class="kcs-qa">
-									<div class="kcs-q"><span class="kcs-qn">Q<?php echo (int) $slot; ?></span><?php echo esc_html( $q['prompt'] ); ?></div>
+									<div class="kcs-q"><span class="kcs-qn">Q<?php echo (int) $slot; ?></span><div class="kcs-qtext"><?php echo kcs_prompt_html( $q['prompt'] ); ?></div></div>
 									<?php if ( '' !== $a['choice'] ) : ?>
-										<span class="kcs-chip"><?php echo esc_html( $a['choice'] ); ?></span>
+										<span class="kcs-answer"><?php echo esc_html( $a['choice'] ); ?></span>
 									<?php else : ?>
-										<span class="kcs-chip is-empty">No response on file</span>
+										<span class="kcs-answer is-empty">No response on file</span>
 									<?php endif; ?>
 									<div class="kcs-followup<?php echo '' === $a['written'] ? ' is-empty' : ''; ?>">
 										<?php if ( '' !== $q['followup'] ) : ?>
