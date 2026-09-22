@@ -189,10 +189,10 @@
 
 /* Answer block: same size and family throughout, a short grey label per row. */
 .kcs-a { margin-left: calc(2em + 14px); display: grid; gap: 4px; font-size: 15px; line-height: 1.5; }
-.kcs-row { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
-.kcs-row--written { flex-direction: column; gap: 2px; }
+.kcs-row { display: flex; gap: 6px; align-items: baseline; flex-wrap: wrap; }
+.kcs-row--written { flex-direction: column; gap: 0.6em; }
 .kcs-label { color: var(--kcs-ink-3); flex: none; }
-.kcs-answer { color: var(--kcs-ink); font-weight: 600; }
+.kcs-answer { color: var(--kcs-ink); font-weight: 400; }
 .kcs-answer.is-empty { color: var(--kcs-ink-3); font-weight: 400; }
 .kcs-written { color: var(--kcs-ink); }
 .kcs-written.is-empty { color: var(--kcs-ink-3); }

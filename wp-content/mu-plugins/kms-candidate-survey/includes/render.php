@@ -242,7 +242,7 @@ function kcs_shortcode( $atts ) {
 									<div class="kcs-q"><span class="kcs-qn">Q<?php echo (int) $slot; ?></span><div class="kcs-qtext"><?php echo kcs_prompt_html( $q['prompt'] ); ?></div></div>
 									<div class="kcs-a">
 										<div class="kcs-row">
-											<span class="kcs-label">Answer</span>
+											<span class="kcs-label">Answer:</span>
 											<?php if ( '' !== $a['choice'] ) : ?>
 												<span class="kcs-answer"><?php echo esc_html( $a['choice'] ); ?></span>
 											<?php else : ?>
