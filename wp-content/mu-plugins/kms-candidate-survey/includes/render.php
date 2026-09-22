@@ -240,20 +240,23 @@ function kcs_shortcode( $atts ) {
 								?>
 								<div class="kcs-qa">
 									<div class="kcs-q"><span class="kcs-qn">Q<?php echo (int) $slot; ?></span><div class="kcs-qtext"><?php echo kcs_prompt_html( $q['prompt'] ); ?></div></div>
-									<?php if ( '' !== $a['choice'] ) : ?>
-										<span class="kcs-answer"><?php echo esc_html( $a['choice'] ); ?></span>
-									<?php else : ?>
-										<span class="kcs-answer is-empty">No response on file</span>
-									<?php endif; ?>
-									<div class="kcs-followup<?php echo '' === $a['written'] ? ' is-empty' : ''; ?>">
-										<?php if ( '' !== $q['followup'] ) : ?>
-											<span class="kcs-fq"><?php echo esc_html( $q['followup'] ); ?></span>
-										<?php endif; ?>
-										<?php if ( '' !== $a['written'] ) : ?>
-											<?php echo wpautop( esc_html( $a['written'] ) ); ?>
-										<?php else : ?>
-											No written response provided.
-										<?php endif; ?>
+									<div class="kcs-a">
+										<div class="kcs-row">
+											<span class="kcs-label">Answer</span>
+											<?php if ( '' !== $a['choice'] ) : ?>
+												<span class="kcs-answer"><?php echo esc_html( $a['choice'] ); ?></span>
+											<?php else : ?>
+												<span class="kcs-answer is-empty">No answer given</span>
+											<?php endif; ?>
+										</div>
+										<div class="kcs-row kcs-row--written">
+											<span class="kcs-label"><?php echo '' !== $q['followup'] ? esc_html( $q['followup'] ) : 'Written response'; ?></span>
+											<?php if ( '' !== $a['written'] ) : ?>
+												<div class="kcs-written"><?php echo wpautop( esc_html( $a['written'] ) ); ?></div>
+											<?php else : ?>
+												<div class="kcs-written is-empty">None provided</div>
+											<?php endif; ?>
+										</div>
 									</div>
 								</div>
 							<?php endforeach; ?>

@@ -183,29 +183,21 @@
 .kcs-body { padding: 4px 4px 24px 30px; display: grid; gap: 22px; }
 .kcs .kcs-note { margin: 0; padding: 0; font-size: 15px; color: var(--kcs-ink-2); }
 
-.kcs-qa { display: grid; gap: 8px; }
+.kcs-qa { display: grid; gap: 6px; }
 .kcs-q { display: flex; gap: 14px; align-items: baseline; font-size: 15px; font-weight: 600; color: var(--kcs-ink); }
 .kcs-q .kcs-qn { width: 2em; }
 
-/* Answer: plain text with a square marker, no pill */
-.kcs-answer { font-size: 15px; font-weight: 600; color: var(--kcs-ink); margin-left: calc(2em + 14px); }
-.kcs-answer::before { content: ""; display: inline-block; width: 9px; height: 9px; background: var(--kcs-yes); margin-right: 8px; }
+/* Answer block: same size and family throughout, a short grey label per row. */
+.kcs-a { margin-left: calc(2em + 14px); display: grid; gap: 4px; font-size: 15px; line-height: 1.5; }
+.kcs-row { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.kcs-row--written { flex-direction: column; gap: 2px; }
+.kcs-label { color: var(--kcs-ink-3); flex: none; }
+.kcs-answer { color: var(--kcs-ink); font-weight: 600; }
 .kcs-answer.is-empty { color: var(--kcs-ink-3); font-weight: 400; }
-.kcs-answer.is-empty::before { background: transparent; border: 1px solid var(--kcs-ink-3); }
-
-/* Written response: quote rule, no box */
-.kcs-followup {
-	font-size: 15px;
-	color: var(--kcs-ink-2);
-	margin: 2px 0 0 calc(2em + 14px);
-	padding: 2px 0 2px 14px;
-	border-left: 2px solid var(--kcs-rule);
-	line-height: 1.55;
-}
-.kcs-followup.is-empty { color: var(--kcs-ink-3); }
-.kcs .kcs-followup p { margin: 0 0 0.7em; padding: 0; line-height: 1.55; }
-.kcs .kcs-followup p:last-child { margin-bottom: 0; }
-.kcs-fq { display: block; font-size: 13px; color: var(--kcs-ink-3); margin-bottom: 4px; }
+.kcs-written { color: var(--kcs-ink); }
+.kcs-written.is-empty { color: var(--kcs-ink-3); }
+.kcs .kcs-written p { margin: 0 0 0.6em; padding: 0; line-height: inherit; }
+.kcs .kcs-written p:last-child { margin-bottom: 0; }
 
 .kcs .kcs-empty { color: var(--kcs-ink-3); padding: 28px 4px; font-size: 15px; margin: 0; }
 .kcs .kcs-empty[hidden] { display: none; }
@@ -218,7 +210,7 @@
 	.kcs-count { margin-left: auto; }
 	.kcs-status { flex-basis: 100%; margin-left: 26px; }
 	.kcs-body { padding-left: 4px; }
-	.kcs-answer, .kcs-followup { margin-left: 0; }
+	.kcs-a { margin-left: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {

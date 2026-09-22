@@ -138,42 +138,11 @@ body:not(.kcs-standalone) .kcs.kcs-theme-warm:not(.kcs-dark) {
 .kcs-theme-warm .kcs-body { padding: 14px 16px 18px; border-top: 1px solid var(--kcs-rule); gap: 16px; }
 .kcs-theme-warm .kcs-note { font-size: 14px; color: var(--kcs-ink-3); font-style: italic; }
 
-.kcs-theme-warm .kcs-qa { gap: 5px; }
-.kcs-theme-warm .kcs-q { gap: 8px; font-size: 13.5px; color: var(--kcs-ink-2); }
-.kcs-theme-warm .kcs-q .kcs-qn { width: auto; }
-
-/* Answer as a pill */
-.kcs-theme-warm .kcs-answer {
-	display: inline-block;
-	width: fit-content;
-	margin-left: 0;
-	background: var(--kcs-yes-tint);
-	color: var(--kcs-yes);
-	border-radius: 999px;
-	padding: 4px 12px;
-	font-size: 13.5px;
-	font-weight: 600;
-}
-.kcs-theme-warm .kcs-answer::before { content: none; }
-.kcs-theme-warm .kcs-answer.is-empty { background: var(--kcs-surface-2); color: var(--kcs-ink-3); font-weight: 500; font-style: italic; }
-
-/* Written response as a soft box */
-.kcs-theme-warm .kcs-followup {
-	margin: 2px 0 0;
-	padding: 10px 12px;
-	border: 0;
-	border-radius: 8px;
-	background: var(--kcs-surface-2);
-	font-size: 14px;
-}
-.kcs-theme-warm .kcs-followup.is-empty { font-style: italic; }
-.kcs-theme-warm .kcs-fq {
-	font-size: 12px;
-	text-transform: uppercase;
-	letter-spacing: 0.04em;
-	font-weight: 600;
-	font-style: normal;
-}
+.kcs-theme-warm .kcs-q { gap: 10px; font-size: 15px; color: var(--kcs-ink); }
+.kcs-theme-warm .kcs-q .kcs-qn { width: 2em; font-family: inherit; }
+.kcs-theme-warm .kcs-a { margin-left: calc(2em + 10px); font-size: 15px; }
+.kcs-theme-warm .kcs-answer { color: var(--kcs-yes); }
+.kcs-theme-warm .kcs-answer.is-empty { color: var(--kcs-ink-3); }
 
 .kcs-theme-warm .kcs-empty { text-align: center; padding: 40px 12px; }
 .kcs-theme-warm .kcs-footer { margin-top: 40px; padding-top: 16px; font-size: 12.5px; }
