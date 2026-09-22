@@ -1,0 +1,31 @@
+/* KMS Candidate Survey — admin styles */
+.kcs-meta-question,
+.kcs-settings .kcs-question {
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	padding: 4px 16px 12px;
+	margin: 16px 0;
+	background: #fff;
+}
+.kcs-settings .kcs-question[hidden] { display: none; }
+.kcs-meta-question legend,
+.kcs-settings .kcs-question legend {
+	padding: 0 6px;
+	font-size: 14px;
+	line-height: 1.4;
+}
+.kcs-meta .form-table th,
+.kcs-meta-question .form-table th { width: 160px; }
+.kcs-meta-question .form-table,
+.kcs-meta .form-table { margin-top: 0; }
+.kcs-badge {
+	display: inline-block;
+	padding: 1px 8px;
+	border-radius: 999px;
+	background: #f0f0f1;
+	color: #50575e;
+	font-size: 12px;
+	line-height: 1.7;
+}
+.kcs-badge--yes { background: #e6ebe0; color: #3f5a43; }
+.kcs-badge--declined { background: #f3e3df; color: #8a2f21; }
