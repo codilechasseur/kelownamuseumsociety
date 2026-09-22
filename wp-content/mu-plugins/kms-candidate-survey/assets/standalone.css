@@ -1,52 +1,35 @@
 /* KMS Candidate Survey — unbranded page template.
-   Gives the page its own identity (prototype palette + Fraunces / Source Sans 3)
-   instead of inheriting the museum site's fonts and accent colour. */
+   A plain page frame and its own typeface, independent of the museum site. */
 
 html body.kcs-standalone {
 	margin: 0;
 	padding: 0;
-	background: #f3f1ea !important; /* beats Divi's customizer body background */
-	color: #221f1a;
-	font-family: "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
+	background: #fff !important; /* beats Divi's customizer body background */
+	color: #1a1a1a;
+	font-family: "Public Sans", system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
 	font-size: 16px;
 	line-height: 1.5;
 	-webkit-font-smoothing: antialiased;
 }
 
 .kcs-standalone .kcs-page {
-	max-width: 920px;
+	max-width: 800px;
 	margin: 0 auto;
-	padding: 32px 20px 48px;
+	padding: 40px 20px 56px;
 }
 
 /* Anything the editor adds around the shortcode gets sensible defaults. */
-.kcs-standalone .kcs-page > :not(.kcs) { max-width: 880px; margin-left: auto; margin-right: auto; }
+.kcs-standalone .kcs-page > :not(.kcs) { max-width: 760px; margin-left: auto; margin-right: auto; }
 .kcs-standalone .kcs-page p { margin: 0 0 1em; }
 
-.kcs-standalone .kcs {
-	--kcs-surface: #fffdf8;
-	--kcs-surface-2: #ece8db;
-	--kcs-line: #ddd7c6;
-	--kcs-accent: #7a2e3a;        /* wine */
-	--kcs-accent-soft: #f1e2e0;
-	--kcs-accent2: #4f6b53;       /* orchard green */
-	--kcs-accent2-soft: #e6ebe0;
-	--kcs-gold: #b0842e;
+/* Warm styles: prototype fonts and page colours. */
+html body.kcs-standalone--warm,
+html body.kcs-standalone--warm-dark {
+	font-family: "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
-
-.kcs-standalone .kcs .kcs-title,
-.kcs-standalone .kcs .kcs-stat-num,
-.kcs-standalone .kcs .kcs-qn,
-.kcs-standalone .kcs .kcs-name {
-	font-family: "Fraunces", Georgia, "Times New Roman", serif;
-}
-.kcs-standalone .kcs .kcs-title { font-weight: 600; }
-.kcs-standalone .kcs .kcs-stat-num { font-weight: 600; }
-.kcs-standalone .kcs .kcs-name { font-weight: 600; }
-.kcs-standalone .kcs .kcs-qn { font-weight: 600; }
-
-.kcs-standalone .kcs-toolbar { background: #f3f1ea; }
+html body.kcs-standalone--warm { background: #f3f1ea !important; color: #221f1a; }
+html body.kcs-standalone--warm-dark { background: #171511 !important; color: #f1ede3; }
 
 @media (max-width: 480px) {
-	.kcs-standalone .kcs-page { padding: 24px 16px 40px; }
+	.kcs-standalone .kcs-page { padding: 28px 16px 40px; }
 }

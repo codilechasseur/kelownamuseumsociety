@@ -1,0 +1,185 @@
+/* KMS Candidate Survey — "Warm" page style (and its dark variant).
+   Layered over survey.css when Survey Settings > Page style is Warm or Warm dark.
+   Cream page, wine + orchard-green accents, Fraunces headings, rounded cards. */
+
+.kcs.kcs-theme-warm {
+	--kcs-page-bg: #f3f1ea;
+	--kcs-surface: #fffdf8;
+	--kcs-surface-2: #ece8db;
+	--kcs-ink: #221f1a;
+	--kcs-ink-2: #55524a;
+	--kcs-ink-3: #8b8778;
+	--kcs-rule: #ddd7c6;
+	--kcs-rule-strong: #ddd7c6;
+	--kcs-tint: #ece8db;
+	--kcs-accent: #7a2e3a;        /* wine */
+	--kcs-accent-soft: #f1e2e0;
+	--kcs-yes: #4f6b53;           /* orchard green */
+	--kcs-yes-tint: #e6ebe0;
+	--kcs-gold: #b0842e;
+	--kcs-radius: 10px;
+	--kcs-font-heading: "Fraunces", Georgia, "Times New Roman", serif;
+
+	font-family: "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
+	max-width: 880px;
+}
+
+.kcs.kcs-theme-warm.kcs-dark {
+	--kcs-page-bg: #171511;
+	--kcs-surface: #211e1a;
+	--kcs-surface-2: #2a2622;
+	--kcs-ink: #f1ede3;
+	--kcs-ink-2: #c7c1b3;
+	--kcs-ink-3: #8f897a;
+	--kcs-rule: #3a352d;
+	--kcs-rule-strong: #3a352d;
+	--kcs-tint: #2a2622;
+	--kcs-accent: #e39aa4;
+	--kcs-accent-soft: #362227;
+	--kcs-yes: #9dc0a2;
+	--kcs-yes-tint: #22291f;
+	--kcs-gold: #e0b563;
+}
+
+/* On a themed (Divi) page the dark variant needs its own backdrop; the unbranded
+   template colours the whole body instead (see standalone.css). */
+.kcs.kcs-theme-warm.kcs-dark { color: var(--kcs-ink); }
+body:not(.kcs-standalone) .kcs.kcs-theme-warm.kcs-dark {
+	background: var(--kcs-page-bg);
+	padding: 32px 24px;
+	border-radius: var(--kcs-radius);
+}
+body:not(.kcs-standalone) .kcs.kcs-theme-warm:not(.kcs-dark) {
+	background: var(--kcs-page-bg);
+	padding: 32px 24px;
+	border-radius: var(--kcs-radius);
+}
+
+/* Header */
+.kcs-theme-warm .kcs-eyebrow {
+	text-transform: uppercase;
+	letter-spacing: 0.09em;
+	font-size: 12.5px;
+	font-weight: 600;
+	color: var(--kcs-yes);
+	margin-bottom: 6px;
+}
+.kcs-theme-warm .kcs-title { font-weight: 600; letter-spacing: 0; max-width: none; text-wrap: balance; }
+.kcs-theme-warm .kcs-subhead { font-size: 15.5px; margin-top: 10px; max-width: 62ch; }
+
+/* Stats as tiles */
+.kcs-theme-warm .kcs-stats { gap: 10px; margin-top: 22px; padding: 0; border: 0; }
+.kcs-theme-warm .kcs-stat {
+	display: block;
+	background: var(--kcs-surface);
+	border: 1px solid var(--kcs-rule);
+	border-radius: var(--kcs-radius);
+	padding: 10px 14px;
+	min-width: 110px;
+	flex: 1 1 110px;
+}
+.kcs-theme-warm .kcs-stat-num { font-family: var(--kcs-font-heading); font-size: 22px; font-weight: 600; color: var(--kcs-accent); line-height: 1.2; }
+.kcs-theme-warm .kcs-stat-label { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; }
+
+/* Questions */
+.kcs-theme-warm .kcs-questions { margin-top: 30px; border-top: 1px solid var(--kcs-rule); padding-top: 18px; }
+.kcs-theme-warm .kcs-questions-title {
+	font-size: 13px;
+	text-transform: uppercase;
+	letter-spacing: 0.07em;
+	color: var(--kcs-ink-3);
+	border: 0;
+	padding: 0;
+	margin-bottom: 10px;
+}
+.kcs-theme-warm .kcs-qitem { gap: 10px; font-size: 14.5px; color: var(--kcs-ink-2); padding: 4px 0; border: 0; }
+.kcs-theme-warm .kcs-qn { font-family: var(--kcs-font-heading); color: var(--kcs-accent); font-weight: 600; }
+.kcs-theme-warm .kcs-qitem .kcs-qn { width: 1.6em; }
+
+/* Toolbar */
+.kcs-theme-warm .kcs-toolbar { gap: 10px; padding: 16px 0 12px; margin-top: 26px; border-bottom: 1px solid var(--kcs-rule); }
+.kcs-theme-warm .kcs-search {
+	background: var(--kcs-surface);
+	border: 1px solid var(--kcs-rule);
+	border-radius: 8px;
+	padding: 9px 12px;
+	font-size: 14.5px;
+}
+.kcs-theme-warm .kcs-btn {
+	background: var(--kcs-surface);
+	border: 1px solid var(--kcs-rule);
+	border-radius: 8px;
+	padding: 9px 13px;
+	font-size: 13.5px;
+	font-weight: 600;
+	color: var(--kcs-ink-2);
+	text-decoration: none;
+}
+.kcs-theme-warm .kcs-btn:hover { border-color: var(--kcs-accent); color: var(--kcs-accent); background: var(--kcs-surface); }
+.kcs-theme-warm .kcs-count { font-size: 13px; }
+
+/* Candidate cards */
+.kcs-theme-warm .kcs-candidates { display: grid; gap: 8px; margin-top: 14px; }
+.kcs-theme-warm .kcs-item { border: 0; }
+.kcs-theme-warm .kcs-candidate {
+	background: var(--kcs-surface);
+	border: 1px solid var(--kcs-rule);
+	border-radius: var(--kcs-radius);
+	overflow: hidden;
+}
+.kcs-theme-warm .kcs-summary { padding: 13px 16px; }
+.kcs-theme-warm .kcs-summary:hover { background: transparent; }
+.kcs-theme-warm .kcs-chev { width: 18px; height: 18px; }
+.kcs-theme-warm .kcs-candidate[open] .kcs-chev { color: var(--kcs-accent); }
+.kcs-theme-warm .kcs-name { font-family: var(--kcs-font-heading); font-weight: 600; }
+.kcs-theme-warm .kcs-party { font-size: 13px; }
+.kcs-theme-warm .kcs-status { font-size: 12.5px; }
+.kcs-theme-warm .kcs-status.is-responded::before { border-radius: 50%; width: 8px; height: 8px; }
+.kcs-theme-warm .kcs-body { padding: 14px 16px 18px; border-top: 1px solid var(--kcs-rule); gap: 16px; }
+.kcs-theme-warm .kcs-note { font-size: 14px; color: var(--kcs-ink-3); font-style: italic; }
+
+.kcs-theme-warm .kcs-qa { gap: 5px; }
+.kcs-theme-warm .kcs-q { gap: 8px; font-size: 13.5px; color: var(--kcs-ink-2); }
+.kcs-theme-warm .kcs-q .kcs-qn { width: auto; }
+
+/* Answer as a pill */
+.kcs-theme-warm .kcs-answer {
+	display: inline-block;
+	width: fit-content;
+	margin-left: 0;
+	background: var(--kcs-yes-tint);
+	color: var(--kcs-yes);
+	border-radius: 999px;
+	padding: 4px 12px;
+	font-size: 13.5px;
+	font-weight: 600;
+}
+.kcs-theme-warm .kcs-answer::before { content: none; }
+.kcs-theme-warm .kcs-answer.is-empty { background: var(--kcs-surface-2); color: var(--kcs-ink-3); font-weight: 500; font-style: italic; }
+
+/* Written response as a soft box */
+.kcs-theme-warm .kcs-followup {
+	margin: 2px 0 0;
+	padding: 10px 12px;
+	border: 0;
+	border-radius: 8px;
+	background: var(--kcs-surface-2);
+	font-size: 14px;
+}
+.kcs-theme-warm .kcs-followup.is-empty { font-style: italic; }
+.kcs-theme-warm .kcs-fq {
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	font-weight: 600;
+	font-style: normal;
+}
+
+.kcs-theme-warm .kcs-empty { text-align: center; padding: 40px 12px; }
+.kcs-theme-warm .kcs-footer { margin-top: 40px; padding-top: 16px; font-size: 12.5px; }
+
+@media (max-width: 520px) {
+	.kcs-theme-warm .kcs-stats { gap: 8px; }
+	.kcs-theme-warm .kcs-stat { min-width: 90px; padding: 9px 11px; }
+	body:not(.kcs-standalone) .kcs.kcs-theme-warm { padding: 20px 14px; }
+}

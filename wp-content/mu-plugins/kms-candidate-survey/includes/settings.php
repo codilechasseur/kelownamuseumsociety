@@ -4,6 +4,7 @@
  *
  * Stored in a single option (KCS_OPTION):
  *   eyebrow, heading, intro, footer_note   strings
+ *   style                                  plain | warm | warm-dark  (see kcs_style_options)
  *   question_count                         int, 1..KCS_MAX_QUESTIONS
  *   questions                              [ 1 => [ prompt (limited HTML), choices (newline list), followup ], ... ]
  *
@@ -25,9 +26,29 @@ function kcs_default_settings() {
 		'heading'        => 'Where City Council Candidates Stand on Arts & Culture',
 		'intro'          => 'Ahead of the 2026 civic election, every candidate for Kelowna City Council was asked four questions about supporting arts, culture and heritage in the city. Responses are listed below by candidate — expand a name to read their full answers.',
 		'footer_note'    => 'Compiled by Culture Vote Kelowna. Survey responses are presented as submitted by each candidate or their campaign.',
+		'style'          => 'plain',
 		'question_count' => 4,
 		'questions'      => array(),
 	);
+}
+
+/**
+ * Public page styles (value => label).
+ */
+function kcs_style_options() {
+	return array(
+		'plain'     => 'Plain (default) — white page, neutral sans-serif, ruled lists',
+		'warm'      => 'Warm — cream page, serif headings, rounded cards',
+		'warm-dark' => 'Warm dark — the warm style on a dark background',
+	);
+}
+
+/**
+ * The active page style key.
+ */
+function kcs_get_style() {
+	$settings = kcs_get_settings();
+	return array_key_exists( $settings['style'], kcs_style_options() ) ? $settings['style'] : 'plain';
 }
 
 /**
@@ -153,6 +174,11 @@ function kcs_sanitize_settings( $input ) {
 		$clean[ $key ] = isset( $input[ $key ] ) ? sanitize_textarea_field( wp_unslash( $input[ $key ] ) ) : '';
 	}
 
+	$clean['style'] = isset( $input['style'] ) ? sanitize_key( wp_unslash( $input['style'] ) ) : 'plain';
+	if ( ! array_key_exists( $clean['style'], kcs_style_options() ) ) {
+		$clean['style'] = 'plain';
+	}
+
 	$clean['question_count'] = isset( $input['question_count'] ) ? (int) $input['question_count'] : 4;
 	$clean['question_count'] = max( 1, min( KCS_MAX_QUESTIONS, $clean['question_count'] ) );
 
@@ -238,6 +264,21 @@ function kcs_render_settings_page() {
 				<tr>
 					<th scope="row"><label for="kcs-footer">Footer note</label></th>
 					<td><textarea id="kcs-footer" class="large-text" rows="2" name="<?php echo esc_attr( $opt ); ?>[footer_note]"><?php echo esc_textarea( $settings['footer_note'] ); ?></textarea></td>
+				</tr>
+			</table>
+
+			<h2>Appearance</h2>
+			<table class="form-table" role="presentation">
+				<tr>
+					<th scope="row"><label for="kcs-style">Page style</label></th>
+					<td>
+						<select id="kcs-style" name="<?php echo esc_attr( $opt ); ?>[style]">
+							<?php foreach ( kcs_style_options() as $value => $label ) : ?>
+								<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $settings['style'], $value ); ?>><?php echo esc_html( $label ); ?></option>
+							<?php endforeach; ?>
+						</select>
+						<p class="description">Applies wherever the shortcode is shown. The warm styles load their own fonts (Fraunces and Source Sans 3).</p>
+					</td>
 				</tr>
 			</table>
 

@@ -15,9 +15,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function kcs_status_options() {
 	return array(
-		'no_reply'  => 'No reply yet',
+		'no_reply'  => 'No response',
 		'responded' => 'Responded',
-		'declined'  => 'Declined to respond',
+		'declined'  => 'Declined',
 	);
 }
 
