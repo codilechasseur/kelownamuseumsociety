@@ -190,8 +190,14 @@
 .kcs .kcs-note { margin: 0; padding: 0; font-size: 14px; color: var(--kcs-ink-faint); font-style: italic; }
 
 .kcs-qa { display: grid; gap: 6px; }
-.kcs-q { font-size: 14px; font-weight: 600; color: var(--kcs-ink-soft); }
-.kcs-q .kcs-qn { margin-right: 6px; }
+.kcs-q { display: flex; gap: 10px; align-items: baseline; font-size: 14px; font-weight: 600; color: var(--kcs-ink-soft); }
+.kcs-q .kcs-qn { width: 1.8em; }
+
+/* Question text may carry limited HTML (paragraphs, breaks, bold, links). */
+.kcs .kcs-qtext { flex: 1 1 auto; min-width: 0; }
+.kcs .kcs-qtext p { margin: 0 0 0.45em; padding: 0; line-height: inherit; }
+.kcs .kcs-qtext p:last-child { margin-bottom: 0; }
+.kcs .kcs-qtext a { color: var(--kcs-accent); text-decoration: underline; }
 
 .kcs-chip {
 	display: inline-flex;

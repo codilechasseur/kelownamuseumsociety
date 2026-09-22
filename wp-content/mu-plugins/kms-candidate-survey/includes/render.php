@@ -170,7 +170,7 @@ function kcs_shortcode( $atts ) {
 			<h2 class="kcs-questions-title" id="<?php echo esc_attr( $id ); ?>-qh">The Questions</h2>
 			<ol class="kcs-qlist">
 				<?php foreach ( $questions as $slot => $q ) : ?>
-					<li class="kcs-qitem"><span class="kcs-qn">Q<?php echo (int) $slot; ?></span><span><?php echo esc_html( $q['prompt'] ); ?></span></li>
+					<li class="kcs-qitem"><span class="kcs-qn">Q<?php echo (int) $slot; ?></span><div class="kcs-qtext"><?php echo kcs_prompt_html( $q['prompt'] ); ?></div></li>
 				<?php endforeach; ?>
 			</ol>
 		</section>
@@ -219,7 +219,7 @@ function kcs_shortcode( $atts ) {
 								$a = $c['answers'][ $slot ];
 								?>
 								<div class="kcs-qa">
-									<div class="kcs-q"><span class="kcs-qn">Q<?php echo (int) $slot; ?></span><?php echo esc_html( $q['prompt'] ); ?></div>
+									<div class="kcs-q"><span class="kcs-qn">Q<?php echo (int) $slot; ?></span><div class="kcs-qtext"><?php echo kcs_prompt_html( $q['prompt'] ); ?></div></div>
 									<?php if ( '' !== $a['choice'] ) : ?>
 										<span class="kcs-chip"><?php echo esc_html( $a['choice'] ); ?></span>
 									<?php else : ?>

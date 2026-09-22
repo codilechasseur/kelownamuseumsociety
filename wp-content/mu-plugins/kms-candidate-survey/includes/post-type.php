@@ -119,7 +119,7 @@ function kcs_render_meta_box( $post ) {
 		$orphan  = '' !== $choice && ! in_array( $choice, $q['choices'], true );
 		?>
 		<fieldset class="kcs-meta-question">
-			<legend><strong>Q<?php echo (int) $slot; ?>.</strong> <?php echo esc_html( $q['prompt'] ); ?></legend>
+			<legend><strong>Q<?php echo (int) $slot; ?>.</strong> <?php echo kcs_prompt_html( $q['prompt'] ); ?></legend>
 			<table class="form-table" role="presentation">
 				<tr>
 					<th scope="row"><label for="kcs-q<?php echo (int) $slot; ?>-choice">Answer</label></th>
