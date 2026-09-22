@@ -3,7 +3,7 @@
 Contributors: theeventscalendar, borkweb, bordoni, brianjessee, aguseo, camwynsp, GeoffBel, jentheo, leahkoerper, lucatume, neillmcshea, vicskf, zbtirrell, juanfra
 Tags: events, calendar, event, venue, organizer, dates, date, google maps, conference, workshop, concert, meeting, seminar, summit, class, the events calendar, widget, pro
 Donate link: https://evnt.is/29
-Stable tag: 7.8.0
+Stable tag: 7.8.3
 Requires at least: 6.8
 Tested up to: 7.0
 Requires PHP: 7.4
@@ -213,6 +213,22 @@ Previous versions of Events Calendar Pro are not cross-compatible with 6.X add-o
 Remember to always make a backup of your database and files before updating!
 
 == Changelog ==
+
+= [7.8.3] 2026-09-17 =
+
+* Fix - Removed the previously saved values of a checkbox Additional Field when every option is unselected and the event is updated.
+* Fix - Resolved two PHP 8 fatal errors in recurring events: describing a yearly rule with no months selected, and generating a series when an instance could not be inserted.
+* Language - 0 new strings added, 36 updated, 0 fuzzied, and 0 obsoleted.
+
+= [7.8.2] 2026-09-03 =
+
+* Fix - Resolved an issue where selected options in a Checkbox Additional Field appeared unchecked while its block was focused in the block editor.
+* Language - 0 new strings added, 0 updated, 0 fuzzied, and 0 obsoleted.
+
+= [7.8.1] 2026-08-05 =
+
+* Language - 7 new strings added, 1 updated, 0 fuzzied, and 0 obsoleted.
+* Tweak - Switched changelog tooling from jetpack-changelogger to @stellarwp/changelogger.
 
 = [7.8.0] 2026-07-08 =
 

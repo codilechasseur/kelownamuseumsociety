@@ -178,6 +178,8 @@ class Tribe__Events__Pro__Custom_Meta {
 	 * values, such as a checkbox field) an additional set of records will be created
 	 * storing each value in a separate row of the postmeta table.
 	 *
+	 * @since 7.8.3 Multichoice fields submitted without a selection have their stored values removed.
+	 *
 	 * @param $post_id
 	 * @param $data
 	 *
@@ -210,6 +212,25 @@ class Tribe__Events__Pro__Custom_Meta {
 
 			if ( is_string( $value ) && strstr( $value, '|' ) ) {
 				$value = explode( '|', $value );
+			}
+
+			// An empty submission for a multichoice field means no option was selected, not a value of "".
+			if ( self::is_multichoice( $custom_field ) ) {
+				$value = array_filter(
+					is_array( $value ) ? $value : [ $value ],
+					static fn( $item ) => is_scalar( $item ) && '' !== $item
+				);
+
+				/*
+				 * The rows are removed rather than emptied: an ordinary row with no searchable
+				 * counterpart is what Custom_Meta_Tools::find_events_needing_update_for() reads
+				 * as an unmigrated event.
+				 */
+				if ( ! $value ) {
+					delete_post_meta( $post_id, $ordinary_field_name );
+					delete_post_meta( $post_id, $searchable_field_name );
+					continue;
+				}
 			}
 
 			// If multiple values have been assigned (ie, if this is a checkbox field or similar) then

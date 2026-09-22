@@ -70,9 +70,16 @@ class Tribe__Events__Pro__Post_Meta_Copier {
 
 	/**
 	 * Clears possibly-existing meta on the destination post to prevent duplicates and other issues.
+	 *
+	 * @since 7.8.3 Destinations holding no meta of their own no longer end the request.
 	 */
 	private function clear_destination_meta() {
 		$post_meta_keys = get_post_custom_keys( $this->destination_id );
+
+		if ( empty( $post_meta_keys ) ) {
+			return;
+		}
+
 		$block_list     = $this->get_meta_key_block_list();
 		$post_meta_keys = array_diff( $post_meta_keys, $block_list );
 

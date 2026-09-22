@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: The Events Calendar Pro 7.8.0\n"
+"Project-Id-Version: The Events Calendar Pro 7.8.3\n"
 "Report-Msgid-Bugs-To: https://evnt.is/191x\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-07T22:35:02+00:00\n"
+"POT-Creation-Date: 2026-09-17T18:46:26+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: tribe-events-calendar-pro\n"
@@ -141,7 +141,7 @@ msgid "Additional %1$s Fields"
 msgstr ""
 
 #: src/admin-views/event-meta.php:32
-#: src/admin-views/event-meta.php:48
+#: src/admin-views/event-meta.php:50
 #: src/Events_Pro/Site_Health/Info_Section.php:241
 #: src/Events_Pro/Site_Health/Info_Section.php:259
 #: src/Tribe/Recurrence/Engines/Null.php:22
@@ -761,7 +761,7 @@ msgstr ""
 #: src/admin-views/recurrence/years.php:149
 #: src/Events_Pro/Custom_Tables/V1/Editors/Classic/partials/months.php:57
 #: src/Events_Pro/Custom_Tables/V1/Editors/Classic/partials/years.php:123
-#: src/Tribe/Recurrence/Meta.php:1759
+#: src/Tribe/Recurrence/Meta.php:1763
 #: src/modules/data/blocks/recurring/constants.js:71
 msgid "Monday"
 msgstr ""
@@ -771,7 +771,7 @@ msgstr ""
 #: src/admin-views/recurrence/years.php:150
 #: src/Events_Pro/Custom_Tables/V1/Editors/Classic/partials/months.php:58
 #: src/Events_Pro/Custom_Tables/V1/Editors/Classic/partials/years.php:124
-#: src/Tribe/Recurrence/Meta.php:1760
+#: src/Tribe/Recurrence/Meta.php:1764
 #: src/modules/data/blocks/recurring/constants.js:72
 msgid "Tuesday"
 msgstr ""
@@ -781,7 +781,7 @@ msgstr ""
 #: src/admin-views/recurrence/years.php:151
 #: src/Events_Pro/Custom_Tables/V1/Editors/Classic/partials/months.php:59
 #: src/Events_Pro/Custom_Tables/V1/Editors/Classic/partials/years.php:125
-#: src/Tribe/Recurrence/Meta.php:1761
+#: src/Tribe/Recurrence/Meta.php:1765
 #: src/modules/data/blocks/recurring/constants.js:73
 msgid "Wednesday"
 msgstr ""
@@ -791,7 +791,7 @@ msgstr ""
 #: src/admin-views/recurrence/years.php:152
 #: src/Events_Pro/Custom_Tables/V1/Editors/Classic/partials/months.php:60
 #: src/Events_Pro/Custom_Tables/V1/Editors/Classic/partials/years.php:126
-#: src/Tribe/Recurrence/Meta.php:1762
+#: src/Tribe/Recurrence/Meta.php:1766
 #: src/modules/data/blocks/recurring/constants.js:74
 msgid "Thursday"
 msgstr ""
@@ -801,7 +801,7 @@ msgstr ""
 #: src/admin-views/recurrence/years.php:153
 #: src/Events_Pro/Custom_Tables/V1/Editors/Classic/partials/months.php:61
 #: src/Events_Pro/Custom_Tables/V1/Editors/Classic/partials/years.php:127
-#: src/Tribe/Recurrence/Meta.php:1763
+#: src/Tribe/Recurrence/Meta.php:1767
 #: src/modules/data/blocks/recurring/constants.js:75
 msgid "Friday"
 msgstr ""
@@ -811,7 +811,7 @@ msgstr ""
 #: src/admin-views/recurrence/years.php:154
 #: src/Events_Pro/Custom_Tables/V1/Editors/Classic/partials/months.php:62
 #: src/Events_Pro/Custom_Tables/V1/Editors/Classic/partials/years.php:128
-#: src/Tribe/Recurrence/Meta.php:1764
+#: src/Tribe/Recurrence/Meta.php:1768
 #: src/modules/data/blocks/recurring/constants.js:76
 msgid "Saturday"
 msgstr ""
@@ -821,7 +821,7 @@ msgstr ""
 #: src/admin-views/recurrence/years.php:155
 #: src/Events_Pro/Custom_Tables/V1/Editors/Classic/partials/months.php:63
 #: src/Events_Pro/Custom_Tables/V1/Editors/Classic/partials/years.php:129
-#: src/Tribe/Recurrence/Meta.php:1765
+#: src/Tribe/Recurrence/Meta.php:1769
 #: src/modules/data/blocks/recurring/constants.js:70
 msgid "Sunday"
 msgstr ""
@@ -2925,22 +2925,22 @@ msgid ""
 msgstr ""
 
 #: src/Events_Pro/Custom_Tables/V1/Legacy_Compat/Provider.php:256
-#: src/Tribe/Recurrence/Meta.php:1841
+#: src/Tribe/Recurrence/Meta.php:1845
 msgid "Condense events in Series"
 msgstr ""
 
 #: src/Events_Pro/Custom_Tables/V1/Legacy_Compat/Provider.php:257
-#: src/Tribe/Recurrence/Meta.php:1842
+#: src/Tribe/Recurrence/Meta.php:1846
 msgid "Show only the next event in each Series (only affects list-style views)."
 msgstr ""
 
 #: src/Events_Pro/Custom_Tables/V1/Legacy_Compat/Provider.php:260
-#: src/Tribe/Recurrence/Meta.php:1848
+#: src/Tribe/Recurrence/Meta.php:1852
 msgid "Front-end Condense Events Series toggle"
 msgstr ""
 
 #: src/Events_Pro/Custom_Tables/V1/Legacy_Compat/Provider.php:262
-#: src/Tribe/Recurrence/Meta.php:1849
+#: src/Tribe/Recurrence/Meta.php:1853
 msgid "Allow users to limit list-style views to only show the next event in each Series."
 msgstr ""
 
@@ -3244,6 +3244,49 @@ msgstr ""
 #, php-format
 msgctxt "Notice message for the forced deactivation of the Virtual Events plugin after attempting to activate, and the plugin was merged to Events Pro."
 msgid "%1$s could not be activated. The %2$s functionality has been merged into %3$s. %4$sLearn More%5$s."
+msgstr ""
+
+#. translators: 1: The AIOSEO plugin short name.
+#: src/Events_Pro/Integrations/Plugins/AIOSEO/Controller.php:121
+#: src/modules/blocks/additional-fields/elements/settings/template.js:23
+#, php-format,js-format
+msgid "%1$s Settings"
+msgstr ""
+
+#: src/Events_Pro/Integrations/Plugins/AIOSEO/Controller.php:124
+msgid "AIOSEO Settings"
+msgstr ""
+
+#: src/Events_Pro/Integrations/Plugins/AIOSEO/Controller.php:187
+msgid "edit the Series"
+msgstr ""
+
+#. translators: %s: link to edit the Series post.
+#: src/Events_Pro/Integrations/Plugins/AIOSEO/Controller.php:204
+#, php-format
+msgid "You are editing a single occurrence of a recurring event. To manage SEO settings, please %s."
+msgstr ""
+
+#. translators: %s: link to edit the Series post.
+#: src/Events_Pro/Integrations/Plugins/AIOSEO/Controller.php:213
+#, php-format
+msgid "SEO Title — %s to set the SEO title for this event."
+msgstr ""
+
+#. translators: %s: link to edit the Series post.
+#: src/Events_Pro/Integrations/Plugins/AIOSEO/Controller.php:222
+#, php-format
+msgid "Meta Description — %s to set the meta description."
+msgstr ""
+
+#. translators: %s: link to edit the Series post.
+#: src/Events_Pro/Integrations/Plugins/AIOSEO/Controller.php:231
+#, php-format
+msgid "Focus Keyphrase — %s to configure focus keyphrases and SEO analysis."
+msgstr ""
+
+#: src/Events_Pro/Integrations/Plugins/AIOSEO/Controller.php:238
+msgid "Edit Series SEO Settings"
 msgstr ""
 
 #: src/Events_Pro/Integrations/Plugins/Elementor/Widgets/Event_Additional_Fields.php:55
@@ -4173,7 +4216,7 @@ msgid "Remove"
 msgstr ""
 
 #: src/Tribe/Editor/Blocks/Additional_Field.php:164
-#: src/Tribe/Recurrence/Meta.php:1814
+#: src/Tribe/Recurrence/Meta.php:1818
 msgid " and "
 msgstr ""
 
@@ -5629,110 +5672,110 @@ msgctxt "Used when displaying: \"the last Monday\" or \"the last day\""
 msgid "the last %1$s"
 msgstr ""
 
-#: src/Tribe/Recurrence/Meta.php:1690
+#: src/Tribe/Recurrence/Meta.php:1694
 msgctxt "An unspecified end date"
 msgid "an unspecified date"
 msgstr ""
 
-#: src/Tribe/Recurrence/Meta.php:1772
+#: src/Tribe/Recurrence/Meta.php:1776
 msgid ", and"
 msgstr ""
 
-#: src/Tribe/Recurrence/Meta.php:1774
+#: src/Tribe/Recurrence/Meta.php:1778
 #: src/modules/blocks/additional-fields/utils.js:97
 msgid "and"
 msgstr ""
 
-#: src/Tribe/Recurrence/Meta.php:1776
+#: src/Tribe/Recurrence/Meta.php:1780
 msgid ","
 msgstr ""
 
-#: src/Tribe/Recurrence/Meta.php:1794
+#: src/Tribe/Recurrence/Meta.php:1798
 #: src/modules/data/blocks/recurring/constants.js:171
 msgid "January"
 msgstr ""
 
-#: src/Tribe/Recurrence/Meta.php:1795
+#: src/Tribe/Recurrence/Meta.php:1799
 #: src/modules/data/blocks/recurring/constants.js:172
 msgid "February"
 msgstr ""
 
-#: src/Tribe/Recurrence/Meta.php:1796
+#: src/Tribe/Recurrence/Meta.php:1800
 #: src/modules/data/blocks/recurring/constants.js:173
 msgid "March"
 msgstr ""
 
-#: src/Tribe/Recurrence/Meta.php:1797
+#: src/Tribe/Recurrence/Meta.php:1801
 #: src/modules/data/blocks/recurring/constants.js:174
 msgid "April"
 msgstr ""
 
-#: src/Tribe/Recurrence/Meta.php:1798
+#: src/Tribe/Recurrence/Meta.php:1802
 #: src/modules/data/blocks/recurring/constants.js:175
 #: src/modules/data/blocks/recurring/constants.js:188
 msgid "May"
 msgstr ""
 
-#: src/Tribe/Recurrence/Meta.php:1799
+#: src/Tribe/Recurrence/Meta.php:1803
 #: src/modules/data/blocks/recurring/constants.js:176
 msgid "June"
 msgstr ""
 
-#: src/Tribe/Recurrence/Meta.php:1800
+#: src/Tribe/Recurrence/Meta.php:1804
 #: src/modules/data/blocks/recurring/constants.js:177
 msgid "July"
 msgstr ""
 
-#: src/Tribe/Recurrence/Meta.php:1801
+#: src/Tribe/Recurrence/Meta.php:1805
 #: src/modules/data/blocks/recurring/constants.js:178
 msgid "August"
 msgstr ""
 
-#: src/Tribe/Recurrence/Meta.php:1802
+#: src/Tribe/Recurrence/Meta.php:1806
 #: src/modules/data/blocks/recurring/constants.js:179
 msgid "September"
 msgstr ""
 
-#: src/Tribe/Recurrence/Meta.php:1803
+#: src/Tribe/Recurrence/Meta.php:1807
 #: src/modules/data/blocks/recurring/constants.js:180
 msgid "October"
 msgstr ""
 
-#: src/Tribe/Recurrence/Meta.php:1804
+#: src/Tribe/Recurrence/Meta.php:1808
 #: src/modules/data/blocks/recurring/constants.js:181
 msgid "November"
 msgstr ""
 
-#: src/Tribe/Recurrence/Meta.php:1805
+#: src/Tribe/Recurrence/Meta.php:1809
 #: src/modules/data/blocks/recurring/constants.js:182
 msgid "December"
 msgstr ""
 
-#: src/Tribe/Recurrence/Meta.php:1812
+#: src/Tribe/Recurrence/Meta.php:1816
 msgid ", and "
 msgstr ""
 
-#: src/Tribe/Recurrence/Meta.php:1816
+#: src/Tribe/Recurrence/Meta.php:1820
 msgid ", "
 msgstr ""
 
-#: src/Tribe/Recurrence/Meta.php:1857
+#: src/Tribe/Recurrence/Meta.php:1861
 msgid "Create recurring events in advance for"
 msgstr ""
 
-#: src/Tribe/Recurrence/Meta.php:1858
+#: src/Tribe/Recurrence/Meta.php:1862
 msgid "Recurring events will be created this far in advance"
 msgstr ""
 
-#: src/Tribe/Recurrence/Meta.php:1866
+#: src/Tribe/Recurrence/Meta.php:1870
 msgid "Clean up recurring events after"
 msgstr ""
 
-#: src/Tribe/Recurrence/Meta.php:1867
+#: src/Tribe/Recurrence/Meta.php:1871
 msgid "Automatically remove recurring event instances older than this"
 msgstr ""
 
-#: src/Tribe/Recurrence/Meta.php:1885
+#: src/Tribe/Recurrence/Meta.php:1889
 msgid " months"
 msgstr ""
 
@@ -8854,11 +8897,6 @@ msgstr ""
 #: src/modules/blocks/additional-fields/elements/field-container/element.js:32
 #, js-format
 msgid "Add %1$s"
-msgstr ""
-
-#: src/modules/blocks/additional-fields/elements/settings/template.js:23
-#, js-format
-msgid "%1$s Settings"
 msgstr ""
 
 #: src/modules/blocks/additional-fields/elements/settings/template.js:26
