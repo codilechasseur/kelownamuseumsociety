@@ -474,7 +474,7 @@ class ET_AI_App {
 		];
 
 		if ( $DEBUG || $enqueue_prod_scripts || file_exists( $asset_path ) ) {
-			$BUNDLE_URI = ! file_exists( $asset_path ) ? "{$home_url['scheme']}://{$home_url['host']}:31498/et-ai-app.bundle.js" : "{$build_dir_uri}/et-ai-app.bundle.js";
+			$BUNDLE_URI = ! file_exists( $asset_path ) ? "{$home_url['scheme']}://{$home_url['host']}:31500/et-ai-app.bundle.js" : "{$build_dir_uri}/et-ai-app.bundle.js";
 
 			// Skip the React loading if we already have React ( Gutenberg editor for example ) to avoid conflicts.
 			if ( ! $skip_react_loading ) {
