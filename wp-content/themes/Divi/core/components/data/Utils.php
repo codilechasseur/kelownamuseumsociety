@@ -128,10 +128,10 @@ class ET_Core_Data_Utils {
 				$result = (int) $value->int;
 				break;
 			case count( $value->boolean ) > 0:
-				$result = (boolean) $value->boolean;
+				$result = (bool) $value->boolean;
 				break;
 			case count( $value->double ) > 0:
-				$result = (double) $value->double;
+				$result = (float) $value->double;
 				break;
 			default:
 				$result = (string) $value;

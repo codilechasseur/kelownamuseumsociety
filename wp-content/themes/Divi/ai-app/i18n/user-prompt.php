@@ -16,7 +16,7 @@ return array(
 	'Generate Text'                                    => esc_html__( 'Generate Text', 'Divi' ),
 	'Generate Code'                                    => esc_html__( 'Generate Code', 'Divi' ),
 	'Generating'                                       => esc_html__( 'Generating', 'Divi' ),
-	'Generating Images'                                => esc_html__( 'Generating Images', 'Divi' ),
+	'Generating Images'                                => esc_html__( 'Generating Image', 'Divi' ),
 	'Guide Me'                                         => esc_html__( 'Guide Me', 'Divi' ),
 	'Height'                                           => esc_html__( 'Height', 'Divi' ),
 	'Image Description'                                => esc_html__( 'Image Description', 'Divi' ),
@@ -69,7 +69,7 @@ return array(
 		'Lengthen'     => esc_html__( 'Lengthen', 'Divi' ),
 		'Shorten'      => esc_html__( 'Shorten', 'Divi' ),
 		'Simplify'     => esc_html__( 'Simplify', 'Divi' ),
-		'GenerateMore' => esc_html__( 'Generate Four More', 'Divi' ),
+		'GenerateMore' => esc_html__( 'Generate One More', 'Divi' ),
 	],
 	'tones'                                            => [
 		'informative' => esc_html__( 'Informative', 'Divi' ),
@@ -208,7 +208,7 @@ return array(
 	'Purchase Membership'                              => esc_html__( 'Your free Divi AI usage limit has been exceeded. Purchase a Divi AI membership to use Divi AI without any limits!', 'Divi' ),
 	'Upgrade Membership'                               => esc_html__( 'Your Divi AI usage limit has been exceeded. Upgrade Divi AI membership to use Divi AI without any limits!', 'Divi' ),
 	'$serverBusy'                                      => esc_html__( 'Divi AI Server is too busy right now. Please try again in a few minutes.', 'Divi' ),
-	'$finalizeImage'                                   => esc_html__( 'Divi AI is finalizing your images! Please stand by.', 'Divi' ),
+	'$finalizeImage'                                   => esc_html__( 'Divi AI is finalizing your image!', 'Divi' ),
 	'$imagesETAMessage'                                => esc_html__( 'About %s seconds remaining', 'Divi' ),
 
 	'Upload a Reference Image'                         => esc_html__( 'Upload a Reference Image', 'Divi' ),

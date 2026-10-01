@@ -1,3 +1,8 @@
+version 4.27.9 ( updated 09-18-2026 )
+- Updated Divi AI with new image, text, and code generation models.
+- Updated Divi AI image generation to create one image at a time instead of four variations.
+- Fixed Divi Builder page layout being lost after switching to the default editor, clicking Use The Divi Builder, and saving in the WordPress 7.1 block editor (D4 backport of #51765).
+
 version 4.27.8 ( updated 08-19-2026 )
 - Fixed Theme Builder Shop page templates not rendering on the frontend with WooCommerce 11.0.
 - Fixed Divi block editor compatibility with WordPress 7.1's iframed editor canvas, including editor asset loading, content width settings in the sidebar, Placeholder block styling, header buttons when switching between Divi and the default editor, Layout block editor styling with library modal display, and D4 layout block live preview sizing in the editor canvas.
