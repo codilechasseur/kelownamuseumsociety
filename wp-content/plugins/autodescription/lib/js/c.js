@@ -8,7 +8,7 @@
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -85,7 +85,7 @@ window.tsfC = function () {
 	 * Updates character counter.
 	 *
 	 * @since 4.0.0
-	 * @access private
+	 * @access public
 	 *
 	 * @param {Object} test The object to test.
 	 */
@@ -127,6 +127,8 @@ window.tsfC = function () {
 			exclaimer = l10n.i18n.guidelines.short.good;
 		}
 
+		exclaimer = tsf.escapeString( exclaimer );
+
 		switch ( counterType ) {
 			case 3:
 				exclaimer = `${testLength} &ndash; ${exclaimer}`;
@@ -140,7 +142,7 @@ window.tsfC = function () {
 				break;
 		}
 
-		el.innerHTML = exclaimer;
+		el.innerHTML = exclaimer; // escaped as exclaimer pre-write above. testLength is int.
 
 		el.classList.remove( ...Object.values( classes ), ...Object.values( counterClasses ) );
 		el.classList.add( newClass, counterClasses[ counterType ] );
@@ -210,11 +212,9 @@ window.tsfC = function () {
 			guidelineHelper = l10n.i18n.guidelines.long.good;
 		}
 
-		let label = l10n.i18n.pixelsUsed
+		const pixelsUsed = l10n.i18n.pixelsUsed
 			.replace( /%1\$d/g, testWidth )
 			.replace( /%2\$d/g, guidelines.goodUpper );
-
-		label += `<br>${guidelineHelper}`;
 
 		bar.classList.remove( ...Object.values( classes ) );
 
@@ -223,10 +223,13 @@ window.tsfC = function () {
 		bar.querySelector( '.tsf-pixel-counter-fluid' ).style.width = newWidth;
 
 		// Update tooltip and ARIA label.
-		bar.dataset.desc = label;
+		bar.dataset.desc = `${tsf.escapeString( pixelsUsed )}<br>${tsf.escapeString( guidelineHelper )}`;
 		// Replace HTML tags with spaces. TODO see TSF's PHP-code `strip_tags_cs()` for a better solution.
 		// NOTE: Screen readers don't always read out HTML entities as intended. They should fix that, not us, as it's an escaping issue.
-		bar.setAttribute( 'aria-label', tsf.escapeString( label.replace( /(<([^>]+)?>?)/ig, ' ' ) ) );
+		bar.setAttribute(
+			'aria-label',
+			tsf.escapeString( `${pixelsUsed} ${guidelineHelper}`.replace( /(<([^>]+)?>?)/ig, ' ' ) ),
+		);
 
 		tsfTT.triggerUpdate( bar );
 	}
@@ -296,12 +299,23 @@ window.tsfC = function () {
 	 * Resets counter a11y onClick listener.
 	 *
 	 * @since 4.0.0
+	 * @since 5.2.0 1. Now binds to the count link, not the whole counter. Enter activates that link.
+	 *              2. Now stops Enter from bubbling, so post Quick Edit does not save instead.
 	 * @access public
 	 */
 	function resetCounterListener() {
-		return document.querySelectorAll( '.tsf-counter' ).forEach(
-			el => el.addEventListener( 'click', _counterUpdate ),
-		);
+		return document.querySelectorAll( '.tsf-counter .tsf-tooltip-item' ).forEach( el => {
+
+			// Post Quick Edit saves on Enter for the whole cell. Block its propagation on focus.
+			el.addEventListener(
+				'keydown',
+				event => {
+					'Enter' === event.key && event.stopPropagation();
+				},
+			);
+
+			el.addEventListener( 'click', _counterUpdate );
+		} );
 	}
 
 	/**
@@ -311,32 +325,37 @@ window.tsfC = function () {
 	 * @access private
 	 */
 	function _initCounters() {
+
 		// Any edit screen
 		resetCounterListener();
 	}
 
-	return Object.assign( {
-		/**
-		 * Initialises all aspects of the scripts.
-		 * You shouldn't call this.
-		 *
-		 * @since 4.0.0
-		 * @access protected
-		 *
-		 * @function
-		 */
-		load: () => {
-			document.body.addEventListener( 'tsf-onload', _initCounters );
+	return Object.assign(
+		{
+			/**
+			 * Initialises all aspects of the scripts.
+			 * You shouldn't call this.
+			 *
+			 * @since 4.0.0
+			 * @access protected
+			 *
+			 * @function
+			 */
+			load: () => {
+				document.body.addEventListener( 'tsf-onload', _initCounters );
+			},
 		},
-	}, {
-		updatePixelCounter,
-		updateCharacterCounter,
-		triggerCounterUpdate,
-		resetCounterListener,
-		getCounterType,
-	}, {
-		counterClasses,
-		l10n,
-	} );
+		{
+			updatePixelCounter,
+			updateCharacterCounter,
+			triggerCounterUpdate,
+			resetCounterListener,
+			getCounterType,
+		},
+		{
+			counterClasses,
+			l10n,
+		},
+	);
 }();
 window.tsfC.load();

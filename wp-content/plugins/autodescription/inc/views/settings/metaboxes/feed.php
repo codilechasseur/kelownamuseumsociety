@@ -18,7 +18,7 @@ use The_SEO_Framework\Helper\Format\Markdown;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2016 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2016 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -85,8 +85,8 @@ switch ( $instance ) : // Quite useless, but prepared for expansion.
 						\esc_url( \admin_url( 'options-reading.php' ) ),
 					),
 					[ 'a' ],
-					[ 'a_internal' => false ] // open in new window, although it's internal.
-				)
+					[ 'a_internal' => false ], // open in new window, although it's internal.
+				),
 			);
 		}
 

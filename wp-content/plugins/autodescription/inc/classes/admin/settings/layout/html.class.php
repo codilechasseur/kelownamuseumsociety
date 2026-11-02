@@ -12,7 +12,7 @@ use The_SEO_Framework\Data\Filter\Escape;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2021 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2021 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -245,6 +245,7 @@ class HTML {
 	 *
 	 * @since 4.0.0
 	 * @since 4.1.0 No longer adds an extra space in front of the return value when no data is generated.
+	 * @example $data `[ 'postId' => 42 ]`
 	 *
 	 * @param iterable $data {
 	 *     The data attributes.

@@ -8,14 +8,11 @@ namespace The_SEO_Framework;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use The_SEO_Framework\Helper\{
-	Headers,
-	Query,
-};
+use The_SEO_Framework\Helper\Headers;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -51,6 +48,7 @@ if ( Sitemap\Utils::may_output_optimized_sitemap() ) {
 	// It's not a bridge, don't treat it like one: clean me up?
 	\add_filter( 'wp_sitemaps_add_provider', [ Sitemap\WP\Filter::class, 'filter_add_provider' ], 9, 2 );
 	\add_filter( 'wp_sitemaps_max_urls', [ Sitemap\WP\Filter::class, 'filter_max_urls' ], 9 );
+	\add_filter( 'wp_sitemaps_posts_query_args', [ Sitemap\WP\Filter::class, 'filter_posts_query_args' ] );
 	// We miss the proper hooks. https://github.com/sybrew/the-seo-framework/issues/610#issuecomment-1300191500
 	\add_filter( 'wp_sitemaps_posts_query_args', [ Sitemap\WP\Filter::class, 'trick_filter_doing_sitemap' ], 11 );
 }
@@ -59,7 +57,7 @@ if ( Sitemap\Utils::may_output_optimized_sitemap() ) {
 \add_action( 'template_redirect', [ Front\Redirect::class, 'init_meta_setting_redirect' ] );
 
 // Prepares requisite robots headers to avoid low-quality content penalties.
-\add_action( 'do_robots', [ Headers::class, 'output_robots_noindex_headers' ] );
+\add_action( 'do_robots', [ Headers::class, 'output_robots_noindex_headers' ], 9 );
 \add_action( 'the_seo_framework_sitemap_header', [ Headers::class, 'output_robots_noindex_headers' ] );
 
 // Overwrite title tags.
@@ -76,7 +74,7 @@ if ( Data\Plugin::get_option( 'alter_archive_query' ) ) {
 
 		case 'in_query':
 		default:
-			\add_action( 'pre_get_posts', [ Front\Query::class, 'alter_archive_query_in' ], 9999, 1 );
+			\add_action( 'pre_get_posts', [ Front\Query::class, 'alter_archive_query_in' ], 9999 );
 	}
 }
 
@@ -88,7 +86,7 @@ if ( Data\Plugin::get_option( 'alter_search_query' ) ) {
 
 		case 'in_query':
 		default:
-			\add_action( 'pre_get_posts', [ Front\Query::class, 'alter_search_query_in' ], 9999, 1 );
+			\add_action( 'pre_get_posts', [ Front\Query::class, 'alter_search_query_in' ], 9999 );
 	}
 }
 
@@ -105,7 +103,7 @@ if (
 
 	// Only add the feed link to the excerpt if we're only building excerpts.
 	if ( \get_option( 'rss_use_excerpt' ) )
-		\add_filter( 'the_excerpt_rss', [ Front\Feed::class, 'modify_the_content_feed' ], 10, 1 );
+		\add_filter( 'the_excerpt_rss', [ Front\Feed::class, 'modify_the_content_feed' ] );
 }
 
 /**

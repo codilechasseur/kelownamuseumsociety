@@ -17,7 +17,7 @@ use The_SEO_Framework\Data;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -94,9 +94,11 @@ class Post_Type {
 		 */
 		return (bool) \apply_filters(
 			'the_seo_framework_supported_post_type',
-			$post_type
+			(
+				   $post_type
 				&& ! self::is_disabled( $post_type )
-				&& \in_array( $post_type, self::get_all_public(), true ),
+				&& \in_array( $post_type, self::get_all_public(), true )
+			),
 			$post_type,
 		);
 	}
@@ -148,12 +150,16 @@ class Post_Type {
 	public static function supports_taxonomies( $post_type = '' ) {
 
 		// phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition -- I know.
-		if ( null !== $memo = memo( null, $post_type ) ) return $memo;
+		if ( null !== $memo = memo( null, $post_type ) )
+			return $memo;
 
 		$post_type = $post_type ?: Query::get_current_post_type();
 
 		// Return false if no post type if found -- do not memo that, for query call might be too early.
-		return $post_type && memo( (bool) \get_object_taxonomies( $post_type, 'names' ), $post_type );
+		return $post_type && memo(
+			(bool) \get_object_taxonomies( $post_type, 'names' ),
+			$post_type,
+		);
 	}
 
 	/**
@@ -172,7 +178,7 @@ class Post_Type {
 			array_filter(
 				self::get_public_pta(),
 				[ self::class, 'is_pta_supported' ],
-			)
+			),
 		) );
 	}
 
@@ -203,9 +209,9 @@ class Post_Type {
 						array_filter(
 							self::get_all_public(),
 							fn( $post_type ) => \get_post_type_object( $post_type )->has_archive ?? false,
-						)
-					)
-				)
+						),
+					),
+				),
 			);
 	}
 
@@ -223,7 +229,7 @@ class Post_Type {
 			array_filter(
 				self::get_all_public(),
 				[ self::class, 'is_supported' ],
-			)
+			),
 		) );
 	}
 
@@ -251,14 +257,18 @@ class Post_Type {
 				 */
 				(array) \apply_filters(
 					'the_seo_framework_public_post_types',
-					array_values( array_filter(
-						array_unique( array_merge(
-							self::get_all_forced_supported(),
-							// array_keys() because get_post_types() gives a sequential array.
-							array_keys( (array) \get_post_types( [ 'public' => true ] ) ),
-						) ),
-						'is_post_type_viewable',
-					) ),
+					array_values(
+						array_filter(
+							array_unique(
+								array_merge(
+									self::get_all_forced_supported(),
+									// array_keys() because get_post_types() gives a sequential array.
+									array_keys( (array) \get_post_types( [ 'public' => true ] ) ),
+								),
+							),
+							'is_post_type_viewable',
+						),
+					),
 				),
 			);
 	}
@@ -276,9 +286,9 @@ class Post_Type {
 	 */
 	public static function get_all_forced_supported() {
 		/**
-		* @since 3.1.0
-		* @param string[] $forced Forced supported post types.
-		*/
+		 * @since 3.1.0
+		 * @param string[] $forced Forced supported post types.
+		 */
 		return (array) \apply_filters(
 			'the_seo_framework_forced_supported_post_types',
 			array_values( \get_post_types( [
@@ -295,19 +305,20 @@ class Post_Type {
 	 * @since 4.1.0 Now gets hierarchical post types that don't support rewrite, as well.
 	 * @since 5.0.0 1. Moved from `\The_SEO_Framework\Load`.
 	 *              2. Renamed from `get_hierarchical_post_types`.
+	 * @since 5.2.0 Now resets the index keys of the return value.
 	 *
 	 * @return string[] All public hierarchical post types.
 	 */
 	public static function get_all_hierarchical() {
-		return memo() ?? memo(
+		return memo() ?? memo( array_values(
 			\get_post_types(
 				[
 					'hierarchical' => true,
 					'public'       => true,
 				],
 				'names',
-			)
-		);
+			),
+		) );
 	}
 
 	/**
@@ -317,19 +328,20 @@ class Post_Type {
 	 * @since 4.1.0 Now gets non-hierarchical post types that don't support rewrite, as well.
 	 * @since 5.0.0 1. Moved from `\The_SEO_Framework\Load`.
 	 *              2. Renamed from `get_nonhierarchical_post_types`.
+	 * @since 5.2.0 Now resets the index keys of the return value.
 	 *
 	 * @return array The public nonhierarchical post types.
 	 */
 	public static function get_all_nonhierarchical() {
-		return memo() ?? memo(
+		return memo() ?? memo( array_values(
 			\get_post_types(
 				[
 					'hierarchical' => false,
 					'public'       => true,
 				],
 				'names',
-			)
-		);
+			),
+		) );
 	}
 
 	/**

@@ -14,7 +14,7 @@ use The_SEO_Framework\Traits\Property_Refresher;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -62,6 +62,7 @@ class Plugin {
 	 * @since 5.0.0
 	 */
 	public static function flush_cache() {
+
 		static::refresh_static_properties();
 		// PTA is stored in the default plugin options.
 		Plugin\PTA::refresh_static_properties();
@@ -79,7 +80,7 @@ class Plugin {
 	 *              3. Moved from `\The_SEO_Framework\Load`.
 	 * @uses \THE_SEO_FRAMEWORK_SITE_OPTIONS
 	 *
-	 * @param string ...$key Option name. Additional parameters will try get subvalues of the array.
+	 * @param string ...$key Option name. Additional parameters will try get sub-values of the array.
 	 *                       When empty, it'll return all options. You should use get_options() instead.
 	 * @return mixed The TSF option value. Null when not found.
 	 */
@@ -142,7 +143,7 @@ class Plugin {
 	 *
 	 * @param string|array $option The option key, or an array of key and value pairs.
 	 * @param mixed        $value  The option value. Ignored when $option is an array.
-	 * @return bool True on succesful update, false otherwise.
+	 * @return bool True on successful update, false otherwise.
 	 */
 	public static function update_option( $option, $value = '' ) {
 

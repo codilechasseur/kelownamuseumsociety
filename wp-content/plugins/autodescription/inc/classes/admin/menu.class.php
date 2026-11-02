@@ -15,7 +15,7 @@ use function The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -40,8 +40,9 @@ use function The_SEO_Framework\{
 class Menu {
 
 	/**
-	 * Adds menu links under "settings" in the wp-admin dashboard
+	 * Adds the top-level SEO menu in wp-admin.
 	 *
+	 * @hook admin_menu 10
 	 * @since 2.2.2
 	 * @since 2.9.2 Added static cache so the method can only run once.
 	 * @since 5.0.0 1. Moved from `\The_SEO_Framework\Load`.
@@ -97,7 +98,8 @@ class Menu {
 	public static function get_top_menu_args() {
 
 		// phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition -- I know.
-		if ( null !== $memo = memo() ) return $memo;
+		if ( null !== $memo = memo() )
+			return $memo;
 
 		$issue_count = self::get_top_menu_issue_count();
 
@@ -155,7 +157,8 @@ class Menu {
 	 */
 	public static function get_top_menu_issue_count() {
 
-		if ( is_headless( 'settings' ) ) return 0;
+		if ( is_headless( 'settings' ) )
+			return 0;
 
 		/**
 		 * @since 4.2.8
@@ -186,7 +189,7 @@ class Menu {
 				/* translators: %s: number of issues waiting */
 				\_n( '%s issue waiting', '%s issues waiting', $issue_count, 'autodescription' ),
 				$notice_i18n,
-			)
+			),
 		);
 	}
 }

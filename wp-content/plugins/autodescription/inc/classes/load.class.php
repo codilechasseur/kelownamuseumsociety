@@ -15,7 +15,7 @@ use The_SEO_Framework\Data;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2015 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2015 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -81,7 +81,7 @@ final class Load extends Pool {
 	 * @since 4.1.4.Now constructs headlessness.
 	 * @since 5.0.0 Is now protected. Use `tsf()` or `the_seo_framework()` instead.
 	 */
-	protected function __construct() { }
+	protected function __construct() {}
 
 	/**
 	 * Handles unapproachable invoked properties.

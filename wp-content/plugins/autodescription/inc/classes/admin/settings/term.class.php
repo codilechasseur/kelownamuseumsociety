@@ -1,6 +1,6 @@
 <?php
 /**
- * @package The_SEO_Framework\Classes\Admin\Settings\Post
+ * @package The_SEO_Framework\Classes\Admin\Settings\Term
  * @subpackage The_SEO_Framework\Admin\Edit\Term
  */
 
@@ -8,16 +8,16 @@ namespace The_SEO_Framework\Admin\Settings;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use The_SEO_Framework\{
-	Data,
-	Helper\Query,
-	Helper\Taxonomy,
-	Helper\Template,
+use The_SEO_Framework\Data;
+use The_SEO_Framework\Helper\{
+	Query,
+	Taxonomy,
+	Template,
 };
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -45,8 +45,8 @@ final class Term {
 	/**
 	 * Prepares the setting fields.
 	 *
-	 * @since 5.0.0
 	 * @hook current_screen 10
+	 * @since 5.0.0
 	 */
 	public static function prepare_setting_fields() {
 
@@ -72,6 +72,7 @@ final class Term {
 	/**
 	 * Outputs the term settings fields.
 	 *
+	 * @hook {$taxonomy}_edit_form 0
 	 * @since 4.0.0
 	 *
 	 * @param \WP_Term $term     Current taxonomy term object.

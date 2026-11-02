@@ -8,7 +8,7 @@
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2024 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2024 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -45,9 +45,13 @@ window.tsfUtils = function () {
 	 * @return {Function}
 	 */
 	function debounce( func, timeout = 0 ) {
+
 		let timeoutId;
+
 		return ( ...args ) => {
+
 			clearTimeout( timeoutId );
+
 			return {
 				timeoutId: timeoutId = setTimeout( () => func( ...args ), timeout ),
 				cancel: () => clearTimeout( timeoutId ),

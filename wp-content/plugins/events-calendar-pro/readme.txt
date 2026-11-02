@@ -3,9 +3,9 @@
 Contributors: theeventscalendar, borkweb, bordoni, brianjessee, aguseo, camwynsp, GeoffBel, jentheo, leahkoerper, lucatume, neillmcshea, vicskf, zbtirrell, juanfra
 Tags: events, calendar, event, venue, organizer, dates, date, google maps, conference, workshop, concert, meeting, seminar, summit, class, the events calendar, widget, pro
 Donate link: https://evnt.is/29
-Stable tag: 7.8.3
-Requires at least: 6.8
-Tested up to: 7.0
+Stable tag: 7.8.5
+Requires at least: 6.9
+Tested up to: 7.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -213,6 +213,17 @@ Previous versions of Events Calendar Pro are not cross-compatible with 6.X add-o
 Remember to always make a backup of your database and files before updating!
 
 == Changelog ==
+
+= [7.8.5] 2026-10-29 =
+
+* Language - 0 new strings added, 0 updated, 0 fuzzied, and 0 obsoleted.
+* Security - Hardened the calendar export. Props to ngvuthdanh for reporting.
+
+= [7.8.4] 2026-10-15 =
+
+* Compatibility - Updated the Events Calendar PRO blocks, widget blocks and Additional Field blocks to Block API version 3, removing the WordPress 6.9 block API deprecation notice in the editor.
+* Fix - Stopped the Series post type from flushing rewrite rules over and over on front-end requests and from writing a language-prefixed RewriteBase to the .htaccess file on multilingual sites.
+* Language - 0 new strings added, 22 updated, 0 fuzzied, and 0 obsoleted.
 
 = [7.8.3] 2026-09-17 =
 

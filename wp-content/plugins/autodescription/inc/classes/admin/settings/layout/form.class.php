@@ -8,15 +8,15 @@ namespace The_SEO_Framework\Admin\Settings\Layout;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use The_SEO_Framework\{
-	Data\Filter\Escape,
-	Helper\Format\Arrays,
-	Helper\Query,
+use The_SEO_Framework\Data\Filter\Escape;
+use The_SEO_Framework\Helper\{
+	Format\Arrays,
+	Query,
 };
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2021 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2021 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -50,12 +50,13 @@ class Form {
 	 *
 	 * @since 4.1.4
 	 * @since 5.0.0 'default' is now synonymous to 'selected'. 'default' is no longer promoted.
+	 * @since 5.2.0 1. No longer wraps the select in a `div`.
+	 *              2. Removed the `class` argument.
 	 *
 	 * @param array $args {
 	 *     The select field creation arguments.
 	 *
 	 *     @type string     $id       The select field ID.
-	 *     @type string     $class    The div wrapper class.
 	 *     @type string     $name     The option name.
 	 *     @type int|string $selected The selected option value.
 	 *     @type array      $options  The select option values : { value => name }
@@ -71,7 +72,6 @@ class Form {
 
 		$args += [
 			'id'          => '',
-			'class'       => '',
 			'name'        => '',
 			'selected'    => $args['default'] ?? '',
 			'options'     => [],
@@ -104,25 +104,25 @@ class Form {
 		);
 
 		return vsprintf(
-			\sprintf(
-				'<div class="%s">%s</div>',
-				\esc_attr( $args['class'] ),
-				\is_rtl() ? '%2$s%1$s%3$s' : '%1$s%2$s%3$s',
-			),
+			\is_rtl() ? '%2$s%1$s%3$s' : '%1$s%2$s%3$s',
 			[
-				$args['label'] ? \sprintf(
-					'<label for="%s">%s</label> ', // superfluous space!
-					Escape::option_name_attribute( $args['id'] ),
-					\sprintf(
-						$args['labelstrong'] ? '<strong>%s</strong>' : '%s',
-						\esc_html( $args['label'] ),
+				$args['label']
+					? \sprintf(
+						'<label for="%s">%s</label> ', // superfluous space!
+						Escape::option_name_attribute( $args['id'] ),
+						\sprintf(
+							$args['labelstrong'] ? '<strong>%s</strong>' : '%s',
+							\esc_html( $args['label'] ),
+						),
 					)
-				) : '',
-				$args['info'] ? HTML::make_info(
-					$args['info'][0],
-					$args['info'][1] ?? '',
-					false
-				) . ' ' : '',
+					: '',
+				$args['info']
+					? HTML::make_info(
+						$args['info'][0],
+						$args['info'][1] ?? '',
+						false,
+					) . ' '
+					: '',
 				vsprintf(
 					'<select id="%s" name="%s"%s %s>%s</select>',
 					[
@@ -141,22 +141,26 @@ class Form {
 	 * Outputs character counter wrap for both JavaScript and no-Javascript.
 	 *
 	 * @since 4.1.4
+	 * @since 5.2.0 1. Now exposes the click hint as a tooltip and an ARIA label on the count.
+	 *              2. Now outputs the count as a link, so Enter changes the counter type.
 	 *
 	 * @param string $input_id The input ID it's for.
 	 * @param bool   $display  Whether to display the counter. (options page gimmick)
 	 */
 	public static function output_character_counter_wrap( $input_id, $display = true ) {
+
 		vprintf(
-			'<div class="tsf-counter-wrap hide-if-no-tsf-js" %s><span class=tsf-counter title="%s">%s</span><span class=tsf-ajax></span></div>',
+			'<div class="tsf-counter-wrap hide-if-no-tsf-js" %s><span class=tsf-counter>%s</span><span class=tsf-ajax></span></div>',
 			[
 				( $display ? '' : 'style=display:none;' ),
-				\esc_attr__( 'Click to change the counter type', 'autodescription' ),
 				\sprintf(
 					/* translators: %s = number */
 					\esc_html__( 'Characters: %s', 'autodescription' ),
 					\sprintf(
-						'<span id="%s">0</span>',
+						'<span class=tsf-tooltip-wrap><a id="%1$s" class=tsf-tooltip-item href="javascript:;" data-desc="%2$s" aria-label="%2$s">%3$s</a></span>',
 						\esc_attr( "{$input_id}_chars" ),
+						\esc_attr__( 'Click to change the counter type', 'autodescription' ),
+						'0',
 					),
 				),
 			],
@@ -203,9 +207,10 @@ class Form {
 	 * @param array $args {
 	 *     The image uploader arguments.
 	 *
-	 *     @type string $id                Required. The HTML input id to pass URL into.
-	 *     @type int    $post_id           Optional. The Post ID to bind the uploaded file to. Default current post ID.
-	 *     @type array  $data              {
+	 *     @type string $id           Required. The HTML input id to pass URL into.
+	 *     @type int    $post_id      Optional. Passed to `get_upload_iframe_src()` as the file's parent.
+	 *                                Defaults to `Query::get_the_real_id()`, which is the term ID on term screens.
+	 *     @type array  $data         {
 	 *         Optional. The data attributes for the image uploader.
 	 *
 	 *         @type string $inputType      Optional. Whether the upload type is 'social' or 'logo' for i18n. Default 'social'.
@@ -215,14 +220,14 @@ class Form {
 	 *         @type int    $minHeight      Optional. The minimum image height. Default 200.
 	 *         @type bool   $flex           Optional. Whether the image W:H ratio may be changed. Default true.
 	 *     },
-	 *     @type array  $i18n              {
+	 *     @type array  $i18n         {
 	 *         Optional. The internationalization strings.
 	 *
 	 *         @type string $button_title   Optional. The image-select button on-hover title for accessibility. Default ''.
 	 *                                   Tip: Only fill if 'button_text' is ambiguous.
 	 *         @type string $button_text    Optional. The image-select button title. Defaults l10n 'Select Image'.
 	 *     },
-	 *     @type array  $button_class      {
+	 *     @type array  $button_class {
 	 *         Optional. The button classes.
 	 *
 	 *         @type array $set             Optional. The image set button classes.
@@ -234,7 +239,8 @@ class Form {
 	public static function get_image_uploader_form( $args ) {
 
 		// Required.
-		if ( empty( $args['id'] ) ) return '';
+		if ( empty( $args['id'] ) )
+			return '';
 
 		$args = Arrays::array_merge_recursive_distinct(
 			[

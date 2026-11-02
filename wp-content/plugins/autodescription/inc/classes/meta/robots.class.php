@@ -20,7 +20,7 @@ use The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -36,7 +36,7 @@ use The_SEO_Framework\{
  */
 
 /**
- * Holds getters for meta tag output.
+ * Holds getters for robots output.
  *
  * @since 5.0.0
  * @access protected
@@ -67,12 +67,13 @@ class Robots {
 	 * @return string
 	 */
 	public static function get_meta() {
-		return umemo( __METHOD__ ) ?? umemo(
-			__METHOD__,
-			Data\Blog::is_public()
-				? implode( ',', self::get_generated_meta() )
-				: '',
-		);
+		return umemo( __METHOD__ )
+			?? umemo(
+				__METHOD__,
+				Data\Blog::is_public()
+					? implode( ',', self::get_generated_meta() )
+					: '',
+			);
 	}
 
 	/**
@@ -82,13 +83,12 @@ class Robots {
 	 * @since 5.0.0 1. Renamed from `get_robots_meta()`
 	 *              2. Moved from `\The_SEO_Framework\Load`.
 	 *
-	 * @param array|null $args    The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                            Leave null to autodetermine query.
-	 * @param array|null $get     The robots types to retrieve. Accepts an array of
-	 *                            'noindex', 'nofollow', 'noarchive', 'max_snippet', 'max_image_preview', 'max_video_preview'.
-	 *                            Leave null to retrieve all.
-	 * }
-	 * @param int <bit>  $options The options level. {
+	 * @param ?array    $args    The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                           Leave null to autodetermine query.
+	 * @param ?array    $get     The robots types to retrieve. Accepts an array of values
+	 *                           'noindex', 'nofollow', 'noarchive', 'max_snippet', 'max_image_preview', 'max_video_preview'.
+	 *                           Leave null to retrieve all.
+	 * @param int <bit> $options The options level. {
 	 *    0 = 0b000: Ignore nothing. Collect no assertions. (Default front-end.)
 	 *    1 = 0b001: Ignore protection. (\The_SEO_Framework\ROBOTS_IGNORE_PROTECTION)
 	 *    2 = 0b010: Ignore post/term setting. (\The_SEO_Framework\ROBOTS_IGNORE_SETTINGS)
@@ -144,7 +144,7 @@ class Robots {
 		 * @since 4.0.3 Changed `$meta` key `max_snippet_length` to `max_snippet`
 		 * @since 4.2.0 Now supports the `$args['pta']` index.
 		 *
-		 * @param array      $meta {
+		 * @param array     $meta    {
 		 *     The current robots meta.
 		 *
 		 *     @type ?string $noindex           If set, it should be 'noindex'.
@@ -157,9 +157,9 @@ class Robots {
 		 *     @type ?string $max_video_preview If set, it should be 'max-video-preview:<R>=-1>',
 		 *                                      where '<R>=-1>' is a number of or above -1.
 		 * }
-		 * @param array|null $args The query arguments. Contains 'id', 'tax', 'pta', and 'uid'.
-		 *                         Is null when the query is auto-determined.
-		 * @param int <bit>  $options The ignore level. {
+		 * @param ?array    $args    The query arguments. Contains 'id', 'tax', 'pta', and 'uid'.
+		 *                           Is null when the query is auto-determined.
+		 * @param int <bit> $options The ignore level. {
 		 *    0 = 0b000: Ignore nothing. Collect nothing. (Default front-end.)
 		 *    1 = 0b001: Ignore protection. (\The_SEO_Framework\ROBOTS_IGNORE_PROTECTION)
 		 *    2 = 0b010: Ignore post/term setting. (\The_SEO_Framework\ROBOTS_IGNORE_SETTINGS)

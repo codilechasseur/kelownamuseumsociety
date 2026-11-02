@@ -8,15 +8,15 @@ namespace The_SEO_Framework\Admin\Settings;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use The_SEO_Framework\{
-	Admin,
-	Helper\Post_Type,
-	Helper\Template,
+use The_SEO_Framework\Admin;
+use The_SEO_Framework\Helper\{
+	Post_Type,
+	Template,
 };
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -213,11 +213,14 @@ final class Plugin {
 	 * @since 5.0.0 Renamed from `_output_wrap`.
 	 */
 	public static function output_wrap() {
+
 		/**
 		 * @since 3.0.0
 		 */
 		\do_action( 'the_seo_framework_pre_seo_settings' );
+
 		Template::output_view( 'settings/wrap' );
+
 		/**
 		 * @since 3.0.0
 		 */
@@ -227,6 +230,7 @@ final class Plugin {
 	/**
 	 * Outputs SEO Settings columns.
 	 *
+	 * @hook toplevel_page_theseoframework-settings_settings_page_boxes 10
 	 * @since 4.0.0
 	 * @since 5.0.0 Renamed from `_output_columns`.
 	 */
@@ -237,6 +241,7 @@ final class Plugin {
 	/**
 	 * Outputs notices on SEO setting changes.
 	 *
+	 * @hook the_seo_framework_setting_notices 10
 	 * @since 4.0.0
 	 * @since 4.0.5 This is no longer a static function.
 	 * @since 5.0.0 1. Moved from `\The_SEO_Framework\Load`.
@@ -254,19 +259,25 @@ final class Plugin {
 	 * @since 4.0.0
 	 * @since 5.0.0 1. Removed third parameter: $use_tabs.
 	 *              2. Renamed from `_nav_tab_wrapper`.
+	 * @example $tabs `[ 'general' => [ 'name' => 'General', 'callback' => [ \The_SEO_Framework\Admin\Settings\Post::class, 'general_tab' ], 'dashicon' => 'admin-generic' ] ]`
 	 *
 	 * @param string $id   The nav-tab ID.
 	 * @param array  $tabs {
 	 *     The tab creation arguments keyed by tab name.
 	 *
-	 *     @type string   $name     Tab name.
-	 *     @type callable $callback Output function.
-	 *     @type string   $dashicon The dashicon to use.
-	 *     @type mixed    $args     Optional callback function args. These arguments
-	 *                              will be extracted to variables in scope of the view.
+	 *     @type array {$tab} {
+	 *         The tab creation arguments.
+	 *
+	 *         @type string   $name     Tab name.
+	 *         @type callable $callback Output function.
+	 *         @type string   $dashicon The dashicon to use.
+	 *         @type mixed    $args     Optional callback arguments. Passed as one array
+	 *                                  to the callback.
+	 *     }
 	 * }
 	 */
 	public static function nav_tab_wrapper( $id, $tabs = [] ) {
+
 		Template::output_view( 'settings/wrap-nav', $id, $tabs );
 		Template::output_view( 'settings/wrap-content', $id, $tabs );
 	}
@@ -277,11 +288,14 @@ final class Plugin {
 	 * @since 4.0.0
 	 */
 	public static function _general_metabox() {
+
 		/**
 		 * @since 2.8.0
 		 */
 		\do_action( 'the_seo_framework_general_metabox_before' );
+
 		Template::output_view( 'settings/metaboxes/general', 'main' );
+
 		/**
 		 * @since 2.8.0
 		 */
@@ -354,11 +368,14 @@ final class Plugin {
 	 * @since 4.0.0
 	 */
 	public static function _title_metabox() {
+
 		/**
 		 * @since 2.5.0 or earlier.
 		 */
 		\do_action( 'the_seo_framework_title_metabox_before' );
+
 		Template::output_view( 'settings/metaboxes/title', 'main' );
+
 		/**
 		 * @since 2.5.0 or earlier.
 		 */
@@ -403,11 +420,14 @@ final class Plugin {
 	 * @since 4.0.0
 	 */
 	public static function _description_metabox() {
+
 		/**
 		 * @since 2.5.0 or earlier.
 		 */
 		\do_action( 'the_seo_framework_description_metabox_before' );
+
 		Template::output_view( 'settings/metaboxes/description', 'main' );
+
 		/**
 		 * @since 2.5.0 or earlier.
 		 */
@@ -420,11 +440,14 @@ final class Plugin {
 	 * @since 4.0.0
 	 */
 	public static function _robots_metabox() {
+
 		/**
 		 * @since 2.5.0 or earlier.
 		 */
 		\do_action( 'the_seo_framework_robots_metabox_before' );
+
 		Template::output_view( 'settings/metaboxes/robots', 'main' );
+
 		/**
 		 * @since 2.5.0 or earlier.
 		 */
@@ -468,11 +491,14 @@ final class Plugin {
 	 * @since 4.0.0
 	 */
 	public static function _homepage_metabox() {
+
 		/**
 		 * @since 2.5.0 or earlier.
 		 */
 		\do_action( 'the_seo_framework_homepage_metabox_before' );
+
 		Template::output_view( 'settings/metaboxes/homepage', 'main' );
+
 		/**
 		 * @since 2.5.0 or earlier.
 		 */
@@ -525,11 +551,14 @@ final class Plugin {
 	 * @since 4.2.0
 	 */
 	public static function _post_type_archive_metabox() {
+
 		/**
 		 * @since 4.2.0
 		 */
 		\do_action( 'the_seo_framework_post_type_archive_before' );
+
 		Template::output_view( 'settings/metaboxes/post-type-archive', 'main' );
+
 		/**
 		 * @since 4.2.0
 		 */
@@ -575,11 +604,14 @@ final class Plugin {
 	 * @since 4.0.0
 	 */
 	public static function _social_metabox() {
+
 		/**
 		 * @since 2.5.0 or earlier.
 		 */
 		\do_action( 'the_seo_framework_social_metabox_before' );
+
 		Template::output_view( 'settings/metaboxes/social', 'main' );
+
 		/**
 		 * @since 2.5.0 or earlier.
 		 */
@@ -617,6 +649,16 @@ final class Plugin {
 	}
 
 	/**
+	 * Social Meta Box Fediverse Tab output.
+	 *
+	 * @since 5.2.0
+	 * @see self::social_metabox() Callback for Social Settings box.
+	 */
+	public static function _social_metabox_fediverse_tab() {
+		Template::output_view( 'settings/metaboxes/social', 'fediverse' );
+	}
+
+	/**
 	 * Social Meta Box oEmbed Tab output.
 	 *
 	 * @since 4.0.5
@@ -642,11 +684,14 @@ final class Plugin {
 	 * @since 4.0.0
 	 */
 	public static function _webmaster_metabox() {
+
 		/**
 		 * @since 2.5.0 or earlier.
 		 */
 		\do_action( 'the_seo_framework_webmaster_metabox_before' );
+
 		Template::output_view( 'settings/metaboxes/webmaster', 'main' );
+
 		/**
 		 * @since 2.5.0 or earlier.
 		 */
@@ -660,11 +705,14 @@ final class Plugin {
 	 * @see self::sitemaps_metabox() Callback for Sitemaps Settings box.
 	 */
 	public static function _sitemaps_metabox() {
+
 		/**
 		 * @since 2.5.0 or earlier.
 		 */
 		\do_action( 'the_seo_framework_sitemaps_metabox_before' );
+
 		Template::output_view( 'settings/metaboxes/sitemaps', 'main' );
+
 		/**
 		 * @since 2.5.0 or earlier.
 		 */
@@ -717,11 +765,14 @@ final class Plugin {
 	 * @since 4.0.0
 	 */
 	public static function _feed_metabox() {
+
 		/**
 		 * @since 2.5.2
 		 */
 		\do_action( 'the_seo_framework_feed_metabox_before' );
+
 		Template::output_view( 'settings/metaboxes/feed', 'main' );
+
 		/**
 		 * @since 2.5.2
 		 */
@@ -734,11 +785,14 @@ final class Plugin {
 	 * @since 4.0.0
 	 */
 	public static function _schema_metabox() {
+
 		/**
 		 * @since 2.6.0
 		 */
 		\do_action( 'the_seo_framework_schema_metabox_before' );
+
 		Template::output_view( 'settings/metaboxes/schema', 'main' );
+
 		/**
 		 * @since 2.6.0
 		 */

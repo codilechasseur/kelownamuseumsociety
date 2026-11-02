@@ -27,7 +27,13 @@ use The_SEO_Framework\Meta;
  */
 function _wpforo_fix_page() {
 
-	if ( \is_admin() || ! \function_exists( 'is_wpforo_page' ) || ! \is_wpforo_page() ) return;
+	if (
+		   \is_admin()
+		|| ! \function_exists( 'is_wpforo_page' )
+		|| ! \is_wpforo_page()
+	) {
+		return;
+	}
 
 	if ( _wpforo_seo_title_enabled() ) { // phpcs:ignore TSF.Performance.Opcodes -- is local.
 		\add_filter( 'the_seo_framework_title_from_generation', __NAMESPACE__ . '\_wpforo_filter_pre_title', 10, 2 );
@@ -83,9 +89,9 @@ function _wpforo_filter_canonical_url( $canonical_url ) {
  * @since 4.0.0 No longer overrules external queries.
  * @todo this may cause issues when the forum is on the homepage... Tell users to set the "additions".
  *
- * @param string     $title The filter title.
- * @param array|null $args  The query arguments. Contains 'id', 'tax', 'pta', and 'uid'.
- *                          Is null when the query is auto-determined.
+ * @param string $title The filter title.
+ * @param ?array $args  The query arguments. Contains 'id', 'tax', 'pta', and 'uid'.
+ *                      Is null when the query is auto-determined.
  * @return string $title The wpForo title.
  */
 function _wpforo_filter_pre_title( $title, $args ) {
@@ -124,7 +130,8 @@ function _assert_wpforo_page_seo_bar( $interpreter ) {
 	if ( ! empty( $items['redirect']['meta']['blocking'] ) ) return;
 
 	// Skip if we're not dealing with the wpForo page.
-	if ( ! \has_shortcode( Data\Post::get_content( $interpreter::$query['id'] ), 'wpforo' ) ) return;
+	if ( ! \has_shortcode( Data\Post::get_content( $interpreter::$query['id'] ), 'wpforo' ) )
+		return;
 
 	foreach ( $items as $id => &$item ) {
 		switch ( $id ) {

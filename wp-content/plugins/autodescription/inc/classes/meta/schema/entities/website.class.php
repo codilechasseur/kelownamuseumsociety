@@ -16,7 +16,7 @@ use The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -36,12 +36,13 @@ use The_SEO_Framework\{
  *
  * @since 5.0.0
  * @access protected
+ *         Access via tsf()->schema()->entities['WebSite'] instead.
  */
 final class WebSite extends Reference {
 
 	/**
 	 * @since 5.0.0
-	 * @var callable[] BUILDERS A list of autoloaded builder callbacks.
+	 * @var callable[] BUILDERS A list of auto-loaded builder callbacks.
 	 */
 	const BUILDERS = [
 		[ __CLASS__, 'build' ],
@@ -58,8 +59,8 @@ final class WebSite extends Reference {
 	 * @since 5.0.5 Added back alternateName.
 	 * @see https://developers.google.com/search/docs/appearance/structured-data/sitelinks-searchbox
 	 *
-	 * @param array|null $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                         Leave null to autodetermine query.
+	 * @param ?array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                     Leave null to autodetermine query.
 	 * @return ?array $entity The Schema.org graph entity. Null on failure.
 	 */
 	public static function build( $args = null ) { // phpcs:ignore -- VariableAnalysis, abstract.

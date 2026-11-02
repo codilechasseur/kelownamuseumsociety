@@ -17,7 +17,10 @@ use function The_SEO_Framework\{
 use The_SEO_Framework\{
 	Data,
 	Data\Filter\Sanitize,
-	Helper\Query,
+};
+use The_SEO_Framework\Helper\{
+	Compatibility,
+	Query,
 };
 
 /**
@@ -49,9 +52,9 @@ use The_SEO_Framework\{
  * @source bbp_title()
  * @NOTE Do NOT call `bbp_title()` or apply filter `bbptitle` here, it'll cause an infinite loop.
  *
- * @param string     $title The title.
- * @param array|null $args  The query arguments. Contains 'id', 'tax', 'pta', and 'uid'.
- *                          Is null when the query is auto-determined.
+ * @param string $title The title.
+ * @param ?array $args  The query arguments. Contains 'id', 'tax', 'pta', and 'uid'.
+ *                      Is null when the query is auto-determined.
  * @return string The corrected bbPress title on bbPress pages.
  */
 function _bbpress_filter_title( $title, $args ) {
@@ -60,7 +63,9 @@ function _bbpress_filter_title( $title, $args ) {
 		   isset( $args )
 		|| ! \function_exists( 'is_bbpress' )
 		|| ! \is_bbpress()
-	) return $title;
+	) {
+		return $title;
+	}
 
 	// phpcs:disable WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.TextDomainMismatch -- Not my code.
 	$new_title = [];
@@ -243,7 +248,7 @@ function _bbpress_filter_do_adjust_query( $adjust, $wp_query ) {
  * @hook the_seo_framework_robots_meta_array 10
  * @since 4.2.8
  *
- * @param array      $meta    {
+ * @param array  $meta {
  *     The parsed robots meta.
  *
  *     @type string $noindex           Ideally be empty or 'noindex'
@@ -253,20 +258,22 @@ function _bbpress_filter_do_adjust_query( $adjust, $wp_query ) {
  *     @type string $max_image_preview Ideally be empty or 'max-image-preview:<none|standard|large>'
  *     @type string $max_video_preview Ideally be empty or 'max-video-preview:<R>=-1>'
  * }
- * @param array|null $args The query arguments. Contains 'id', 'tax', 'pta', and 'uid'.
- *                         Is null when the query is auto-determined.
+ * @param ?array $args The query arguments. Contains 'id', 'tax', 'pta', and 'uid'.
+ *                     Is null when the query is auto-determined.
  * @return array
  */
 function _bbpress_filter_robots( $meta, $args ) {
 
 	if ( isset( $args ) ) {
-		if ( ! Helper\Compatibility::can_i_use( [
+		if ( ! Compatibility::can_i_use( [
 			'functions' => [
 				'bbp_get_forum_post_type',
 				'bbp_get_topic_post_type',
 				'bbp_get_reply_post_type',
 			],
-		] ) ) return $meta;
+		] ) ) {
+			return $meta;
+		}
 
 		normalize_generation_args( $args );
 
@@ -281,13 +288,15 @@ function _bbpress_filter_robots( $meta, $args ) {
 			}
 		}
 	} else {
-		if ( ! Helper\Compatibility::can_i_use( [
+		if ( ! Compatibility::can_i_use( [
 			'functions' => [
 				'bbp_is_single_forum',
 				'bbp_is_single_topic',
 				'bbp_is_single_reply',
 			],
-		] ) ) return $meta;
+		] ) ) {
+			return $meta;
+		}
 
 		// Front-end
 		if ( \bbp_is_single_forum() ) {
@@ -310,6 +319,9 @@ function _bbpress_filter_robots( $meta, $args ) {
  *
  * @hook the_seo_framework_seo_bar 10
  * @since 4.2.8
+ * @since 5.2.0 1. Now removes the indexing override assessment.
+ *              2. Now compares the forum post type with `bbp_get_forum_post_type()`.
+ *              3. Now reads the post type from the SEO Bar query cache.
  *
  * @param string $interpreter The interpreter class name.
  * @param object $builder     The builder's class instance.
@@ -318,22 +330,27 @@ function _assert_bbpress_noindex_defaults_seo_bar( $interpreter, $builder ) {
 
 	if ( $interpreter::$query['tax'] ) return;
 
-	if ( ! Helper\Compatibility::can_i_use( [
+	if ( ! Compatibility::can_i_use( [
 		'functions' => [
 			'bbp_get_forum_post_type',
 			'bbp_get_topic_post_type',
 			'bbp_get_reply_post_type',
 			'bbp_is_forum_public',
 		],
-	] ) ) return;
+	] ) ) {
+		return;
+	}
 
 	$items = $interpreter::collect_seo_bar_items();
 
 	// Don't do anything if there's a blocking redirect.
 	if ( ! empty( $items['redirect']['meta']['blocking'] ) ) return;
 
-	switch ( $interpreter::$query['post_type'] ) {
-		case \bbp_get_forum_post_type():
+	$forum_post_type = \bbp_get_forum_post_type();
+	$post_type       = $builder->get_query_cache()['states']['posttype'] ?? '';
+
+	switch ( $post_type ) {
+		case $forum_post_type:
 			$forum_id = $interpreter::$query['id'];
 			break;
 		case \bbp_get_topic_post_type():
@@ -348,12 +365,12 @@ function _assert_bbpress_noindex_defaults_seo_bar( $interpreter, $builder ) {
 		? $interpreter::STATE_OKAY
 		: $interpreter::STATE_UNKNOWN;
 
-	if ( 'forum' === $interpreter::$query['post_type'] ) {
+	if ( $forum_post_type === $post_type ) {
 		$index_item['assess']['notpublic'] = \__( 'This is not a public forum.', 'autodescription' );
 	} else {
 		$index_item['assess']['notpublic'] = \__( 'This page is not part of a public forum.', 'autodescription' );
 	}
 
 	// No amount of overriding will fix this -- the forum/topic/reply is publicly unreachable.
-	unset( $index_item['override'] );
+	unset( $index_item['assess']['override'] );
 }

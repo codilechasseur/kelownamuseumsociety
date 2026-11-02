@@ -10,22 +10,26 @@ namespace The_SEO_Framework\Admin\Script;
 
 use function The_SEO_Framework\{
 	has_run,
-	umemo,
 	is_headless,
+	umemo,
 };
 
-use The_SEO_Framework\Data;
+use The_SEO_Framework\{
+	Data,
+	Data\Filter\Sanitize,
+};
 use The_SEO_Framework\Helper\{
-	Format,
+	Format\Color,
 	Post_Type,
 	Query,
 	Taxonomy,
-	Template
+	Template,
+	User,
 };
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2018 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2018 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -94,6 +98,7 @@ final class Registry {
 	 *
 	 * @hook admin_enqueue_scripts 0
 	 * @since 5.0.0
+	 * @since 5.2.0 Now registers scripts on profile and user screens, including the users list.
 	 *
 	 * @access private
 	 */
@@ -103,6 +108,14 @@ final class Registry {
 			   Query::is_seo_settings_page()
 			// Notices can be outputted if not entirely headless -- this very method only runs when not entirely headless.
 			|| Data\Plugin::get_site_cache( 'persistent_notices' )
+			|| (
+				   ! is_headless( 'user' )
+				&& Query::is_profile_admin()
+				&& (
+					   User::is_supported()
+					|| ! Query::is_profile_edit()
+				)
+			)
 			|| (
 				   ! is_headless( 'meta' )
 				&& (
@@ -124,8 +137,6 @@ final class Registry {
 	 * Registers all scripts and necessary hooks.
 	 *
 	 * @since 5.0.0
-	 *
-	 * @access public
 	 */
 	public static function register_scripts_and_hooks() {
 
@@ -149,9 +160,13 @@ final class Registry {
 	/**
 	 * Enqueues all known registered scripts, styles, and templates.
 	 *
+	 * @hook admin_enqueue_scripts 10
+	 * @hook wp_enqueue_scripts 10
+	 * @hook admin_footer 998
 	 * @since 3.1.0
 	 */
 	public static function enqueue() {
+
 		self::_prepare_admin_scripts();
 		self::_output_templates();
 	}
@@ -176,6 +191,7 @@ final class Registry {
 	 * @since 4.0.0
 	 * @since 5.0.0 1. Is now static.
 	 *              2. Now adds a low contrast SEO Bar class.
+	 * @access private
 	 *
 	 * @param string $classes Space-separated list of CSS classes.
 	 * @return string
@@ -191,9 +207,11 @@ final class Registry {
 	/**
 	 * Prints the TSF no-js transform script, using ES2015 (ECMA-262).
 	 *
+	 * @hook in_admin_header 10
 	 * @since 4.0.0
 	 * @since 4.0.5 Put the const assignment on front, so it's prone to fail earlier.
 	 * @since 5.0.0 Is now static.
+	 * @access private
 	 */
 	public static function _print_tsfjs_script() {
 		echo "<script>(()=>{const a=0;document.body.classList.replace('tsf-no-js','tsf-js')})()</script>";
@@ -202,10 +220,13 @@ final class Registry {
 	/**
 	 * Prepares scripts for output on post edit screens.
 	 *
+	 * @hook admin_enqueue_scripts 1
 	 * @since 3.1.0
 	 * @since 5.0.0 Is now static.
+	 * @access private
 	 */
 	public static function _prepare_admin_scripts() {
+
 		self::forward_known_scripts();
 		self::autoload_known_scripts();
 	}
@@ -269,9 +290,11 @@ final class Registry {
 	 * }
 	 */
 	public static function register( $script ) {
+
 		// This is over 350x faster than a polyfill for `array_is_list()`.
 		if ( isset( $script[0] ) && array_values( $script ) === $script ) {
 			foreach ( $script as $s ) self::register( $s );
+
 			return;
 		}
 
@@ -287,6 +310,7 @@ final class Registry {
 	 * @param string $type The script type.
 	 */
 	public static function forward_known_script( $id, $type ) {
+
 		if ( ! ( self::get_status_of( $id, $type ) & self::REGISTERED ) ) {
 			foreach ( self::$scripts as $s ) {
 				if ( $s['id'] === $id && $s['type'] === $type )
@@ -320,9 +344,12 @@ final class Registry {
 	 * @since 5.0.0 Is now static.
 	 */
 	private static function forward_known_scripts() {
+
 		// Register them first to accommodate for dependencies.
 		foreach ( self::$scripts as $s ) {
-			if ( self::get_status_of( $s['id'], $s['type'] ) & self::REGISTERED ) continue;
+			if ( self::get_status_of( $s['id'], $s['type'] ) & self::REGISTERED )
+				continue;
+
 			self::forward_script( $s );
 		}
 	}
@@ -336,7 +363,9 @@ final class Registry {
 	private static function autoload_known_scripts() {
 		foreach ( self::$scripts as $s ) {
 			if ( $s['autoload'] ) {
-				if ( self::get_status_of( $s['id'], $s['type'] ) & self::LOADED ) continue;
+				if ( self::get_status_of( $s['id'], $s['type'] ) & self::LOADED )
+					continue;
+
 				self::load_script( $s['id'], $s['type'] );
 			}
 		}
@@ -389,7 +418,8 @@ final class Registry {
 	 */
 	private static function load_script( $id, $type ) {
 
-		if ( ! ( self::get_status_of( $id, $type ) & self::REGISTERED ) ) return;
+		if ( ! ( self::get_status_of( $id, $type ) & self::REGISTERED ) )
+			return;
 
 		$loaded = false;
 
@@ -491,6 +521,11 @@ final class Registry {
 	 * @since 3.1.0
 	 * @since 5.0.0 1. Is now static.
 	 *              2. Renamed from `convert_color_css`.
+	 * @since 5.2.0 1. Now registers the admin color scheme if not yet registered.
+	 *              2. Now uses cached user data for improved admin performance.
+	 *              3. Added support for WordPress 7.0 admin color schemes.
+	 *              4. Now sanitizes scheme colors to hexadecimal before inline CSS.
+	 *              5. Now falls back to the 'modern' scheme. WordPress 7.0 is required.
 	 * @link <https://make.wordpress.org/core/2021/02/23/standardization-of-wp-admin-colors-in-wordpress-5-7/>
 	 *
 	 * @param array $css The CSS to convert.
@@ -501,32 +536,38 @@ final class Registry {
 		$conversions = umemo( __METHOD__ . '/conversions' );
 
 		if ( ! $conversions ) {
-			$_scheme = \get_user_option( 'admin_color' ) ?: 'fresh';
-			$_colors = $GLOBALS['_wp_admin_css_colors'];
+			$_scheme = Data\User::get_userdata(
+				Query::get_current_user_id(),
+				'admin_color',
+			) ?: 'modern';
 
-			if (
-				   ! \is_array( $_colors[ $_scheme ]->colors ?? null )
-				|| \count( $_colors[ $_scheme ]->colors ) < 4 // unexpected scheme, ignore and override.
-			) {
-				$_colors = [
-					'#222',
-					'#333',
-					'#0073aa',
-					'#00a0d2',
-				];
-			} else {
-				$_colors = $_colors[ $_scheme ]->colors;
-			}
+			// register_admin_color_schemes runs on admin_init; but we may want to convert colors elsewhere.
+			if ( empty( $GLOBALS['_wp_admin_css_colors'] ) )
+				\register_admin_color_schemes();
+
+			$_colors = $GLOBALS['_wp_admin_css_colors'][ $_scheme ]->colors ?? null;
+
+			if ( ! \is_array( $_colors ) || \count( $_colors ) < 3 )
+				$_colors = [ '1e1e1e', '3858e9', '7b90ff' ]; // Default to 'modern' scheme colors if something's wrong.
+
+			// When the scheme lacks a 4th color, duplicate the background into the accent slot, shifting the rest down by one.
+			isset( $_colors[3] ) or array_unshift( $_colors, $_colors[0] );
+
+			// Modern scheme in that slot order. A non-hex slot cannot break out of the style declaration.
+			$_fallbacks = [ '1e1e1e', '1e1e1e', '3858e9', '7b90ff' ];
+
+			foreach ( [ 0, 1, 2, 3 ] as $i )
+				$_colors[ $i ] = Sanitize::rgb_hex( $_colors[ $i ] ?? '' ) ?: $_fallbacks[ $i ];
 
 			$_conversion_table = [
-				'{{$bg}}'               => $_colors[0],
-				'{{$rel_bg}}'           => '#' . Format\Color::get_relative_fontcolor( $_colors[0] ),
-				'{{$bg_accent}}'        => $_colors[1],
-				'{{$rel_bg_accent}}'    => '#' . Format\Color::get_relative_fontcolor( $_colors[1] ),
-				'{{$color}}'            => $_colors[2],
-				'{{$rel_color}}'        => '#' . Format\Color::get_relative_fontcolor( $_colors[2] ),
-				'{{$color_accent}}'     => $_colors[3],
-				'{{$rel_color_accent}}' => '#' . Format\Color::get_relative_fontcolor( $_colors[3] ),
+				'{{$bg}}'               => '#' . $_colors[0],
+				'{{$rel_bg}}'           => '#' . Color::get_relative_fontcolor( $_colors[0] ),
+				'{{$bg_accent}}'        => '#' . $_colors[1],
+				'{{$rel_bg_accent}}'    => '#' . Color::get_relative_fontcolor( $_colors[1] ),
+				'{{$color}}'            => '#' . $_colors[2],
+				'{{$rel_color}}'        => '#' . Color::get_relative_fontcolor( $_colors[2] ),
+				'{{$color_accent}}'     => '#' . $_colors[3],
+				'{{$rel_color_accent}}' => '#' . Color::get_relative_fontcolor( $_colors[3] ),
 			];
 
 			$conversions = umemo(
@@ -558,6 +599,7 @@ final class Registry {
 	 * }
 	 */
 	private static function register_template( $id, $templates ) {
+
 		// Wrap template if it's only one on the base.
 		if ( isset( $templates['file'] ) )
 			$templates = [ $templates ];
@@ -576,12 +618,15 @@ final class Registry {
 	 * The template will only be outputted when the related script is too.
 	 * The loop will only run when templates are registered.
 	 *
+	 * @hook admin_footer 999
 	 * @since 3.1.0
 	 * @since 3.2.2 Now clears outputted templates, so to prevent duplications.
 	 * @since 4.1.2 Now clears templates right before outputting them, so to prevent a plausible infinite loop.
 	 * @since 5.0.0 Is now static.
+	 * @access private
 	 */
 	public static function _output_templates() {
+
 		foreach ( self::$templates as $id => $templates ) {
 			if ( \wp_script_is( $id, 'enqueued' ) ) { // This list retains scripts after they're outputted.
 				// Unset template before the loop, to prevent an infinite loop.

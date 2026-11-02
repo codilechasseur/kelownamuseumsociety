@@ -12,7 +12,7 @@ namespace The_SEO_Framework;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2017 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2017 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -43,10 +43,9 @@ echo '<?xml version="1.0" encoding="UTF-8"?>', "\n";
 				<?php
 				/**
 				 * @since 3.1.0
-				 * @param \The_SEO_Framework\Load Alias of `tsf()`
-				 * @TODO 5.1.0 Remove first parameter. It's useless now.
+				 * @since 5.2.0 Removed first parameter.
 				 */
-				\do_action( 'the_seo_framework_xsl_head', \tsf() );
+				\do_action( 'the_seo_framework_xsl_head' );
 				?>
 			</head>
 			<body class="<?= \is_rtl() ? 'rtl' : 'ltr' ?>">
@@ -55,10 +54,9 @@ echo '<?xml version="1.0" encoding="UTF-8"?>', "\n";
 						<?php
 						/**
 						 * @since 3.1.0
-						 * @param \The_SEO_Framework\Load Alias of `tsf()`
-						 * @TODO 5.1.0 Remove first parameter. It's useless now.
+						 * @since 5.2.0 Removed first parameter.
 						 */
-						\do_action( 'the_seo_framework_xsl_description', \tsf() );
+						\do_action( 'the_seo_framework_xsl_description' );
 						?>
 					</div>
 				</div>
@@ -67,10 +65,9 @@ echo '<?xml version="1.0" encoding="UTF-8"?>', "\n";
 						<?php
 						/**
 						 * @since 3.1.0
-						 * @param \The_SEO_Framework\Load Alias of `tsf()`
-						 * @TODO 5.1.0 Remove first parameter. It's useless now.
+						 * @since 5.2.0 Removed first parameter.
 						 */
-						\do_action( 'the_seo_framework_xsl_content', \tsf() );
+						\do_action( 'the_seo_framework_xsl_content' );
 						?>
 					</div>
 				</div>
@@ -79,10 +76,9 @@ echo '<?xml version="1.0" encoding="UTF-8"?>', "\n";
 						<?php
 						/**
 						 * @since 3.1.0
-						 * @param \The_SEO_Framework\Load Alias of `tsf()`
-						 * @TODO 5.1.0 Remove first parameter. It's useless now.
+						 * @since 5.2.0 Removed first parameter.
 						 */
-						\do_action( 'the_seo_framework_xsl_footer', \tsf() );
+						\do_action( 'the_seo_framework_xsl_footer' );
 						?>
 					</div>
 				</div>

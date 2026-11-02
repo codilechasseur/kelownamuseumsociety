@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: The Events Calendar Pro 7.8.3\n"
+"Project-Id-Version: The Events Calendar Pro 7.8.4\n"
 "Report-Msgid-Bugs-To: https://evnt.is/191x\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-17T18:46:26+00:00\n"
+"POT-Creation-Date: 2026-10-29T19:14:54+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: tribe-events-calendar-pro\n"
@@ -29,7 +29,7 @@ msgstr ""
 #: events-calendar-pro.php:176
 #: events-calendar-pro.php:177
 #: src/Tribe/Integrations/Elementor/Service_Provider.php:126
-#: src/modules/blocks/single-venue/index.js:30
+#: src/modules/blocks/single-venue/index.js:33
 msgid "The Events Calendar"
 msgstr ""
 
@@ -633,7 +633,7 @@ msgid "Events Manager"
 msgstr ""
 
 #: src/admin-views/manager/page.php:39
-#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:125
+#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:135
 msgid "Add New"
 msgstr ""
 
@@ -3014,64 +3014,64 @@ msgctxt "Placeholder used in the Series list Start Date column when a Series has
 msgid "-"
 msgstr ""
 
-#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:126
+#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:136
 #, php-format
 msgid "Add New %s"
 msgstr ""
 
-#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:127
+#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:137
 #: src/Tribe/Admin/Manager/Page.php:444
 #, php-format
 msgid "Edit %s"
 msgstr ""
 
-#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:128
+#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:138
 #, php-format
 msgid "New %s"
 msgstr ""
 
-#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:129
+#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:139
 #, php-format
 msgid "View %s"
 msgstr ""
 
-#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:130
+#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:140
 #, php-format
 msgid "Search %s"
 msgstr ""
 
-#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:131
+#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:141
 #, php-format
 msgid "No %s found"
 msgstr ""
 
-#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:132
+#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:142
 #, php-format
 msgid "No %s found in Trash"
 msgstr ""
 
-#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:133
+#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:143
 #: src/Events_Pro/Custom_Tables/V1/Series/Providers/Modifications.php:158
 #, php-format
 msgid "%s published."
 msgstr ""
 
-#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:134
+#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:144
 #, php-format
 msgid "%s published privately."
 msgstr ""
 
-#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:135
+#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:145
 #, php-format
 msgid "%s reverted to draft."
 msgstr ""
 
-#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:136
+#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:146
 #, php-format
 msgid "%s scheduled."
 msgstr ""
 
-#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:137
+#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:147
 #: src/Events_Pro/Custom_Tables/V1/Series/Providers/Modifications.php:152
 #: src/Events_Pro/Custom_Tables/V1/Series/Providers/Modifications.php:155
 #, php-format
@@ -3079,33 +3079,33 @@ msgid "%s updated."
 msgstr ""
 
 #. Translators: %s: Series singular.
-#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:140
+#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:150
 #, php-format
 msgid "%s Link"
 msgstr ""
 
 #. Translators: %s: Series singular.
-#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:144
+#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:154
 #, php-format
 msgid "A link to a particular %s."
 msgstr ""
 
-#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:207
+#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:245
 msgctxt "Singular name of the Series post type."
 msgid "Series"
 msgstr ""
 
-#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:221
+#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:259
 msgctxt "Plural name of the Series post type"
 msgid "Series"
 msgstr ""
 
-#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:234
+#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:272
 msgctxt "Lowercase singular name of the Series post type"
 msgid "series"
 msgstr ""
 
-#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:248
+#: src/Events_Pro/Custom_Tables/V1/Series/Post_Type.php:286
 msgctxt "Lowercase plural name of the Series post type"
 msgid "series"
 msgstr ""
@@ -5050,7 +5050,7 @@ msgid "Calendar Link"
 msgstr ""
 
 #: src/Tribe/Integrations/Elementor/Widgets/Widget_Event_List.php:798
-#: src/modules/blocks/single-venue/index.js:37
+#: src/modules/blocks/single-venue/index.js:40
 msgid "Venue Title"
 msgstr ""
 
@@ -8931,8 +8931,8 @@ msgstr ""
 msgid "Display Images"
 msgstr ""
 
-#: src/modules/blocks/single-venue/index.js:25
-#: src/modules/blocks/single-venue/index.js:29
+#: src/modules/blocks/single-venue/index.js:28
+#: src/modules/blocks/single-venue/index.js:32
 msgid "Single Venue"
 msgstr ""
 

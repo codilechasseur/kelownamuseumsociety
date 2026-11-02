@@ -8,7 +8,7 @@
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -64,6 +64,7 @@ window.tsfSocial = function () {
 	 * @param {string} part
 	 */
 	function _tickState( group, part ) {
+
 		switch ( part ) {
 			case 'addAdditions':
 				const titleRef = getInputInstance( group ).refs.title?.dataset?.for;
@@ -127,6 +128,7 @@ window.tsfSocial = function () {
 		except = Array.isArray( except ) ? except : [ except ];
 
 		inputInstances.forEach( ( { group, inputs, refs } ) => {
+
 			if ( except.includes( group ) ) return;
 			updateStateOf( group, part, value );
 		} );
@@ -221,6 +223,7 @@ window.tsfSocial = function () {
 		const getState = part => getStateOf( group, part );
 
 		function* _generateActiveValue( what ) {
+
 			const locks   = getState( 'inputLocks' ),
 				  phLocks = getState( 'placeholderLocks' );
 
@@ -255,6 +258,7 @@ window.tsfSocial = function () {
 			}
 		}
 		const getActiveValue = what => {
+
 			const generator = _generateActiveValue( what );
 
 			let val = '';
@@ -268,6 +272,7 @@ window.tsfSocial = function () {
 			return val?.length ? val : '';
 		}
 		const setPlaceholders = () => {
+
 			const locks   = getState( 'inputLocks' ),
 				  phLocks = getState( 'placeholderLocks' );
 
@@ -280,10 +285,14 @@ window.tsfSocial = function () {
 				inputs.twTitle.placeholder = locks.twTitle || phLocks.twTitle
 						? tsf.decodeEntities( getState( 'defaults' ).twTitle )
 						: tsf.decodeEntities( getActiveValue( 'og' ) );
+
+			window.tsfPropose?.syncProposed( inputs.ogTitle );
+			window.tsfPropose?.syncProposed( inputs.twTitle );
 		}
 		const updateCounter = ( target, text, type ) => {
+
 			const counter = document.getElementById( `${target.id}_chars` );
-			counter && tsfC?.updateCharacterCounter( {
+			counter && window.tsfC?.updateCharacterCounter( {
 				e:     counter,
 				text:  text,
 				field: 'title',
@@ -291,11 +300,13 @@ window.tsfSocial = function () {
 			} );
 		}
 		const updateSocialCounters = () => {
+
 			inputs.ogTitle && updateCounter( inputs.ogTitle, getActiveValue( 'og' ), 'opengraph' );
 			inputs.twTitle && updateCounter( inputs.twTitle, getActiveValue( 'twitter' ), 'twitter' );
 		}
 		const updateRefTitle = tsfUtils.debounce(
 			() => {
+
 				setPlaceholders();
 				updateSocialCounters();
 			},
@@ -306,6 +317,7 @@ window.tsfSocial = function () {
 
 		const updateTitle = tsfUtils.debounce(
 			() => {
+
 				setPlaceholders();
 				updateSocialCounters();
 			},
@@ -331,6 +343,7 @@ window.tsfSocial = function () {
 
 		// We use context here because the description guidelines differ per social media embed.
 		function* _generateActiveValue( what, context ) {
+
 			const locks   = getState( 'inputLocks' ),
 				  phLocks = getState( 'placeholderLocks' );
 
@@ -370,6 +383,7 @@ window.tsfSocial = function () {
 			}
 		}
 		const getActiveValue = ( what, context ) => {
+
 			const generator = _generateActiveValue( what, context );
 
 			let val = '';
@@ -384,6 +398,7 @@ window.tsfSocial = function () {
 			return val?.length ? val : '';
 		}
 		const setPlaceholders = () => {
+
 			const locks   = getState( 'inputLocks' ),
 				  phLocks = getState( 'placeholderLocks' );
 
@@ -397,10 +412,14 @@ window.tsfSocial = function () {
 				inputs.twDesc.placeholder = locks.twDesc || phLocks.twDesc
 					? tsf.decodeEntities( getState( 'defaults' ).twDesc )
 					: tsf.decodeEntities( getActiveValue( 'og', 'twitter' ) );
+
+			window.tsfPropose?.syncProposed( inputs.ogDesc );
+			window.tsfPropose?.syncProposed( inputs.twDesc );
 		}
 		const updateCounter = ( target, text, type ) => {
+
 			const counter = document.getElementById( `${target.id}_chars` );
-			counter && tsfC?.updateCharacterCounter( {
+			counter && window.tsfC?.updateCharacterCounter( {
 				e:     counter,
 				text:  text,
 				field: 'description',
@@ -408,11 +427,13 @@ window.tsfSocial = function () {
 			} );
 		}
 		const updateSocialCounters = () => {
+
 			inputs.ogDesc && updateCounter( inputs.ogDesc, getActiveValue( 'og', 'og' ), 'opengraph' );
 			inputs.twDesc && updateCounter( inputs.twDesc, getActiveValue( 'twitter', 'twitter' ), 'twitter' );
 		}
 		const updateRefDesc = tsfUtils.debounce(
 			() => {
+
 				setPlaceholders();
 				updateSocialCounters();
 			},
@@ -422,6 +443,7 @@ window.tsfSocial = function () {
 
 		const updateDesc = tsfUtils.debounce(
 			() => {
+
 				setPlaceholders();
 				updateSocialCounters();
 			},

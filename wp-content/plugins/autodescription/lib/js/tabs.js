@@ -8,7 +8,7 @@
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2020 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2020 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -58,9 +58,11 @@ window.tsfTabs = function () {
 	 * @access private
 	 */
 	function _correctTabFocus() {
+
 		let changeEvent = new Event( 'change' );
 
 		tabStack.forEach( args => {
+
 			if ( ! args.fixHistory ) return;
 			document.querySelectorAll( `.${args.HTMLClasses.tabRadio}:checked` ).forEach( el => {
 				el.dispatchEvent( changeEvent );
@@ -188,6 +190,7 @@ window.tsfTabs = function () {
 		const allContent = document.querySelectorAll( `.${target.name}-content` );
 
 		const lockHeight = () => {
+
 			container.style.boxSizing = 'border-box'; // FIXME this won't cause issues, right...? Ugh.
 			container.style.minHeight = `${container.getBoundingClientRect().height}px`;
 		}
@@ -196,6 +199,7 @@ window.tsfTabs = function () {
 		}
 
 		const setCorrectTab = async () => {
+
 			let newContent = document.getElementById( `${_toggleCache.get( 'target' ).get( cacheId )}-content` );
 
 			// Lock height, so to prevent jumping.
@@ -212,6 +216,7 @@ window.tsfTabs = function () {
 			return testTab(); // do not pass newContent!
 		}
 		const testTab = async () => {
+
 			// Regain this value from a new query, for the toggle's target-cache might've changed.
 			let newContent = document.getElementById( `${_toggleCache.get( 'target' ).get( cacheId )}-content` );
 
@@ -233,6 +238,7 @@ window.tsfTabs = function () {
 		}
 
 		const doPromise = () => new Promise( async resolve => {
+
 			allContent.forEach( el => { tsfUI.fadeOut( el, fadeOutTimeout ) } );
 			// Await fadeout before continuing (with fadeIn at setCorrectTab).
 			await tsfUtils.delay( fadeOutTimeout );
@@ -242,6 +248,7 @@ window.tsfTabs = function () {
 		const clearPromise = () => _toggleCache.get( 'promises' ).delete( cacheId );
 
 		const runPromise = () => {
+
 			if ( _toggleCache.get( 'promises' ).has( cacheId ) ) return;
 
 			_toggleCache.get( 'promises' ).set( cacheId, doPromise );
@@ -291,6 +298,7 @@ window.tsfTabs = function () {
 
 				event.stopPropagation();
 				event.preventDefault();
+
 				return false;
 			}
 		}
@@ -376,33 +384,37 @@ window.tsfTabs = function () {
 		} );
 	}
 
-	return Object.assign( {
-		/**
-		 * Initialises all aspects of the scripts.
-		 * You shouldn't call this.
-		 *
-		 * @since 4.1.3
-		 * @access protected
-		 *
-		 * @function
-		 */
-		load: () => {
-			_toggleCache.set( 'promises', new Map() );
-			_toggleCache.set( 'target', new Map() );
-			_toggleCache.set( 'wrap', new Map() );
-			_toggleCache.set( 'container', new Map() );
+	return Object.assign(
+		{
+			/**
+			 * Initialises all aspects of the scripts.
+			 * You shouldn't call this.
+			 *
+			 * @since 4.1.3
+			 * @access protected
+			 *
+			 * @function
+			 */
+			load: () => {
 
-			// Delay the focus fix, so not to delay the interactive state... even though it causes a page jump. This merely addresses an edge-case.
-			window.addEventListener( 'load', _correctTabFocus );
+				_toggleCache.set( 'promises', new Map() );
+				_toggleCache.set( 'target', new Map() );
+				_toggleCache.set( 'wrap', new Map() );
+				_toggleCache.set( 'container', new Map() );
+
+				// Delay the focus fix, so not to delay the interactive state... even though it causes a page jump. This merely addresses an edge-case.
+				window.addEventListener( 'load', _correctTabFocus );
+			},
 		},
-	}, {
-		hideTab,
-		showTab,
-		toggleTab,
-		toggleToInstant,
-		toggleTo,
-		getStack,
-		initStack,
-	} );
+		{
+			hideTab,
+			showTab,
+			toggleTab,
+			toggleToInstant,
+			toggleTo,
+			getStack,
+			initStack,
+		},
+	);
 }();
 window.tsfTabs.load();

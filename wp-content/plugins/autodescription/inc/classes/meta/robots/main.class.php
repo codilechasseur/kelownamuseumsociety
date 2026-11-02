@@ -14,7 +14,7 @@ use function The_SEO_Framework\umemo;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -40,8 +40,8 @@ final class Main {
 
 	/**
 	 * @since 4.2.0
-	 * @var array|null $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                       Leave null to autodetermine query.
+	 * @var ?array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                   Leave null to autodetermine query.
 	 */
 	private $args;
 
@@ -82,7 +82,7 @@ final class Main {
 	 * @since 4.2.0
 	 * @access private
 	 */
-	private function __construct() { }
+	private function __construct() {}
 
 	/**
 	 * Creates and returns the instance.
@@ -101,14 +101,16 @@ final class Main {
 	 * @since 4.2.0
 	 * @access private
 	 *
-	 * @param array|null $args    The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                            Leave null to autodetermine query.
-	 * @param int        $options Modifies return values/assertions. See const ROBOTS_* at /bootstrap/define.php
+	 * @param ?array $args    The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                        Leave null to autodetermine query.
+	 * @param int    $options Modifies return values/assertions. See const ROBOTS_* at /bootstrap/define.php
 	 * @return Main $this
 	 */
 	public function set( $args = null, $options = 0 ) {
+
 		$this->args    = $args;
 		$this->options = $options;
+
 		return $this;
 	}
 
@@ -118,7 +120,7 @@ final class Main {
 	 * @since 4.2.0
 	 * @access public
 	 *
-	 * @param null|array $get The robots types to retrieve. See class constant GETTERS for valid values.
+	 * @param ?array $get The robots types to retrieve. See class constant GETTERS for valid values.
 	 * @return array The robots-values results. Assert values may be true-esque.
 	 */
 	public function get( $get = null ) {
@@ -150,8 +152,9 @@ final class Main {
 			$generator->send( $g );
 
 			do {
+				// goto while() -- motivating generator.
 				// phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.Found -- Shhh. It's OK. I'm a professional.
-				if ( ( $r = $generator->current() ) === $halt ) continue; // goto while() -- motivating generator.
+				if ( ( $r = $generator->current() ) === $halt ) continue;
 
 				$results[ $g ] = $r;
 
@@ -178,11 +181,11 @@ final class Main {
 			null,
 			isset( $this->args ),
 		)
-		?? umemo(
-			__METHOD__,
-			isset( $this->args ) ? new Args : new Front,
-			isset( $this->args ),
-		);
+			?? umemo(
+				__METHOD__,
+				isset( $this->args ) ? new Args : new Front,
+				isset( $this->args ),
+			);
 	}
 
 	/**
@@ -221,6 +224,7 @@ final class Main {
 	 * @see $this->collect_assertions()
 	 */
 	private function reset_assertions() {
+
 		// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- No function by reference support?
 		$assertions = &$this->collect_assertions();
 		$assertions = [];

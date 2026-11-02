@@ -9,7 +9,7 @@ namespace {
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2018 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2018 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -96,9 +96,28 @@ namespace {
 	 *
 	 * @since 5.0.0
 	 * @since 5.1.4 Added the `title` attribute.
+	 * @since 5.2.0 1. Now omits the `<style>` element when `the_seo_framework_breadcrumb_shortcode_css` returns no rules.
+	 *              2. An empty `home` attribute now omits the `home` crumb.
+	 *              3. Added the `max` attribute, which collapses the trail. Values below 3 are raised to 3.
+	 *              4. The `home` label and `aria-current` now follow each crumb's `role` instead of its
+	 *                 position. Each crumb must have a `role`.
+	 *              5. A crumb without a URL now renders as `<span>` instead of an empty link.
 	 * @link <https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/examples/breadcrumb/>
 	 *
-	 * @param array $atts The shortcode attributes.
+	 * @param array|string $atts {
+	 *     The shortcode attributes. WordPress passes an empty string when there are none.
+	 *
+	 *     @type string   $sep   The separator, added through the CSS `content` property. Default `\203A`.
+	 *     @type string   $home  The name of the `home` and `current-home` crumbs.
+	 *                           An empty string omits the `home` crumb.
+	 *                           Default "Home", as translated by WordPress.
+	 *     @type string   $class The class of the `nav` element. Only the first valid class name is kept.
+	 *                           Default `tsf-breadcrumb`.
+	 *     @type ?string  $title `meta` considers meta titles; any other value uses page titles.
+	 *                           Default null, which follows the 'breadcrumb_use_meta_title' option.
+	 *     @type ?numeric $max   The most crumbs to show; a longer trail collapses.
+	 *                           Values below 3 are raised to 3. Default null, which shows the whole trail.
+	 * }
 	 * @return string The breadcrumbs.
 	 */
 	function tsf_breadcrumb( $atts = [] ) {
@@ -109,6 +128,7 @@ namespace {
 				'home'  => __( 'Home', 'default' ), // defined in wp_page_menu()
 				'class' => 'tsf-breadcrumb',
 				'title' => null,
+				'max'   => null,
 			],
 			$atts,
 			'tsf_breadcrumb',
@@ -120,40 +140,68 @@ namespace {
 		$class = $matches[0] ?? 'tsf-breadcrumb';
 		$sep   = esc_html( $atts['sep'] );
 
-		$options = [
-			'use_meta_title' => isset( $atts['title'] ) ? 'meta' === $atts['title'] : null,
-		];
+		$trail  = \The_SEO_Framework\Meta\Breadcrumbs::get_breadcrumb_list(
+			null,
+			[
+				'use_meta_title' => isset( $atts['title'] ) ? 'meta' === $atts['title'] : null,
+			],
+		);
+		$crumbs = [];
 
-		$crumbs = \The_SEO_Framework\Meta\Breadcrumbs::get_breadcrumb_list( null, $options );
-		$count  = count( $crumbs );
-		$items  = [];
-
-		$home = \The_SEO_Framework\coalesce_strlen( $atts['home'] ) ?? $crumbs[0]['name'];
-
-		if ( 1 === $count ) {
-			$items[] = sprintf(
-				'<span aria-current="page">%s</span>',
-				esc_html( $home ),
-			);
-		} else {
-			foreach ( $crumbs as $i => $crumb ) {
-				if ( ( $count - 1 ) === $i ) {
-					$items[] = sprintf(
-						'<span aria-current="page">%s</span>',
-						esc_html( $crumb['name'] ),
-					);
-				} else {
-					$items[] = sprintf(
-						'<a href="%s">%s</a>',
-						esc_url( $crumb['url'] ),
-						esc_html( 0 === $i ? $home : $crumb['name'] ),
-					);
-				}
+		foreach ( $trail as $crumb ) {
+			// home="" omits the home crumb. home="0" is the label "0". A bare home attribute is ignored.
+			if ( '' === $atts['home'] ) {
+				if ( 'home' === $crumb['role'] ) continue;
+			} elseif ( 'home' === $crumb['role'] || 'current-home' === $crumb['role'] ) {
+				$crumb['name'] = $atts['home'];
 			}
+
+			$crumbs[] = $crumb;
+		}
+
+		// The collapse keeps the last `max - 1` crumbs, so it waits for the complete trail.
+		if ( $atts['max'] ) {
+			$max = max( 3, (int) $atts['max'] ); // At least the first, parent, and current crumbs.
+
+			if ( count( $crumbs ) > $max )
+				$crumbs = [
+					$crumbs[0],
+					[
+						'role' => 'ellipsis',
+						'name' => '',
+						'url'  => '',
+					],
+					...array_slice( $crumbs, -( $max - 1 ) ),
+				];
 		}
 
 		$html = '';
-		foreach ( $items as $item ) {
+
+		foreach ( $crumbs as $crumb ) {
+			if ( 'ellipsis' === $crumb['role'] ) {
+				$html .= <<<'HTML'
+					<li class="breadcrumb-item breadcrumb-ellipsis" aria-hidden="true">&hellip;</li>
+					HTML;
+				continue;
+			}
+
+			$name    = esc_html( $crumb['name'] );
+			$current = 'current' === $crumb['role'] || 'current-home' === $crumb['role'];
+
+			if ( $current || '' === $crumb['url'] ) {
+				$item = sprintf(
+					'<span%s>%s</span>',
+					$current ? ' aria-current="page"' : '',
+					$name,
+				);
+			} else {
+				$item = sprintf(
+					'<a href="%s">%s</a>',
+					esc_url( $crumb['url'] ),
+					$name,
+				);
+			}
+
 			$html .= <<<HTML
 				<li class="breadcrumb-item">$item</li>
 				HTML;
@@ -161,6 +209,9 @@ namespace {
 
 		/**
 		 * @since 5.0.0
+		 * @since 5.2.0 1. Added `padding-inline-start:0` to `nav.$class ol`.
+		 *              2. Now omits the `<style>` element when this filter returns no rules.
+		 *              3. `nav.$class ol` is now a wrapping flex row whose crumbs use `white-space:nowrap`.
 		 * @param array  $css   The CSS selectors and their attributes.
 		 * @param string $class The class name of the breadcrumb wrapper.
 		 */
@@ -168,12 +219,15 @@ namespace {
 			'the_seo_framework_breadcrumb_shortcode_css',
 			[
 				"nav.$class ol"                            => [
-					'display:inline',
+					'display:flex',
+					'flex-wrap:wrap',
 					'list-style:none',
 					'margin-inline-start:0',
+					'padding-inline-start:0',
 				],
-				"nav.$class ol li"                         => [ // We could combine with above; but this is easier for other devs.
-					'display:inline',
+				"nav.$class ol li"                         => [
+					'white-space:nowrap',
+					'list-style:none',
 				],
 				"nav.$class ol li:not(:last-child)::after" => [
 					"content:'$sep'",
@@ -193,17 +247,24 @@ namespace {
 				implode( ';', $declaration ),
 			);
 
-		$style = "<style>$styles</style>";
+		$style = $styles ? "<style>$styles</style>" : '';
 		$nav   = <<<HTML
 			<nav aria-label="Breadcrumb" class="$class"><ol>$html</ol></nav>
 			HTML;
 
 		/**
 		 * @since 5.0.0
+		 * @since 5.2.0 1. `$style` is now an empty string when the CSS filter returns no rules.
+		 *              2. `$crumbs` may now omit the `home` crumb, rename it, and include an ellipsis item
+		 *                 when `max` collapses the trail. It is still the list rendered in the shortcode.
+		 *              3. Added `$trail`, the generated list before those changes.
 		 * @param string $output The entire breadcrumb navigation element output.
-		 * @param array  $crumbs The breadcrumbs found.
+		 * @param array  $crumbs The breadcrumb items rendered in the shortcode. May omit the `home` crumb,
+		 *                       use the `home` attribute as its name, and include an item with role `ellipsis`.
 		 * @param string $nav    The breadcrumb navigation element.
-		 * @param string $style  The CSS style element appended.
+		 * @param string $style  The CSS style element appended. Empty when no CSS rules remain.
+		 * @param array  $trail  The generated breadcrumb list before the shortcode omits or renames
+		 *                       the `home` crumb, or collapses the trail.
 		 */
 		return apply_filters(
 			'the_seo_framework_breadcrumb_shortcode_output',
@@ -211,6 +272,7 @@ namespace {
 			$crumbs,
 			$nav,
 			$style,
+			$trail,
 		);
 	}
 }
@@ -271,9 +333,9 @@ namespace The_SEO_Framework {
 	 * @see https://github.com/sybrew/the-seo-framework/issues/640#issuecomment-1703260744.
 	 *      We made an exception about passing by reference for this function.
 	 *
-	 * @param array|null $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                         Leave null to have queries be autodetermined.
-	 *                         Passed by reference.
+	 * @param ?array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                     Leave null to have queries be autodetermined.
+	 *                     Passed by reference.
 	 */
 	function normalize_generation_args( &$args ) {
 
@@ -344,7 +406,9 @@ namespace The_SEO_Framework {
 	 * @return bool True if already called, false otherwise.
 	 */
 	function has_run( $caller ) {
+
 		static $ran = [];
+
 		return $ran[ $caller ] ?? ! ( $ran[ $caller ] = true );
 	}
 
@@ -369,11 +433,11 @@ namespace The_SEO_Framework {
 	 * Example usage:
 	 * ```
 	 * function expensive_call( $arg ) {
-	 *     print( "expensive $arg!" );
+	 *     print "expensive $arg!";
 	 *     return $arg * 2;
 	 * }
 	 * function my_function( $arg ) {
-	 *     return memo( null, $arg );
+	 *     return memo( null, $arg )
 	 *         ?? memo( expensive_call( $arg ), $arg );
 	 * }
 	 * my_function( 1 ); // prints "expensive 1!", returns 2.
@@ -428,11 +492,11 @@ namespace The_SEO_Framework {
 	 * Example usage:
 	 * ```
 	 * function expensive_call( $arg ) {
-	 *     print( "expensive $arg!" );
+	 *     print "expensive $arg!";
 	 *     return $arg * 2;
 	 * }
 	 * function my_function( $arg ) {
-	 *     return umemo( __METHOD__, null, $arg );
+	 *     return umemo( __METHOD__, null, $arg )
 	 *         ?? umemo( __METHOD__, expensive_call( $arg ), $arg );
 	 * }
 	 * my_function( 1 ); // prints "expensive 1!", returns 2.
@@ -475,7 +539,7 @@ namespace The_SEO_Framework {
 	 *
 	 * Example usage, PHP7.4+:
 	 * ```
-	 * function my_function( $arg ) { return fmemo( fn() => print( $arg ) + 5 ); }
+	 * function my_function( $arg ) { return fmemo( fn() => print $arg + 5 ); }
 	 * my_function( 1 ); // prints '1', returns 6.
 	 * my_function( 1 ); // does not print, returns 6.
 	 * ```
@@ -483,7 +547,7 @@ namespace The_SEO_Framework {
 	 * This way, callers of my_function() won't bust the cache by sending unregistered superfluous arguments.
 	 *
 	 * ```
-	 * function printer() { print( 69 ); }
+	 * function printer() { print 69; }
 	 * function print_once() { fmemo( 'printer' ); }
 	 * print_once(); // 69
 	 * print_once(); // *cricket noises*
@@ -497,7 +561,7 @@ namespace The_SEO_Framework {
 	 * TODO Can we use callables as $func? If so, adjust docs and apply internally.
 	 *
 	 * @param callable $func The Closure or function to memoize.
-	 *                       The Closure can only be cached properly if it's staticlaly stored.
+	 *                       The Closure can only be cached properly if it's statically stored.
 	 * @return mixed The cached value if $value_to_set is null.
 	 *               Otherwise, the $value_to_set.
 	 */

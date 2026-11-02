@@ -26,7 +26,6 @@ a.tsf-tooltip-item {
 	pointer-events: none;
 	box-sizing: border-box;
 	display: flex;
-	flex: 1 1 auto;
 	flex-flow: row wrap;
 	justify-content: flex-start;
 	direction: ltr;
@@ -58,6 +57,10 @@ a.tsf-tooltip-item {
 	flex: 1 0 auto;
 	flex-flow: row wrap;
 	justify-content: flex-start;
+}
+
+.tsf-tooltip-text {
+	max-width: 256px;
 }
 
 .tsf-tooltip-text-wrap * {
@@ -108,7 +111,7 @@ a.tsf-tooltip-item {
 	top: -8px;
 }
 
-.tsf-tooltip-arrow:before {
+.tsf-tooltip-arrow::before {
 	content: "";
 	border-left: 9px solid transparent;
 	border-right: 9px solid transparent;
@@ -118,7 +121,7 @@ a.tsf-tooltip-item {
 	left: 0;
 }
 
-.tsf-tooltip-arrow:after {
+.tsf-tooltip-arrow::after {
 	content: "";
 	border-left: 8px solid transparent;
 	border-right: 8px solid transparent;
@@ -128,14 +131,14 @@ a.tsf-tooltip-item {
 	left: 1px;
 }
 
-.tsf-tooltip-down .tsf-tooltip-arrow:before {
+.tsf-tooltip-down .tsf-tooltip-arrow::before {
 	bottom: auto;
 	top: 0;
 	border-top: 0;
 	border-bottom: 9px solid rgba( 0, 0, 0, .25 );
 }
 
-.tsf-tooltip-down .tsf-tooltip-arrow:after {
+.tsf-tooltip-down .tsf-tooltip-arrow::after {
 	bottom: auto;
 	top: 1px;
 	border-top: 0;

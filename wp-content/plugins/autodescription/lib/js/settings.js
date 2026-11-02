@@ -8,7 +8,7 @@
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -90,6 +90,7 @@ window.tsfSettings = function( $ ) {
 		form.addEventListener(
 			'submit',
 			() => {
+
 				submitButtons.forEach( el => el.disabled = true );
 				setTimeout( () => submitButtons.forEach( el => el.disabled = false ), 3000 );
 			},
@@ -100,6 +101,7 @@ window.tsfSettings = function( $ ) {
 	 * Initializes input helpers for the General Settings.
 	 *
 	 * @since 4.0.0
+	 * @since 5.2.0 Now toggles editing of generated values.
 	 * @access private
 	 */
 	function _initGeneralSettings() {
@@ -114,10 +116,11 @@ window.tsfSettings = function( $ ) {
 		 * @param {Event} event
 		 */
 		const toggleCharCounterDisplay = event => {
+
 			document.querySelectorAll( '.tsf-counter-wrap' ).forEach( el => {
 				el.style.display = event.target.checked ? '' : 'none';
 			} );
-			event.target.checked && tsfC?.triggerCounterUpdate();
+			event.target.checked && window.tsfC?.triggerCounterUpdate();
 		}
 		document.getElementById( _getSettingsId( 'display_character_counter' ) )
 			?.addEventListener( 'click', toggleCharCounterDisplay );
@@ -132,13 +135,29 @@ window.tsfSettings = function( $ ) {
 		 * @param {Event} event
 		 */
 		const togglePixelCounterDisplay = event => {
+
 			document.querySelectorAll( '.tsf-pixel-counter-wrap' ).forEach( el => {
 				el.style.display = event.target.checked ? '' : 'none';
 			} );
-			event.target.checked && tsfC?.triggerCounterUpdate();
+			event.target.checked && window.tsfC?.triggerCounterUpdate();
 		}
 		document.getElementById( _getSettingsId( 'display_pixel_counter' ) )
 			?.addEventListener( 'click', togglePixelCounterDisplay );
+
+		/**
+		 * Engages editing of generated values while the checkbox is checked.
+		 *
+		 * @since 5.2.0
+		 * @access private
+		 *
+		 * @function
+		 * @param {Event} event
+		 */
+		const toggleEditGeneratedValues = event => {
+			event.target.checked ? window.tsfPropose?.engage() : window.tsfPropose?.disengage();
+		}
+		document.getElementById( _getSettingsId( 'edit_proposed_values' ) )
+			?.addEventListener( 'click', toggleEditGeneratedValues );
 
 		/**
 		 * Emits a canonical URL scheme change to rewrite canonical URLs on the page.
@@ -171,11 +190,13 @@ window.tsfSettings = function( $ ) {
 			  excludedPtTaxonomies  = new Set(), // Excluded taxonomies via post types.
 			  excludedTaxonomiesAll = new Set(); // Combined E_Taxonomies + E_PtTaxonomies
 		const validateTaxonomyState = () => {
+
 			// We want to show that the taxonomy is excluded, but make that auto-reversible, and somehow still enactable?
 			let taxEntries    = document.querySelectorAll( '.tsf-excluded-taxonomies' ),
-				triggerchange = false;
+				triggerChange = false;
 
 			taxEntries.forEach( element => {
+
 				// get taxonomy from last [] entry.
 				const taxonomy = element.name.split( /(?:.+\[)(.+?)(?:])/ ).join( '' );
 
@@ -185,7 +206,7 @@ window.tsfSettings = function( $ ) {
 				if ( isDisabled ) {
 					if ( ! excludedPtTaxonomies.has( taxonomy ) ) {
 						// Newly disabled, trigger change.
-						triggerchange = true;
+						triggerChange = true;
 					}
 					// Filter it out to prevent duplicates. Redundant?
 					excludedPtTaxonomies.add( taxonomy );
@@ -193,16 +214,17 @@ window.tsfSettings = function( $ ) {
 					if ( excludedPtTaxonomies.has( taxonomy ) ) {
 						excludedPtTaxonomies.delete( taxonomy );
 						// Enabled again, was disabled. Trigger change.
-						triggerchange = true;
+						triggerChange = true;
 					}
 				}
 				refreshTaxonomies();
-				triggerchange && dispatchTaxonomySupportChangedEvent( taxonomy );
+				triggerChange && dispatchTaxonomySupportChangedEvent( taxonomy );
 			} );
 		}
 		document.body.addEventListener( 'tsf-post-type-support-changed', validateTaxonomyState );
 
 		const refreshTaxonomies = () => {
+
 			// Refresh and concatenate.
 			excludedTaxonomiesAll.clear();
 			excludedTaxonomies.forEach( taxonomy => excludedTaxonomiesAll.add( taxonomy ) );
@@ -221,7 +243,7 @@ window.tsfSettings = function( $ ) {
 				}
 			) );
 		}
-		const dispatchPosttypeSupportChangedEvent = postType => {
+		const dispatchPostTypeSupportChangedEvent = postType => {
 			document.body.dispatchEvent( new CustomEvent(
 				'tsf-post-type-support-changed',
 				{
@@ -243,12 +265,12 @@ window.tsfSettings = function( $ ) {
 			let postType = event.target.name.split( /(?:.+\[)(.+?)(?:])/ ).join( '' );
 			if ( event.target.checked ) {
 				excludedPostTypes.add( postType );
-				dispatchPosttypeSupportChangedEvent( postType );
+				dispatchPostTypeSupportChangedEvent( postType );
 			} else {
 				// No need to filter when it was never registered in the first place.
 				if ( init ) {
 					excludedPostTypes.delete( postType );
-					dispatchPosttypeSupportChangedEvent( postType );
+					dispatchPostTypeSupportChangedEvent( postType );
 				}
 			}
 		}
@@ -272,10 +294,12 @@ window.tsfSettings = function( $ ) {
 			}
 		}
 		document.querySelectorAll( '.tsf-excluded-post-types' ).forEach( el => {
+
 			el.addEventListener( 'change', checkDisabledPT );
 			_dispatchAtInteractive( el, 'change' );
 		} );
 		document.querySelectorAll( '.tsf-excluded-taxonomies' ).forEach( el => {
+
 			el.addEventListener( 'change', checkDisabledTaxonomy );
 			_dispatchAtInteractive( el, 'change' );
 		} );
@@ -292,6 +316,7 @@ window.tsfSettings = function( $ ) {
 	function _initColorPicker() {
 
 		document.querySelectorAll( '.tsf-color-picker' ).forEach( element => {
+
 			// We might as well switch to jQuery instantly since wpColorPicker added its prototype to it.
 			let $input       = $( element ),
 				currentColor = '',
@@ -301,6 +326,7 @@ window.tsfSettings = function( $ ) {
 				defaultColor: defaultColor,
 				width: 238,
 				change: () => {
+
 					currentColor = $input.wpColorPicker( 'color' );
 
 					if ( '' === currentColor )
@@ -311,6 +337,7 @@ window.tsfSettings = function( $ ) {
 					tsfAys.registerChange();
 				},
 				clear: () => {
+
 					// We can't loop this to the change method, as it's not reliable (due to deferring?).
 					// So, we just fill it in for the user.
 					if ( defaultColor.length ) {
@@ -343,6 +370,7 @@ window.tsfSettings = function( $ ) {
 		 * @function
 		 */
 		const toggleAdditionsDisplayExample = event => {
+
 			if ( event.target.checked ) {
 				document.querySelectorAll( '.tsf-title-additions-js' ).forEach( el => el.style.display = 'none' );
 				if ( socialAdditionsToggle ) {
@@ -391,10 +419,12 @@ window.tsfSettings = function( $ ) {
 				  locationClass = 'tsf-title-additions-location-hidden';
 
 			document.querySelectorAll( '.tsf-title-additions-example-left' ).forEach( el => {
+
 				el.classList.toggle( locationClass, ! showLeft );
 				el.classList.remove( 'hidden' );
 			} );
 			document.querySelectorAll( '.tsf-title-additions-example-right' ).forEach( el => {
+
 				el.classList.toggle( locationClass, showLeft );
 				el.classList.remove( 'hidden' );
 			} );
@@ -406,6 +436,7 @@ window.tsfSettings = function( $ ) {
 			);
 		}
 		document.querySelectorAll( '#tsf-title-location input' ).forEach( el => {
+
 			el.addEventListener( 'change', toggleAdditionsLocationExample );
 			if ( el.checked )
 				_dispatchAtInteractive( el, 'change' );
@@ -423,10 +454,12 @@ window.tsfSettings = function( $ ) {
 				  prefixClass = 'tsf-title-tax-prefix-hidden';
 
 			document.querySelectorAll( '.tsf-title-tax-prefix' ).forEach( el => {
+
 				el.classList.toggle( prefixClass, ! showPrefix );
 				el.classList.remove( 'hidden' );
 			} );
 			document.querySelectorAll( '.tsf-title-tax-noprefix' ).forEach( el => {
+
 				el.classList.toggle( prefixClass, showPrefix );
 				el.classList.remove( 'hidden' );
 			} );
@@ -446,6 +479,7 @@ window.tsfSettings = function( $ ) {
 		 * @param {Event} event
 		 */
 		const updateSeparator = event => {
+
 			const separator   = tsf.decodeEntities( event.target.dataset.entity ),
 				  activeClass = 'tsf-title-separator-active';
 
@@ -494,6 +528,7 @@ window.tsfSettings = function( $ ) {
 		 * @param {Event} event
 		 */
 		 const adjustSiteTitleExampleOutput = event => {
+
 			let examples = document.querySelectorAll( '.tsf-site-title-js' ),
 				newVal   = tsf.decodeEntities( tsf.sDoubleSpace( event.target.value.trim() ) );
 
@@ -529,18 +564,20 @@ window.tsfSettings = function( $ ) {
 		 * @function
 		 */
 		const enqueueGeneralInputListeners = () => {
+
 			tsfTitle.enqueueUnregisteredInputTrigger( _getSettingsId( 'homepage_title' ) );
 			tsfDescription.enqueueUnregisteredInputTrigger( _getSettingsId( 'homepage_description' ) );
 		}
 
 		/**
-		 * Enqueues doctitles input trigger synchronously on postbox collapse or open.
+		 * Enqueues doc-titles input trigger synchronously on postbox collapse or open.
 		 *
 		 * @function
 		 * @param {!jQuery.Event} event
 		 * @param {Element}       elem
 		 */
 		const triggerPostboxSynchronousUnregisteredInput = ( event, elem ) => {
+
 			if ( 'autodescription-homepage-settings' === elem.id ) {
 				let inside = elem.querySelector( '.inside' );
 				if ( inside.offsetHeight > 0 && inside.offsetWidth > 0 ) {
@@ -604,6 +641,7 @@ window.tsfSettings = function( $ ) {
 			);
 		}
 		document.querySelectorAll( '#tsf-home-title-location input' ).forEach( el => {
+
 			el.addEventListener( 'change', toggleHoverAdditionsPlacement );
 			if ( el.checked )
 				_dispatchAtInteractive( el, 'change' );
@@ -616,6 +654,7 @@ window.tsfSettings = function( $ ) {
 		 * @param {string} visibility
 		 */
 		const setTitleVisibilityPrefix = visibility => {
+
 			let oldPrefixValue = tsfTitle.getStateOf( _titleId, 'prefixValue' ),
 				prefixValue    = '';
 
@@ -650,6 +689,7 @@ window.tsfSettings = function( $ ) {
 		 * @param {Event} event
 		 */
 		const adjustHomepageExampleOutput = event => {
+
 			let examples = document.querySelectorAll( '.tsf-custom-title-js' ),
 				val      = tsf.decodeEntities( tsf.sDoubleSpace( event.target.value.trim() ) );
 
@@ -671,9 +711,11 @@ window.tsfSettings = function( $ ) {
 		 * @function
 		 */
 		const updateHomePageTaglineExampleOutput = () => {
+
 			clearTimeout( updateHomePageTaglineExampleOutputBuffer );
 			updateHomePageTaglineExampleOutputBuffer = setTimeout(
 				() => {
+
 					let value = tsfTitle.getStateOf( _titleId, 'additionValue' );
 
 					value = tsf.decodeEntities( tsf.sDoubleSpace( value.trim() ) );
@@ -701,6 +743,7 @@ window.tsfSettings = function( $ ) {
 		 * @function
 		 */
 		const updateHoverAdditionsValue = () => {
+
 			let value = taglineInput.value.trim();
 
 			if ( ! value.length )
@@ -722,6 +765,7 @@ window.tsfSettings = function( $ ) {
 		 * @param {Event} event
 		 */
 		const toggleHomePageTaglineExampleDisplay = event => {
+
 			let addAdditions = false;
 
 			if ( event.target.checked ) {
@@ -822,19 +866,16 @@ window.tsfSettings = function( $ ) {
 
 		const twitterCardType = document.getElementById( _getSettingsId( 'homepage_twitter_card_type' ) );
 		const updateTitleRemoveAdditions = event => {
+
 			const { cardType } = event.detail;
 
 			const _defaultIndexOption = twitterCardType.querySelector( '[value=""]' ),
 				  _data               = twitterCardType.dataset || {};
 
-			const newHTML = _data.defaultI18n?.replace(
+			_defaultIndexOption.textContent = ( _data.defaultI18n || '' ).replace(
 				'%s',
-				_data.defaultLocked
-					? _data.defaultValue
-					: cardType,
+				_data.defaultLocked ? _data.defaultValue : cardType,
 			);
-
-			_defaultIndexOption.innerHTML = newHTML;
 			twitterCardType.dispatchEvent( new Event( 'change' ) );
 		}
 		if ( twitterCardType )
@@ -929,6 +970,7 @@ window.tsfSettings = function( $ ) {
 
 		if ( state.isPage ) {
 			const checkPTNoindex = event => {
+
 				const { robotsType, set } = event.detail;
 
 				if ( 'noindex' !== robotsType ) return;
@@ -940,6 +982,7 @@ window.tsfSettings = function( $ ) {
 		}
 
 		const checkSiteNoindex = event => {
+
 			const { checked, robotsType } = event.detail;
 
 			if ( 'noindex' !== robotsType ) return;
@@ -1031,6 +1074,7 @@ window.tsfSettings = function( $ ) {
 		headerWrap && ( headerWrap.style.display = null );
 
 		const populateSelect = () => {
+
 			for ( const postType in postTypeData ) {
 				let _option       = optionOption.cloneNode();
 
@@ -1048,13 +1092,16 @@ window.tsfSettings = function( $ ) {
 		let _debounceSwitch = void 0,
 			_detailsEl;
 		const switchPostTypeSettingsView = event => {
+
 			clearTimeout( _debounceSwitch );
 			_debounceSwitch = setTimeout(
 				() => {
+
 					// Remove old details (if any).
 					_detailsEl && headerWrap?.removeChild( _detailsEl );
 
 					document.querySelectorAll( '.tsf-post-type-archive-wrap' ).forEach( el => {
+
 						if ( event.target.value === el.dataset.postType ) {
 							el.style.display = null;
 							_detailsEl = el.querySelector( '.tsf-post-type-archive-details' )?.cloneNode( true );
@@ -1095,6 +1142,7 @@ window.tsfSettings = function( $ ) {
 	function _initPtaListeners() {
 
 		const augmentSwitcher = event => {
+
 			const { postType, set } = event.detail,
 				  wrap              = document.querySelector( `.tsf-post-type-archive-wrap[data-post-type="${postType}"]` ),
 				  excluded          = set.has( postType );
@@ -1120,6 +1168,7 @@ window.tsfSettings = function( $ ) {
 	 * Initializes PTA's meta title input.
 	 *
 	 * @since 4.2.0
+	 * @since 5.2.0 Now puts the archive prefix in the generated title, as on terms.
 	 * @access private
 	 *
 	 * @param {String} postType The post type name.
@@ -1137,31 +1186,42 @@ window.tsfSettings = function( $ ) {
 			document.getElementById( `tsf-title-data_${_titleId}` )?.dataset.state || 0,
 		);
 
+		// tsfTitle shouldn't be aware of this--since we remove the prefix on-input.
+		const archiveTitle  = state?.defaultTitle?.trim() || '',
+			  archivePrefix = state?.prefixValue?.trim() || '';
+
 		if ( state ) {
-			tsfTitle.updateStateOf( _titleId, 'defaultTitle', state.defaultTitle );
 			tsfTitle.updateStateOf( _titleId, 'addAdditions', state.addAdditions );
 			tsfTitle.updateStateOf( _titleId, 'useSocialTagline', !! ( state.useSocialTagline || false ) );
 			tsfTitle.updateStateOf( _titleId, 'additionValue', state.additionValue );
 			tsfTitle.updateStateOf( _titleId, 'additionPlacement', state.additionPlacement );
-			tsfTitle.updateStateOf( _titleId, 'prefixValue', state.prefixValue );
-			tsfTitle.updateStateOf( _titleId, 'showPrefix', state.showPrefix );
 		}
 
 		/**
-		 * Updates title prefix, based on input and global settings.
+		 * Puts the archive prefix in the generated title when prefixes are enabled.
 		 *
 		 * @function
-		 * @param {Event} event
 		 */
-		const updateTitlePrefix = event => {
-			let showPrefix = ! event.target.value.trim().length;
+		const updateTitlePrefix = () => {
 
-			if ( document.getElementById( _getSettingsId( 'title_rem_prefixes' ) )?.checked )
-				showPrefix = false;
+			let defaultTitle = archiveTitle;
 
-			tsfTitle.updateStateOf( _titleId, 'showPrefix', showPrefix );
+			if (
+				   archivePrefix.length
+				&& ! document.getElementById( _getSettingsId( 'title_rem_prefixes' ) )?.checked
+			) {
+				if ( window.isRtl ) {
+					defaultTitle = `${archiveTitle} ${archivePrefix}`;
+				} else {
+					defaultTitle = `${archivePrefix} ${archiveTitle}`;
+				}
+			}
+
+			tsfTitle.updateStateOf( _titleId, 'defaultTitle', defaultTitle );
 		}
-		titleInput.addEventListener( 'input', updateTitlePrefix );
+
+		updateTitlePrefix();
+		titleInput.addEventListener( 'input', updateTitlePrefix, { capture: true } );
 
 		/**
 		 * Updates title additions, based on singular settings change.
@@ -1170,6 +1230,7 @@ window.tsfSettings = function( $ ) {
 		 * @param {Event} event
 		 */
 		const updateTitleAdditions = event => {
+
 			let addAdditions = ! event.target.checked;
 
 			if ( document.getElementById( _getSettingsId( 'title_rem_additions' ) )?.checked )
@@ -1182,16 +1243,35 @@ window.tsfSettings = function( $ ) {
 
 		const blogNameTrigger = document.getElementById( _getPtaInputId( postType, 'title_no_blog_name' ) );
 		const updateTitleRemoveAdditions = event => {
+
 			const { removeAdditions } = event.detail;
 
-			blogNameTrigger.disabled = removeAdditions;
+			const label = blogNameTrigger.closest( 'label' );
+
+			label.querySelector( '.tsf-title-no-blog-name-clone' )?.remove();
 
 			if ( removeAdditions ) {
-				blogNameTrigger.closest( 'label' ).insertAdjacentHTML( 'beforeend', disabledTitleAdditionsHelp );
-				tsfTT.triggerReset();
-			} else {
+				const clone = blogNameTrigger.cloneNode( true );
+
+				clone.type     = 'hidden';
+				clone.disabled = false;
+				clone.value    = blogNameTrigger.checked ? blogNameTrigger.value : '';
+				clone.id      += '-cloned';
+				clone.classList.add( 'tsf-title-no-blog-name-clone' );
+
+				blogNameTrigger.disabled = true;
+
 				// 'tsf-title-additions-warning' is defined at `../inc/views/templates/settings/settings.php`
-				blogNameTrigger.closest( 'label' ).querySelector( '.tsf-title-additions-warning' )?.remove();
+				if ( ! label.querySelector( '.tsf-title-additions-warning' ) ) {
+					label.insertAdjacentHTML( 'beforeend', disabledTitleAdditionsHelp );
+					tsfTT.triggerReset();
+				}
+
+				label.append( clone );
+			} else {
+				blogNameTrigger.disabled = false;
+
+				label.querySelector( '.tsf-title-additions-warning' )?.remove();
 			}
 
 			blogNameTrigger.dispatchEvent( new Event( 'change' ) );
@@ -1268,17 +1348,13 @@ window.tsfSettings = function( $ ) {
 
 		const twitterCardType = document.getElementById( _getPtaInputId( postType, 'tw_card_type' ) );
 		const updateTitleRemoveAdditions = event => {
+
 			const { cardType } = event.detail;
 
 			const _defaultIndexOption = twitterCardType.querySelector( '[value=""]' ),
 				  _data               = twitterCardType.dataset || {};
 
-			const newHTML = _data.defaultI18n?.replace(
-				'%s',
-				cardType,
-			);
-
-			_defaultIndexOption.innerHTML = newHTML;
+			_defaultIndexOption.textContent = ( _data.defaultI18n || '' ).replace( '%s', cardType ?? '' );
 			twitterCardType.dispatchEvent( new Event( 'change' ) );
 		}
 		if ( twitterCardType )
@@ -1345,6 +1421,7 @@ window.tsfSettings = function( $ ) {
 			pt:   new Map(),
 		}
 		const isNo_Default = robotsType => {
+
 			let off = false;
 
 			if ( 'noindex' === robotsType )
@@ -1353,6 +1430,7 @@ window.tsfSettings = function( $ ) {
 			return off || robotsData.site.get( robotsType ) || robotsData.pt.get( robotsType );
 		}
 		const updateRobots = robotsType => {
+
 			const robotsSelect = document.getElementById( _getPtaInputId( postType, robotsType ) );
 
 			if ( ! robotsSelect ) return;
@@ -1360,26 +1438,28 @@ window.tsfSettings = function( $ ) {
 			const _defaultIndexOption = [ ...robotsSelect.options ].find( o => '0' === o.value ),
 				  _data               = robotsSelect.dataset || {};
 
-			const newHTML = _data.defaultI18n?.replace(
+			const newText = ( _data.defaultI18n || '' ).replace(
 				'%s',
-				tsf.decodeEntities(
-					isNo_Default( robotsType ) ? _data.defaultOff : _data.defaultOn,
-				)
+				isNo_Default( robotsType ) ? _data.defaultOff : _data.defaultOn,
 			);
 
-			if ( newHTML !== _defaultIndexOption?.innerHTML ) {
-				_defaultIndexOption.innerHTML = newHTML;
+			if ( newText !== _defaultIndexOption?.textContent ) {
+				_defaultIndexOption.textContent = newText;
 				robotsSelect.dispatchEvent( new Event( 'change' ) );
 			}
 		}
 		const _registerPTDefaultRobotsValue = event => {
+
 			const { postType: pt, robotsType, set } = event.detail;
+
 			// Nothing to see here.
 			if ( postType !== pt ) return;
+
 			robotsData.pt.set( robotsType, set.has( postType ) );
 			updateRobots( robotsType );
 		}
 		const _registerSiteDefaultRobotsValue = event => {
+
 			const { checked, robotsType } = event.detail;
 			robotsData.site.set( robotsType, !! checked );
 			updateRobots( robotsType );
@@ -1387,9 +1467,9 @@ window.tsfSettings = function( $ ) {
 		document.body.addEventListener( 'tsf-post-type-robots-changed', _registerPTDefaultRobotsValue );
 		document.body.addEventListener( 'tsf-site-robots-changed', _registerSiteDefaultRobotsValue );
 
-		[ 'noindex', 'nofollow', 'noarchive' ].forEach( type => {
-			updateRobots( type )
-		} );
+		[ 'noindex', 'nofollow', 'noarchive' ].forEach(
+			type => { updateRobots( type ) },
+		);
 
 		/**
 		 * @since 5.1.0
@@ -1398,6 +1478,7 @@ window.tsfSettings = function( $ ) {
 		 * @param {Number} value
 		 */
 		const setRobotsIndexingState = value => {
+
 			let type = '';
 
 			switch ( +value ) {
@@ -1439,18 +1520,20 @@ window.tsfSettings = function( $ ) {
 		 * @function
 		 */
 		const enqueueGeneralInputListeners = () => {
+
 			tsfTitle.enqueueUnregisteredInputTrigger( _getPtaInputId( postType, 'doctitle' ) );
 			tsfDescription.enqueueUnregisteredInputTrigger( _getPtaInputId( postType, 'description' ) );
 		}
 
 		/**
-		 * Enqueues doctitles input trigger synchronously on postbox collapse or open.
+		 * Enqueues doc-titles input trigger synchronously on postbox collapse or open.
 		 *
 		 * @function
 		 * @param {!jQuery.Event} event
 		 * @param {Element}       elem
 		 */
 		const triggerPostboxSynchronousUnregisteredInput = ( event, elem ) => {
+
 			if ( 'autodescription-post-type-archive-settings' === elem.id ) {
 				let inside = elem.querySelector( '.inside' );
 				if ( inside.offsetHeight > 0 && inside.offsetWidth > 0 ) {
@@ -1462,12 +1545,13 @@ window.tsfSettings = function( $ ) {
 		$( document ).on( 'postbox-toggled', triggerPostboxSynchronousUnregisteredInput );
 
 		/**
-		 * Enequeues doctitles and social input trigger synchronously on post type change.
+		 * Enqueues doc-titles and social input trigger synchronously on post type change.
 		 * Triggers for the current post type only.
 		 *
 		 * @param {Event} event
 		 */
 		const triggerPtaSynchronousUnregisteredInput = event => {
+
 			if ( event.detail?.postType === postType ) {
 				// This also invokes inputs for the Social tabs, which is nice.
 				enqueueGeneralInputListeners();
@@ -1484,6 +1568,8 @@ window.tsfSettings = function( $ ) {
 	 * Initializes Social meta input.
 	 *
 	 * @since 4.1.0
+	 * @since 5.2.0 1. Now also initializes Fediverse profile inputs.
+	 *              2. Now shows a Fediverse URL placeholder only when that URL will be used.
 	 * @access private
 	 */
 	function _initSocialSettings() {
@@ -1496,6 +1582,7 @@ window.tsfSettings = function( $ ) {
 		 * @param {Event} event
 		 */
 		const updateSocialAdditions = event => {
+
 			if ( event.target.checked ) {
 				tsfSocial.updateStateAll( 'addAdditions', false );
 			} else {
@@ -1574,6 +1661,7 @@ window.tsfSettings = function( $ ) {
 		 * @param {Event} event
 		 */
 		const checkAllDisabled = event => {
+
 			if ( event.target.checked ) {
 				toggleCheckRegistry.add( event.target.name );
 			} else {
@@ -1585,6 +1673,7 @@ window.tsfSettings = function( $ ) {
 				.toggle( 'hidden', ! toggleCheckRegistry.size );
 		}
 		[ 'og_tags', 'facebook_tags', 'twitter_tags', 'oembed_scripts' ].forEach( id => {
+
 			const toggle = document.getElementById( _getSettingsId( id ) );
 			toggle.addEventListener( 'change', checkAllDisabled );
 			_dispatchAtInteractive( toggle, 'change' );
@@ -1606,16 +1695,56 @@ window.tsfSettings = function( $ ) {
 			) );
 		}
 		document.querySelectorAll( '#tsf-twitter-cards input' ).forEach( el => {
+
 			el.addEventListener( 'change', dispatchCardToggleEvent );
 			if ( el.checked )
 				_dispatchAtInteractive( el, 'change' );
 		} );
+
+		const site       = document.getElementById( _getSettingsId( 'fediverse_site' ) ),
+			  siteUrl    = document.getElementById( _getSettingsId( 'fediverse_site_url' ) ),
+			  creator    = document.getElementById( _getSettingsId( 'fediverse_creator' ) ),
+			  creatorUrl = document.getElementById( _getSettingsId( 'fediverse_creator_url' ) );
+
+		if ( site && creator ) {
+			/**
+			 * Shows the value each empty Fediverse field will use.
+			 *
+			 * @since 5.2.0 Now passes each placeholder to `tsfPropose.syncProposed()`.
+			 * @function
+			 */
+			const updateCreatorPlaceholder = () => {
+
+				creator.placeholder = site.value.trim();
+				window.tsfPropose?.syncProposed( creator );
+
+				if ( siteUrl ) {
+					siteUrl.placeholder = tsfFediverse.urlFromHandle( site.value );
+					window.tsfPropose?.syncProposed( siteUrl );
+				}
+
+				if ( ! creatorUrl ) return;
+
+				creatorUrl.placeholder = creator.value.trim()
+					? tsfFediverse.urlFromHandle( creator.value )
+					: ( siteUrl?.value.trim() || tsfFediverse.urlFromHandle( site.value ) );
+				window.tsfPropose?.syncProposed( creatorUrl );
+			}
+			site.addEventListener( 'input', updateCreatorPlaceholder );
+			creator.addEventListener( 'input', updateCreatorPlaceholder );
+			siteUrl?.addEventListener( 'input', updateCreatorPlaceholder );
+			updateCreatorPlaceholder();
+
+			tsfFediverse.bindPair( site, siteUrl );
+			tsfFediverse.bindPair( creator, creatorUrl );
+		}
 	}
 
 	/**
 	 * Initializes Schema settings inputs.
 	 *
 	 * @since 5.0.0
+	 * @since 5.2.0 Added social profile format hints.
 	 * @access private
 	 */
 	function _initSchemaSettings() {
@@ -1626,6 +1755,7 @@ window.tsfSettings = function( $ ) {
 		 * @param {Event} event
 		 */
 		const toggleSettingsDisplay = event => {
+
 			document.getElementById( 'tsf-advanced-structured-data-settings-wrapper' )
 				?.classList
 				.toggle( 'hidden', ! event.target.checked );
@@ -1641,8 +1771,10 @@ window.tsfSettings = function( $ ) {
 			id:  'knowledge_output', // option ID.
 			tab: 'presence',
 		};
+
 		const presenceToggle   = document.getElementById( _getSettingsId( presenceTab.id ) ),
-			  presenceTabRadio = document.getElementById( `tsf-social-tab-${presenceTab.tab}` );
+			  presenceTabRadio = document.getElementById( `tsf-schema-tab-${presenceTab.tab}` );
+
 		const presenceTabLabel = document.getElementById( 'schema-tabs-wrapper' )
 			?.querySelector( `[for=tsf-schema-tab-${presenceTab.tab}]` );
 
@@ -1650,6 +1782,7 @@ window.tsfSettings = function( $ ) {
 		 * @function
 		 */
 		const togglePresenceTab = () => {
+
 			let show = sdToggle?.checked && presenceToggle?.checked;
 
 			presenceTabLabel?.classList.toggle( 'hidden', ! show );
@@ -1692,6 +1825,10 @@ window.tsfSettings = function( $ ) {
 			logoToggle.addEventListener( 'change', toggleDisplayLogo );
 			_dispatchAtInteractive( logoToggle, 'change' );
 		}
+
+		document.querySelectorAll( '[data-social-pattern]' ).forEach( input => {
+			tsfSocialFormat.bind( input );
+		} );
 	}
 
 	/**
@@ -1707,9 +1844,9 @@ window.tsfSettings = function( $ ) {
 
 		if ( copyrightToggle ) {
 			const controlNodes = [
-				"max_snippet_length",
-				"max_image_preview",
-				"max_video_preview",
+				'max_snippet_length',
+				'max_image_preview',
+				'max_video_preview',
 			].map( name => document.getElementById( _getSettingsId( name ) ) );
 
 			const surrogateClass = 'tsf-toggle-directives-surrogate';
@@ -1720,11 +1857,13 @@ window.tsfSettings = function( $ ) {
 			 * @param {Event} event
 			 */
 			const toggleCopyrightControl = event => {
+
 				if ( event.target.checked ) {
 					controlNodes.forEach( el => el.disabled = false );
 					document.querySelectorAll( `.${surrogateClass}` ).forEach( el => el.remove() );
 				} else {
 					controlNodes.forEach( el => {
+
 						el.disabled = true;
 						let surrogate = document.createElement( 'input' );
 						surrogate.type = 'hidden';
@@ -1741,7 +1880,9 @@ window.tsfSettings = function( $ ) {
 
 		const robotsPostTypes     = {},
 			  robotsPtTaxonomies  = {};
+
 		[ robotsPostTypes, robotsPtTaxonomies ].forEach( _const => {
+
 			_const.noindex   = new Set();
 			_const.nofollow  = new Set();
 			_const.noarchive = new Set();
@@ -1755,8 +1896,8 @@ window.tsfSettings = function( $ ) {
 						postType,
 						robotsType,
 						set: robotsPostTypes[ robotsType ],
-					}
-				}
+					},
+				},
 			) );
 		}
 		const dispatchTaxonomyRobotsChangedEvent = ( taxonomy, robotsType ) => {
@@ -1767,8 +1908,8 @@ window.tsfSettings = function( $ ) {
 						taxonomy,
 						robotsType,
 						set: robotsPtTaxonomies[ robotsType ],
-					}
-				}
+					},
+				},
 			) );
 		}
 
@@ -1779,13 +1920,14 @@ window.tsfSettings = function( $ ) {
 					detail: {
 						checked,
 						robotsType,
-					}
-				}
+					},
+				},
 			) );
 		}
 
 		const postTypeRobotsHelp = wp.template( 'tsf-robots-pt-help' )();
 		const addTaxRobotsByPtWarning = ( taxonomy, robotsType, disable ) => {
+
 			// Yes, stacked template literals. Sue me :)
 			let taxEl = document.getElementById( `${ _getSettingsId( `${robotsType}_taxonomies` ) }[${taxonomy}]` );
 			if ( disable ) {
@@ -1800,13 +1942,15 @@ window.tsfSettings = function( $ ) {
 		}
 
 		const validateTaxonomyState = robotsType => {
+
 			// We want to show that the taxonomy is de-robotsTyped, but make that auto-reversible, and somehow still enactable?
 
 			const taxEntries = document.querySelectorAll( `.tsf-robots-taxonomies[data-robots="${robotsType}"]` );
 
-			let triggerchange = false;
+			let triggerChange = false;
 
 			taxEntries.forEach( element => {
+
 				// get taxonomy from last [] entry.
 				let taxonomy = element.name.split( /(?:.+\[)(.+?)(?:])/ ).join( '' );
 
@@ -1816,7 +1960,7 @@ window.tsfSettings = function( $ ) {
 				if ( hasRobots ) {
 					if ( ! robotsPtTaxonomies[ robotsType ].has( taxonomy ) ) {
 						// Newly disabled, trigger change.
-						triggerchange = true;
+						triggerChange = true;
 					}
 					// Filter it out to prevent duplicates. Redundant?
 					robotsPtTaxonomies[ robotsType ].add( taxonomy );
@@ -1824,11 +1968,11 @@ window.tsfSettings = function( $ ) {
 					if ( robotsPtTaxonomies[ robotsType ].has( taxonomy ) ) {
 						robotsPtTaxonomies[ robotsType ].delete( taxonomy );
 						// Enabled again, was disabled. Trigger change.
-						triggerchange = true;
+						triggerChange = true;
 					}
 				}
 				// TODO Collect and combine changes, to condense paint stack (perceptive performance, reduce race condition changes)?
-				triggerchange && dispatchTaxonomyRobotsChangedEvent( taxonomy, robotsType );
+				triggerChange && dispatchTaxonomyRobotsChangedEvent( taxonomy, robotsType );
 			} );
 		}
 		const validateTaxonomiesCache = {
@@ -1839,13 +1983,14 @@ window.tsfSettings = function( $ ) {
 		const getValidateTaxonomiesCache = ( key, robotsType ) => validateTaxonomiesCache[ robotsType ].get( key ) || ( new Set() );
 		// TODO trigger new events here, to make it easier to work with for others?
 		const validateTaxonomies = event => {
+
 			const { taxonomy, robotsType } = event.detail;
 
 			if ( getValidateTaxonomiesCache( 'robotsPtTaxonomies', robotsType ).size
 				!== robotsPtTaxonomies[ robotsType ].size
 			) addTaxRobotsByPtWarning( taxonomy, robotsType, robotsPtTaxonomies[ robotsType ].has( taxonomy ) );
 
-			// Create new pointers in the memory by shadowcloning the object.
+			// Create new pointers in the memory by shadow-cloning the object.
 			validateTaxonomiesCache[ robotsType ].set( 'robotsPtTaxonomies', new Set( robotsPtTaxonomies[ robotsType ] ) );
 		}
 		document.body.addEventListener( 'tsf-taxonomy-robots-changed', validateTaxonomies );
@@ -1860,6 +2005,7 @@ window.tsfSettings = function( $ ) {
 		 * @param {string} taxonomy
 		 */
 		const toggleWarnings = taxonomy => {
+
 			for ( let robotsType in robotsPtTaxonomies ) {
 				if ( robotsPtTaxonomies[ robotsType ].has( taxonomy ) ) {
 					let taxEl   = document.getElementById( `${ _getSettingsId( `${robotsType}_taxonomies` ) }[${taxonomy}]` ),
@@ -1879,6 +2025,7 @@ window.tsfSettings = function( $ ) {
 		let init = false;
 
 		const checkRobotsPT = event => {
+
 			// get post type from last [] entry.
 			let postType   = event.target?.name.split( /(?:.+\[)(.+?)(?:])/ ).join( '' ),
 				robotsType = event.target?.dataset.robots;
@@ -1895,11 +2042,13 @@ window.tsfSettings = function( $ ) {
 			}
 		}
 		document.querySelectorAll( '.tsf-robots-post-types' ).forEach( el => {
+
 			el.addEventListener( 'change', checkRobotsPT );
 			_dispatchAtInteractive( el, 'change' );
 		} );
 
 		const checkRobotsSite = event => {
+
 			let robotsType = event.target?.dataset.robots,
 				checked    = event.target.checked;
 
@@ -1913,6 +2062,7 @@ window.tsfSettings = function( $ ) {
 			}
 		}
 		document.querySelectorAll( '.tsf-robots-site' ).forEach( el => {
+
 			el.addEventListener( 'change', checkRobotsSite );
 			_dispatchAtInteractive( el, 'change' );
 		} );
@@ -1944,10 +2094,12 @@ window.tsfSettings = function( $ ) {
 			document.getElementById( `${ _getSettingsId( 'noarchive_post_types' ) }[${postType}]` ),
 		].filter( el => el );
 		const augmentPTRobots = event => {
+
 			const { postType, set } = event.detail;
 
 			if ( set.has( postType ) ) {
 				getPostTypeRobotsSettings( postType ).forEach( element => {
+
 					if ( ! element ) return;
 
 					let clone = element.cloneNode( true );
@@ -1971,6 +2123,7 @@ window.tsfSettings = function( $ ) {
 				tsfTT.triggerReset();
 			} else {
 				getPostTypeRobotsSettings( postType ).forEach( element => {
+
 					if ( ! element ) return;
 					if ( ! element.dataset.disabledWarning ) return;
 
@@ -2004,11 +2157,14 @@ window.tsfSettings = function( $ ) {
 			document.getElementById( `${ _getSettingsId( 'nofollow_taxonomies' ) }[${taxonomy}]` ),
 			document.getElementById( `${ _getSettingsId( 'noarchive_taxonomies' ) }[${taxonomy}]` ),
 		].filter( el => el );
+
 		const augmentTaxonomyRobots = event => {
+
 			const { taxonomy, set, setPt, setAll } = event.detail;
 
 			if ( setAll.has( taxonomy ) ) {
 				getTaxonomyRobotsSettings( taxonomy ).forEach( element => {
+
 					if ( ! element ) return;
 
 					let clone = element.cloneNode( true );
@@ -2036,6 +2192,7 @@ window.tsfSettings = function( $ ) {
 				tsfTT.triggerReset();
 			} else {
 				getTaxonomyRobotsSettings( taxonomy ).forEach( element => {
+
 					if ( ! element ) return;
 					if ( ! element.dataset.disabledWarning ) return;
 
@@ -2076,11 +2233,12 @@ window.tsfSettings = function( $ ) {
 	function _initWebmastersInputs() {
 
 		const webmasterNodes = [
-			"google_verification",
-			"bing_verification",
-			"yandex_verification",
-			"baidu_verification",
-			"pint_verification",
+			'google_verification',
+			'bing_verification',
+			'yandex_verification',
+			'baidu_verification',
+			'pint_verification',
+			'facebook_verification',
 		].map( name => document.getElementById( _getSettingsId( name ) ) );
 
 		/**
@@ -2088,6 +2246,7 @@ window.tsfSettings = function( $ ) {
 		 * @param {Event} event
 		 */
 		const trimScript = event => {
+
 			let val = event.clipboardData && event.clipboardData.getData( 'text' ) || '';
 
 			if ( val ) {
@@ -2109,12 +2268,14 @@ window.tsfSettings = function( $ ) {
 	 * Initializes Sitemap input.
 	 *
 	 * @since 5.0.5
+	 * @since 5.2.0 Now warns when sitemap view links do not match an unsaved optimized-sitemap setting.
 	 * @access private
 	 */
 	function _initSitemapInputs() {
 
 		const optimizedSitemapsToggle = document.getElementById( _getSettingsId( 'sitemaps_output' ) ),
-			  cacheSitemapsToggle     = document.getElementById( _getSettingsId( 'cache_sitemap' ) );
+			  cacheSitemapsToggle     = document.getElementById( _getSettingsId( 'cache_sitemap' ) ),
+			  sitemapViewLinksUnsaved = document.getElementById( 'tsf-sitemap-view-links-unsaved' );
 		/**
 		 * @function
 		 * @param {Event} event
@@ -2128,8 +2289,18 @@ window.tsfSettings = function( $ ) {
 			document.getElementById( 'tsf-sitemap-transient-cache-settings' )
 				?.classList.toggle( 'hidden', ! sitemapsEnabled );
 		}
+		/**
+		 * @function
+		 */
+		const toggleSitemapViewLinksUnsaved = () => {
+			sitemapViewLinksUnsaved?.classList.toggle(
+				'hidden',
+				optimizedSitemapsToggle.checked === optimizedSitemapsToggle.defaultChecked,
+			);
+		}
 		if ( optimizedSitemapsToggle ) {
 			optimizedSitemapsToggle.addEventListener( 'change', updateSocialAdditions );
+			optimizedSitemapsToggle.addEventListener( 'change', toggleSitemapViewLinksUnsaved );
 			_dispatchAtInteractive( optimizedSitemapsToggle, 'change' );
 		}
 
@@ -2140,6 +2311,7 @@ window.tsfSettings = function( $ ) {
 		 * @param {Event} event
 		 */
 		const checkAllEnabled = event => {
+
 			const prerenderingSettings = document.getElementById( 'tsf-sitemap-prerendering-settings' );
 
 			toggleCheckRegistry.set( event.target.name, !! event.target.checked );
@@ -2147,6 +2319,7 @@ window.tsfSettings = function( $ ) {
 			for ( const val of toggleCheckRegistry.values() ) {
 				if ( ! val ) {
 					prerenderingSettings?.classList.add( 'hidden', ! toggleCheckRegistry.size );
+
 					return;
 				}
 			}
@@ -2155,6 +2328,7 @@ window.tsfSettings = function( $ ) {
 		}
 		// optimizedSitemapsToggle is a master toggle here -- though, since there's only two... shrug.
 		[ optimizedSitemapsToggle, cacheSitemapsToggle ].forEach( toggle => {
+
 			if ( toggle ) {
 				toggle.addEventListener( 'change', checkAllEnabled );
 				_dispatchAtInteractive( toggle, 'change' );
@@ -2170,6 +2344,7 @@ window.tsfSettings = function( $ ) {
 	 * @access private
 	 */
 	function _loadSettings() {
+
 		// One is not reliant on the other; this way, if one crashes, the rest still works.
 		[
 			_initSubmit,
@@ -2215,6 +2390,7 @@ window.tsfSettings = function( $ ) {
 	 * @access private
 	 */
 	function _initTabs() {
+
 		tsfTabs.initStack(
 			'tsfSettings',
 			{
@@ -2227,35 +2403,39 @@ window.tsfSettings = function( $ ) {
 					activeTabContent: 'tsf-nav-tab-content-active',
 				},
 				fixHistory:      true, // false for flex? Doesn't seem like it was?
-			}
+			},
 		);
 	}
 
-	return Object.assign( {
-		/**
-		 * Initialises all aspects of the scripts.
-		 * You shouldn't call this.
-		 *
-		 * @since 4.0.0
-		 * @since 4.0.3 Now also displaces notice-info.
-		 * @access protected
-		 *
-		 * @function
-		 */
-		load: () => {
-			// Execute this ASAP, to prevent late layout shifting. Use same anchor as core--so to prevent subsequent movement.
-			const headerEnd = document.querySelector( '.wp-header-end' );
-			document.querySelectorAll(
-				'div.updated, div.error, div.notice, .notice-error, .notice-warning, .notice-info'
-			).forEach( el => { headerEnd.insertAdjacentElement( 'afterend', el ) } );
+	return Object.assign(
+		{
+			/**
+			 * Initializes all aspects of the scripts.
+			 * You shouldn't call this.
+			 *
+			 * @since 4.0.0
+			 * @since 4.0.3 Now also displaces notice-info.
+			 * @access protected
+			 *
+			 * @function
+			 */
+			load: () => {
 
-			document.body.addEventListener( 'tsf-onload', _loadSettings );
+				// Execute this ASAP, to prevent late layout shifting. Use same anchor as core--so to prevent subsequent movement.
+				const headerEnd = document.querySelector( '.wp-header-end' );
+				document.querySelectorAll(
+					'div.updated, div.error, div.notice, .notice-error, .notice-warning, .notice-info'
+				).forEach( el => { headerEnd.insertAdjacentElement( 'afterend', el ) } );
 
-			// Initializes tabs early; we rely a fallback event that tsf-onload/tsf-ready uses there.
-			_initTabs();
+				document.body.addEventListener( 'tsf-onload', _loadSettings );
+
+				// Initializes tabs early; we rely a fallback event that tsf-onload/tsf-ready uses there.
+				_initTabs();
+			},
 		},
-	}, {
-		l10n,
-	} );
+		{
+			l10n,
+		},
+	);
 }( jQuery );
 window.tsfSettings.load();

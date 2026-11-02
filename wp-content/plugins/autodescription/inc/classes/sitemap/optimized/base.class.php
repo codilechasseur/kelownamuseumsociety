@@ -22,7 +22,7 @@ use The_SEO_Framework\Helper\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -83,7 +83,8 @@ class Base extends Main {
 		if ( ! Sitemap\Cache::is_sitemap_cache_enabled() ) return;
 
 		// Don't prerender if the sitemap is already generated.
-		if ( false !== Sitemap\Cache::get_cached_sitemap_content( $sitemap_id ) ) return;
+		if ( false !== Sitemap\Cache::get_cached_sitemap_content( $sitemap_id ) )
+			return;
 
 		$ini_max_execution_time = (int) ini_get( 'max_execution_time' );
 		if ( 0 !== $ini_max_execution_time && \function_exists( 'set_time_limit' ) )
@@ -155,6 +156,7 @@ class Base extends Main {
 	 *              2. Improved performance by a factor of two+.
 	 *              3. Renamed method from "generate_sitemap" to abstract extension "build_sitemap".
 	 *              4. Moved to \The_SEO_Framework\Builders\Sitemap\Base
+	 * @since 5.2.0 Now prints the timestamp comment in GMT.
 	 * @override
 	 * @slow The queried results are not stored in WP Post's cache, which would allow direct access
 	 *       to all values of the post (if requested). This is because we're using
@@ -192,7 +194,7 @@ class Base extends Main {
 						? \esc_html__( 'Sitemap is prerendered on %s', 'autodescription' )
 						/* translators: %s = timestamp */
 						: \esc_html__( 'Sitemap is generated on %s', 'autodescription' ),
-					\current_time( 'Y-m-d H:i:s \G\M\T' ),
+					\current_time( 'Y-m-d H:i:s \G\M\T', true ),
 				),
 			);
 
@@ -237,6 +239,7 @@ class Base extends Main {
 			 * @since 4.0.0
 			 * @since 5.0.5 1. Now sets orderby to 'lastmod', from 'date'.
 			 *              2. Now sets order to 'DESC', from 'ASC'.
+			 * @since 5.2.0 Now orders by 'modified'. 'lastmod' was mistakenly applied.
 			 * @param array $args The query arguments.
 			 * @link <https://w.org/support/topic/sitemap-and-memory-exhaustion/#post-13331896>
 			 */
@@ -245,7 +248,7 @@ class Base extends Main {
 				[
 					'posts_per_page' => $_hierarchical_posts_limit + \count( $_exclude_ids ),
 					'post_type'      => $hierarchical_post_types,
-					'orderby'        => 'lastmod',
+					'orderby'        => 'modified',
 					'order'          => 'DESC',
 					'post_status'    => 'publish',
 					'has_password'   => false,
@@ -271,6 +274,7 @@ class Base extends Main {
 		if ( $non_hierarchical_post_types ) {
 			/**
 			 * @since 4.0.0
+			 * @since 5.2.0 Now orders by 'modified'.
 			 * @param array $args The query arguments.
 			 */
 			$_args = (array) \apply_filters(
@@ -279,7 +283,7 @@ class Base extends Main {
 					// phpcs:ignore WordPress.WP.PostsPerPage -- This is a sitemap, it will be slow.
 					'posts_per_page' => Sitemap\Utils::get_sitemap_post_limit( 'nonhierarchical' ),
 					'post_type'      => $non_hierarchical_post_types,
-					'orderby'        => 'lastmod',
+					'orderby'        => 'modified',
 					'order'          => 'DESC',
 					'post_status'    => 'publish',
 					'has_password'   => false,
@@ -306,12 +310,13 @@ class Base extends Main {
 		 * @param int[] $hierarchical_post_ids     The post IDs from hierarchical post types.
 		 * @param int[] $non_hierarchical_post_ids The post IDs from non-hierarchical post types.
 		 */
-		$_items      = (array) \apply_filters(
+		$_items = (array) \apply_filters(
 			'the_seo_framework_sitemap_items',
 			array_merge( $hierarchical_post_ids, $non_hierarchical_post_ids ),
 			$hierarchical_post_ids,
 			$non_hierarchical_post_ids,
 		);
+
 		$total_items = \count( $_items );
 
 		// 49998 = 50000-2 (home+blog), max sitemap items.
@@ -338,7 +343,7 @@ class Base extends Main {
 				[
 					'show_modified' => $show_modified,
 					'count'         => $this->url_count,
-				]
+				],
 			) as $_values ) {
 				$content .= static::build_url_item( $_values );
 			}
@@ -485,6 +490,7 @@ class Base extends Main {
 				}
 
 				++$this->url_count;
+
 				yield $_values;
 			}
 		}
@@ -525,6 +531,7 @@ class Base extends Main {
 					$_values['lastmod'] = $post->post_modified_gmt ?? '0000-00-00 00:00:00';
 
 				++$this->url_count;
+
 				yield $_values;
 			}
 
@@ -550,7 +557,8 @@ class Base extends Main {
 	 */
 	protected static function build_url_item( $args ) {
 
-		if ( empty( $args['loc'] ) ) return '';
+		if ( empty( $args['loc'] ) )
+			return '';
 
 		$xml = [
 			'loc' => Escape::xml_uri( $args['loc'] ),
@@ -584,16 +592,21 @@ class Base extends Main {
 	 * }
 	 */
 	protected function generate_additional_base_urls( $args ) {
+
 		/**
 		 * @since 2.5.2
 		 * @since 3.2.2 Invalid URLs are now skipped.
 		 * @since 4.0.0 Added $args parameter.
 		 * @since 4.2.0 No longer forwards the 'show_priority' index in the second ($args) parameter.
-		 * @example return value: [ 'http://example.com' => [ 'lastmod' => '2024-04-10 14:52:06' ] ]
+		 * @example $custom_urls `[ 'http://example.com' => [ 'lastmod' => '2024-04-10 14:52:06' ] ]`
 		 * @param array $custom_urls {
 		 *     An array of custom URLs, keyed by the absolute url to the page.
 		 *
-		 *     @type string $lastmod UNIXTIME <GMT+0> Last modified date, e.g. "2016-01-26 13:04:55"
+		 *     @type array {$url} {
+		 *         The custom URL arguments.
+		 *
+		 *         @type string $lastmod UNIXTIME <GMT+0> Last modified date, e.g. "2016-01-26 13:04:55"
+		 *     }
 		 * }
 		 * @param array $args {
 		 *     The sitemap URL extension arguments.
@@ -621,6 +634,7 @@ class Base extends Main {
 				$_values['lastmod'] = ! empty( $values['lastmod'] ) ? $values['lastmod'] : '0000-00-00 00:00:00';
 
 			++$this->url_count;
+
 			yield $_values;
 		}
 	}

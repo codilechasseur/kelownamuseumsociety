@@ -8,7 +8,7 @@
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2024 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2024 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -74,6 +74,7 @@ window.tsfAuthorSlugs = function () {
 	 * @param {Array<{id:number,slug:string}>} authors The authors to store.
 	 */
 	function store( authors ) {
+
 		authors.forEach( author => {
 			cache.set( +author.id, author.slug );
 		} );
@@ -89,11 +90,13 @@ window.tsfAuthorSlugs = function () {
 	 * @return {Promise<void>} A promise that resolves when the author slug is fetched.
 	 */
 	function fetch( authorId ) {
+
 		// TODO should we add a "fetchingfor" test to prevent concurrent fetches?
 		return new Promise( ( resolve, reject ) => {
 
 			if ( ! authorId ) {
 				reject();
+
 				return;
 			}
 
@@ -101,12 +104,13 @@ window.tsfAuthorSlugs = function () {
 				'tsf_get_author_slug',
 				{
 					data: {
-						nonce: tsf.l10n.nonces.edit_posts,
+						nonce:     tsf.l10n.nonces.edit_posts,
 						author_id: authorId,
 					},
 					timeout: 7000,
 				},
 			).done( response => {
+
 				store( tsf.convertJSONResponse( response ) );
 				resolve();
 			} ).fail( reject );

@@ -12,13 +12,12 @@ use function The_SEO_Framework\umemo;
 
 use The_SEO_Framework\{
 	Data,
-	Helper\Query,
 	Meta,
 };
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -46,12 +45,13 @@ class Utils {
 	 * Returns a list of filterable user-agents that can be blocked.
 	 *
 	 * @since 5.1.0
+	 * @example $agents `[ 'Amazonbot' => [ 'by' => 'Amazon', 'link' => 'https://developer.amazon.com/amazonbot' ] ]`
 	 *
 	 * @param string $type The type of user-agents to get. Accepts 'ai' and 'seo'.
 	 * @return array {
 	 *     A list of user-agents with extra info.
 	 *
-	 *     @type array $user_agent {
+	 *     @type array {$user_agent} {
 	 *         The user-agent's information.
 	 *
 	 *         @type string $by   The entity behind the user-agent.
@@ -165,8 +165,10 @@ class Utils {
 	 * @return bool Whether the robots.txt file exists.
 	 */
 	public static function has_root_robots_txt() {
+
 		// phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition -- I know.
-		if ( null !== $memo = umemo( __METHOD__ ) ) return $memo;
+		if ( null !== $memo = umemo( __METHOD__ ) )
+			return $memo;
 
 		// Ensure get_home_path() is declared.
 		if ( ! \function_exists( 'get_home_path' ) )
@@ -192,7 +194,8 @@ class Utils {
 	public static function get_robots_txt_url() {
 
 		// phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition -- I know.
-		if ( null !== $memo = umemo( __METHOD__ ) ) return $memo;
+		if ( null !== $memo = umemo( __METHOD__ ) )
+			return $memo;
 
 		if ( $GLOBALS['wp_rewrite']->using_permalinks() && ! Data\Blog::is_subdirectory_installation() ) {
 			$home = \trailingslashit( Meta\URI\Utils::set_preferred_url_scheme( Meta\URI\Utils::get_site_host() ) );

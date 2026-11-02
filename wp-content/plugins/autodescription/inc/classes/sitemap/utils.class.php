@@ -20,7 +20,7 @@ use The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -48,6 +48,7 @@ class Utils {
 	 * Returns the sitemap post query limit.
 	 *
 	 * @since 5.0.0
+	 * @since 5.2.0 Now falls back to the default option when the stored limit is empty.
 	 *
 	 * @param string $type Whether the query is for hierarchical post types or not.
 	 * @return int The post limit
@@ -59,12 +60,17 @@ class Utils {
 		 * @since 3.1.0 Now returns an option value; it falls back to the default value if not set.
 		 * @since 4.0.0 1. The default is now 3000, from 1200.
 		 *              2. Now passes a second parameter.
+		 * @since 5.0.5 The option default is now 250.
+		 * @since 5.2.0 The first parameter is the default option when the stored limit is empty.
 		 * @param int $total_post_limit
 		 * @param bool $hierarchical Whether the query is for hierarchical post types or not.
 		 */
 		return (int) \apply_filters(
 			'the_seo_framework_sitemap_post_limit',
-			Data\Plugin::get_option( 'sitemap_query_limit' ),
+			(
+				   Data\Plugin::get_option( 'sitemap_query_limit' )
+				?: Data\Plugin\Setup::get_default_option( 'sitemap_query_limit' )
+			),
 			'hierarchical' === $type,
 		);
 	}
@@ -137,7 +143,10 @@ class Utils {
 			 * @since 4.0.0
 			 * @param int[] $excluded Sequential list of excluded IDs: [ int ...term_id ]
 			 */
-			$excluded = (array) \apply_filters( 'the_seo_framework_sitemap_exclude_term_ids', [] );
+			$excluded = (array) \apply_filters(
+				'the_seo_framework_sitemap_exclude_term_ids',
+				[],
+			);
 
 			// isset() is faster than in_array(). And since we memoize, it's faster to flip.
 			$excluded = $excluded ? array_flip( $excluded ) : [];
@@ -154,6 +163,57 @@ class Utils {
 			];
 
 			// ROBOTS_IGNORE_PROTECTION is not tested for terms. However, we may use that later.
+			$included = 'noindex'
+				!== (
+					Meta\Robots::get_generated_meta(
+						$generator_args,
+						[ 'noindex' ],
+						ROBOTS_IGNORE_PROTECTION,
+					)['noindex'] ?? false // We cast type false for Zend tests strict type before identical-string-comparing.
+				);
+
+			if ( ! $included ) break;
+
+			// This is less likely than a "noindex," even though it's faster to process, we put it later.
+			$included = ! Meta\URI::get_redirect_url( $generator_args );
+			break;
+		}
+
+		return $included;
+	}
+
+	/**
+	 * Determines if the user is possibly included in the sitemap.
+	 *
+	 * @since 5.2.0
+	 *
+	 * @param int $user_id The user ID to check.
+	 * @return bool True if included, false otherwise.
+	 */
+	public static function is_user_included_in_sitemap( $user_id ) {
+
+		static $excluded;
+
+		if ( ! isset( $excluded ) ) {
+			/**
+			 * @since 5.2.0
+			 * @param int[] $excluded Sequential list of excluded IDs: [ int ...user_id ]
+			 */
+			$excluded = (array) \apply_filters(
+				'the_seo_framework_sitemap_exclude_user_ids',
+				[],
+			);
+
+			// isset() is faster than in_array(). And since we memoize, it's faster to flip.
+			$excluded = $excluded ? array_flip( $excluded ) : [];
+		}
+
+		$included = ! isset( $excluded[ $user_id ] );
+
+		while ( $included ) {
+			$generator_args = [ 'uid' => $user_id ];
+
+			// ROBOTS_IGNORE_PROTECTION is not tested for authors. However, we may use that later.
 			$included = 'noindex'
 				!== (
 					Meta\Robots::get_generated_meta(
@@ -217,7 +277,8 @@ class Utils {
 	public static function use_core_sitemaps() {
 
 		// phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition -- I know.
-		if ( null !== $memo = memo() ) return $memo;
+		if ( null !== $memo = memo() )
+			return $memo;
 
 		if ( Data\Plugin::get_option( 'sitemaps_output' ) )
 			return memo( false );
@@ -225,7 +286,7 @@ class Utils {
 		$wp_sitemaps_server = \wp_sitemaps_get_server();
 
 		return memo(
-			method_exists( $wp_sitemaps_server, 'sitemaps_enabled' ) && $wp_sitemaps_server->sitemaps_enabled()
+			method_exists( $wp_sitemaps_server, 'sitemaps_enabled' ) && $wp_sitemaps_server->sitemaps_enabled(),
 		);
 	}
 
@@ -250,8 +311,10 @@ class Utils {
 	 * @return bool Whether the sitemap.xml file exists.
 	 */
 	public static function has_root_sitemap_xml() {
+
 		// phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition -- I know.
-		if ( null !== $memo = memo() ) return $memo;
+		if ( null !== $memo = memo() )
+			return $memo;
 
 		// Ensure get_home_path() is declared.
 		if ( ! \function_exists( 'get_home_path' ) )

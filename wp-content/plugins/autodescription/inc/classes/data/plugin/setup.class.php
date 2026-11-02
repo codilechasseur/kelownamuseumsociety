@@ -15,7 +15,7 @@ use The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -81,7 +81,7 @@ class Setup {
 	 * @since 5.0.0 1. $key is now variadic. Additional variables allow you to dig deeper in the cache.
 	 *              2. Moved from `\The_SEO_Framework\Load`.
 	 *
-	 * @param string ...$key Option name. Additional parameters will try get subvalues of the array.
+	 * @param string ...$key Option name. Additional parameters will try get sub-values of the array.
 	 *                       When empty, it'll return all options. You should use get_default_options() instead.
 	 * @return mixed The default option. Null if it's not registered.
 	 */
@@ -102,7 +102,7 @@ class Setup {
 	 * @since 5.0.0 1. $key is now variadic. Additional variables allow you to dig deeper in the cache.
 	 *              2. Moved from `\The_SEO_Framework\Load`.
 	 *
-	 * @param string ...$key Option name. Additional parameters will try get subvalues of the array.
+	 * @param string ...$key Option name. Additional parameters will try get sub-values of the array.
 	 *                       When empty, it'll return all options. You should use get_warned_options() instead.
 	 * @return bool True if warning is registered. False otherwise.
 	 */
@@ -124,6 +124,10 @@ class Setup {
 	 * @since 4.0.0 `home_title_location` is now switched from right to left, or vice-versa.
 	 * @since 4.2.4 `max_image_preview` now defaults to `large`, from `standard`, matching WordPress's default.
 	 * @since 4.2.7 Added `auto_description_html_method`, defaults to `fast`.
+	 * @since 5.2.0 1. Added `fediverse_site`, `fediverse_site_url`, `fediverse_creator`, and `fediverse_creator_url`.
+	 *              2. Added `breadcrumb_archive` and `breadcrumb_taxonomy`.
+	 *              3. Added `knowledge_tiktok`.
+	 *              4. Added `edit_proposed_values`.
 	 *
 	 * @return array Default site options.
 	 */
@@ -164,6 +168,8 @@ class Setup {
 				'display_pixel_counter'     => 1, // Pixel counter.
 				'display_character_counter' => 1, // Character counter.
 
+				'edit_proposed_values' => 1, // Edit generated values directly.
+
 				// General. Canonical.
 				'canonical_scheme' => 'automatic', // Canonical URL scheme.
 
@@ -177,7 +183,7 @@ class Setup {
 				// Title.
 				'site_title'          => '',        // Blog name.
 				'title_separator'     => 'hyphen',  // Title separator, radio selection.
-				'title_location'      => $titleloc, // Title separation location.
+				'title_location'      => $titleloc, // Title separation location. cspell:ignore titleloc
 				'title_rem_additions' => 0,         // Remove title additions.
 				'title_rem_prefixes'  => 0,         // Remove title prefixes from archives.
 				'title_strip_tags'    => 1,         // Apply 'strip tags' on titles.
@@ -278,6 +284,12 @@ class Setup {
 				'twitter_site'    => '', // Twitter business @username.
 				'twitter_creator' => '', // Twitter user @username.
 
+				// Fediverse.
+				'fediverse_site'         => '', // Fediverse @user@domain.
+				'fediverse_site_url'     => '', // Fediverse profile URL.
+				'fediverse_creator'      => '', // Fediverse author fallback @user@domain.
+				'fediverse_creator_url'  => '', // Fediverse author fallback profile URL.
+
 				// oEmbed.
 				'oembed_use_og_title'     => 0, // Use custom meta titles in oEmbeds.
 				'oembed_use_social_image' => 1, // Use social images in oEmbeds.
@@ -296,23 +308,26 @@ class Setup {
 				'multi_og_image' => 0, // Allow multiple images to be generated.
 
 				// Theme color settings.
-				'theme_color' => '', // Theme color metatag, default none.
+				'theme_color' => '', // Theme color meta tag, default none.
 
 				// Social FallBack images (fb = fallback)
 				'social_image_fb_url' => '', // Fallback image URL.
 				'social_image_fb_id'  => 0,  // Fallback image ID.
 
 				// Webmasters.
-				'google_verification' => '', // Google Verification Code.
-				'bing_verification'   => '', // Bing Verification Code.
-				'yandex_verification' => '', // Yandex Verification Code.
-				'baidu_verification'  => '', // Baidu Verification Code.
-				'pint_verification'   => '', // Pinterest Verification Code.
+				'google_verification'   => '', // Google Verification Code.
+				'bing_verification'     => '', // Bing Verification Code.
+				'yandex_verification'   => '', // Yandex Verification Code.
+				'baidu_verification'    => '', // Baidu Verification Code.
+				'pint_verification'     => '', // Pinterest Verification Code.
+				'facebook_verification' => '', // Facebook Verification Code.
 
 				// Schema.org.
 				'ld_json_enabled'           => 1, // LD+Json toggle for Schema.
 				'ld_json_searchbox'         => 1, // LD+Json Sitelinks Search Box.
 				'ld_json_breadcrumbs'       => 1, // LD+Json Breadcrumbs.
+				'breadcrumb_archive'        => [], // Post Type archive crumb support.
+				'breadcrumb_taxonomy'       => [], // Post Type taxonomy crumb.
 				'breadcrumb_use_meta_title' => 0, // Whether to consider meta titles for breadcrumbs.
 				'knowledge_output'          => 1, // Default for outputting the Knowledge SEO.
 
@@ -334,6 +349,7 @@ class Setup {
 				'knowledge_youtube'    => '', // Youtube Account.
 				'knowledge_linkedin'   => '', // Linkedin Account.
 				'knowledge_pinterest'  => '', // Pinterest Account.
+				'knowledge_tiktok'     => '', // TikTok Account.
 				'knowledge_soundcloud' => '', // SoundCloud Account.
 				'knowledge_tumblr'     => '', // Tumblr Account.
 

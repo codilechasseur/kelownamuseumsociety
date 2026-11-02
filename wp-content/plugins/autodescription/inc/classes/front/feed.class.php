@@ -8,15 +8,15 @@ namespace The_SEO_Framework\Front;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use The_SEO_Framework\{
-	Data,
-	Helper,
-	Helper\Format,
+use The_SEO_Framework\Data;
+use The_SEO_Framework\Helper\{
+	Format\HTML,
+	Headers,
 };
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2020 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2020 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -47,7 +47,7 @@ final class Feed {
 	 * @since 5.0.0
 	 */
 	public static function output_robots_noindex_headers_on_feed() {
-		\is_feed() and Helper\Headers::output_robots_noindex_headers();
+		\is_feed() and Headers::output_robots_noindex_headers();
 	}
 
 	/**
@@ -60,14 +60,15 @@ final class Feed {
 	 * @hook the_excerpt_rss 10
 	 * @since 5.0.0
 	 *
-	 * @param string      $content   The feed's content.
-	 * @param null|string $feed_type The feed type (not used in excerpted content)
+	 * @param string  $content   The feed's content.
+	 * @param ?string $feed_type The feed type (not used in excerpted content)
 	 * @return string The modified feed entry.
 	 */
 	public static function modify_the_content_feed( $content = '', $feed_type = null ) {
 
 		// When there's no content, there's nothing to modify or quote.
-		if ( empty( $content ) ) return '';
+		if ( empty( $content ) )
+			return '';
 
 		/**
 		 * Don't alter already-excerpts or descriptions.
@@ -81,7 +82,7 @@ final class Feed {
 			$clamp_length = (int) \apply_filters( 'the_seo_framework_max_content_feed_length', 400 );
 
 			// Strip all code and lines, and AI-trim it.
-			$excerpt = Format\HTML::extract_content(
+			$excerpt = HTML::extract_content(
 				$content,
 				[
 					'allow_shortcodes' => false,

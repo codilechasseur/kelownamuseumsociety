@@ -11,12 +11,15 @@ namespace The_SEO_Framework\Front;
 use The_SEO_Framework\{
 	Data,
 	Helper,
-	Helper\Query\Exclusion,
+};
+use The_SEO_Framework\Helper\{
+	Query\Exclusion,
+	Taxonomy,
 };
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2020 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2020 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -42,10 +45,12 @@ final class Query {
 	/**
 	 * Alters search query.
 	 *
+	 * @hook pre_get_posts 9999
 	 * @since 2.9.4
 	 * @since 3.0.0 Exchanged meta query for post__not_in query.
 	 * @since 5.0.0 1. Moved from `\The_SEO_Framework\Load`.
 	 *              2. Renamed from `_alter_search_query_in`.
+	 * @since 5.2.0 Now requires a non-empty search term when the raw search parameter is absent.
 	 * @see Twenty Fourteen theme @source \Featured_Content::pre_get_posts()
 	 * @access private
 	 *
@@ -54,31 +59,26 @@ final class Query {
 	 */
 	public static function alter_search_query_in( $wp_query ) {
 
-		// Don't exclude pages in wp-admin.
-		if ( $wp_query->is_search ) {
-			// Only interact with an actual Search Query.
-			if ( ! isset( $wp_query->query['s'] ) )
-				return;
-
-			if ( self::is_query_adjustment_blocked( $wp_query ) )
-				return;
-
-			$excluded = Exclusion::get_excluded_ids_from_cache()['search'];
-
-			if ( ! $excluded )
-				return;
-
-			$post__not_in = $wp_query->get( 'post__not_in' );
-
-			if ( ! empty( $post__not_in ) ) {
-				$excluded = array_unique( array_merge(
-					(array) $post__not_in,
-					$excluded,
-				) );
-			}
-
-			$wp_query->set( 'post__not_in', $excluded );
+		if (
+			   ! self::is_search_query( $wp_query )
+			|| self::is_query_adjustment_blocked( $wp_query )
+		) {
+			return;
 		}
+
+		$excluded = Exclusion::get_excluded_ids_from_cache()['search'];
+
+		if ( ! $excluded ) return;
+
+		$post__not_in = $wp_query->get( 'post__not_in' );
+
+		if ( ! empty( $post__not_in ) )
+			$excluded = array_unique( array_merge(
+				(array) $post__not_in,
+				$excluded,
+			) );
+
+		$wp_query->set( 'post__not_in', $excluded );
 	}
 
 	/**
@@ -89,6 +89,7 @@ final class Query {
 	 * @since 5.0.0 1. Moved from `\The_SEO_Framework\Load`.
 	 *              2. Renamed from `alter_search_query_post`.
 	 * @since 5.1.3 Now verifies that the search query is actually set.
+	 * @since 5.2.0 Now requires a non-empty search term when the raw search parameter is absent.
 	 * @access private
 	 *
 	 * @param array     $posts    The array of retrieved posts.
@@ -97,23 +98,19 @@ final class Query {
 	 */
 	public static function alter_search_query_post( $posts, $wp_query ) {
 
-		if ( $wp_query->is_search ) {
-			// Only interact with an actual Search Query.
-			if ( ! isset( $wp_query->query['s'] ) )
-				return;
-
-			if ( self::is_query_adjustment_blocked( $wp_query ) )
-				return $posts;
-
-			foreach ( $posts as $n => $post ) {
-				if ( Data\Plugin\Post::get_meta_item( 'exclude_local_search', $post->ID ) )
-					unset( $posts[ $n ] );
-			}
-			// Reset numeric index.
-			$posts = array_values( $posts );
+		if (
+			   ! self::is_search_query( $wp_query )
+			|| self::is_query_adjustment_blocked( $wp_query )
+		) {
+			return $posts;
 		}
 
-		return $posts;
+		foreach ( $posts as $n => $post )
+			if ( Data\Plugin\Post::get_meta_item( 'exclude_local_search', $post->ID ) )
+				unset( $posts[ $n ] );
+
+		// Reset numeric index before returning posts.
+		return array_values( $posts );
 	}
 
 	/**
@@ -124,34 +121,35 @@ final class Query {
 	 * @since 3.0.0 Exchanged meta query for post__not_in query.
 	 * @since 5.0.0 1. Moved from `\The_SEO_Framework\Load`.
 	 *              2. Renamed from `_alter_archive_query_in`.
+	 * @since 5.2.0 Now also adjusts the main posts feed.
 	 * @see Twenty Fourteen theme @source \Featured_Content::pre_get_posts()
 	 * @access private
 	 *
 	 * @param \WP_Query $wp_query The WP_Query instance.
-	 * @return void Early if query alteration is useless or blocked.
+	 * @return void Early if query alteration is blocked.
 	 */
 	public static function alter_archive_query_in( $wp_query ) {
 
-		if ( $wp_query->is_archive || $wp_query->is_home ) {
-			if ( self::is_query_adjustment_blocked( $wp_query ) )
-				return;
-
-			$excluded = Exclusion::get_excluded_ids_from_cache()['archive'];
-
-			if ( ! $excluded )
-				return;
-
-			$post__not_in = $wp_query->get( 'post__not_in' );
-
-			if ( ! empty( $post__not_in ) ) {
-				$excluded = array_unique( array_merge(
-					(array) $post__not_in,
-					$excluded,
-				) );
-			}
-
-			$wp_query->set( 'post__not_in', $excluded );
+		if (
+			   ! self::is_archive_listing( $wp_query )
+			|| self::is_query_adjustment_blocked( $wp_query )
+		) {
+			return;
 		}
+
+		$excluded = Exclusion::get_excluded_ids_from_cache()['archive'];
+
+		if ( ! $excluded ) return;
+
+		$post__not_in = $wp_query->get( 'post__not_in' );
+
+		if ( ! empty( $post__not_in ) )
+			$excluded = array_unique( array_merge(
+				(array) $post__not_in,
+				$excluded,
+			) );
+
+		$wp_query->set( 'post__not_in', $excluded );
 	}
 
 	/**
@@ -161,6 +159,7 @@ final class Query {
 	 * @since 2.9.4
 	 * @since 5.0.0 1. Moved from `\The_SEO_Framework\Load`.
 	 *              2. Renamed from `_alter_archive_query_post`.
+	 * @since 5.2.0 Now also adjusts the main posts feed.
 	 * @access private
 	 *
 	 * @param array     $posts    The array of retrieved posts.
@@ -169,19 +168,63 @@ final class Query {
 	 */
 	public static function alter_archive_query_post( $posts, $wp_query ) {
 
-		if ( $wp_query->is_archive || $wp_query->is_home ) {
-			if ( self::is_query_adjustment_blocked( $wp_query ) )
-				return $posts;
-
-			foreach ( $posts as $n => $post ) {
-				if ( Data\Plugin\Post::get_meta_item( 'exclude_from_archive', $post->ID ) )
-					unset( $posts[ $n ] );
-			}
-			// Reset numeric index.
-			$posts = array_values( $posts );
+		if (
+			   ! self::is_archive_listing( $wp_query )
+			|| self::is_query_adjustment_blocked( $wp_query )
+		) {
+			return $posts;
 		}
 
-		return $posts;
+		foreach ( $posts as $n => $post )
+			if ( Data\Plugin\Post::get_meta_item( 'exclude_from_archive', $post->ID ) )
+				unset( $posts[ $n ] );
+
+		// Reset numeric index before returning posts.
+		return array_values( $posts );
+	}
+
+	/**
+	 * Determines whether the query lists posts as an archive or the main posts feed.
+	 *
+	 * WordPress does not set `is_home` when the query is a feed, so `/feed/` is neither
+	 * an archive nor the homepage. Comment feeds and search feeds are left alone.
+	 *
+	 * @since 5.2.0
+	 *
+	 * @param \WP_Query $wp_query The WP_Query instance.
+	 * @return bool
+	 */
+	private static function is_archive_listing( $wp_query ) {
+
+		if ( $wp_query->is_archive || $wp_query->is_home )
+			return true;
+
+		return $wp_query->is_feed
+			&& ! $wp_query->is_singular      // /hello-world/feed/
+			&& ! $wp_query->is_search        // /?s=test&feed=rss2
+			&& ! $wp_query->is_comment_feed; // /comments/feed/
+	}
+
+	/**
+	 * Determines whether a WP_Query instance handles an actual search query.
+	 *
+	 * @since 5.2.0
+	 *
+	 * @param \WP_Query $wp_query The WP_Query instance.
+	 * @return bool
+	 */
+	private static function is_search_query( $wp_query ) {
+
+		if ( ! $wp_query->is_search )
+			return false;
+
+		// Includes an empty `?s=`. fill_query_vars() sets a missing `s` to ''.
+		if ( isset( $wp_query->query['s'] ) )
+			return true;
+
+		$search = $wp_query->query_vars['s'] ?? null;
+
+		return \is_string( $search ) && \strlen( $search );
 	}
 
 	/**
@@ -217,25 +260,30 @@ final class Query {
 
 		$has_filter ??= \has_filter( 'the_seo_framework_do_adjust_archive_query' );
 
-		/**
-		 * This filter affects both 'search-"archives"' and terms/taxonomies.
-		 *
-		 * @since 2.9.4
-		 * @param bool      $adjust   True is unblocked (do adjustment), false is blocked (don't do adjustment).
-		 * @param \WP_Query $wp_query The current query.
-		 */
-		if ( $has_filter && ! \apply_filters( 'the_seo_framework_do_adjust_archive_query', true, $wp_query ) )
+		if (
+			   $has_filter
+			&& ! (
+				/**
+				 * This filter affects both 'search-"archives"' and terms/taxonomies.
+				 *
+				 * @since 2.9.4
+				 * @param bool      $adjust   True is unblocked (do adjustment), false is blocked (don't do adjustment).
+				 * @param \WP_Query $wp_query The current query.
+				 */
+				\apply_filters( 'the_seo_framework_do_adjust_archive_query', true, $wp_query )
+			)
+		) {
 			return true;
+		}
 
 		if ( ! \did_action( 'wp_loaded' ) )
 			return true;
 
-		// TODO WP 6.5+ https://core.trac.wordpress.org/ticket/42061: wp_is_serving_rest_request()
-		if ( \defined( 'REST_REQUEST' ) && \REST_REQUEST ) {
+		if ( \wp_is_serving_rest_request() ) {
 			$referer = \wp_get_referer();
 			if ( str_contains( $referer, 'post.php' ) || str_contains( $referer, 'post-new.php' ) ) {
 				/**
-				 * WordPress should've authenthicated the user at
+				 * WordPress should've authenticated the user at
 				 * WP_REST_Server::check_authentication() -> rest_cookie_check_errors() -> wp_nonce etc.
 				 * before executing the query. For REST_REQUEST can not be true otherwise. Ergo,
 				 * \current_user_can() should work. If it returns true, we can trust it's a safe request.
@@ -257,7 +305,7 @@ final class Query {
 
 			foreach ( $wp_query->tax_query->queries as $_query ) {
 				if ( isset( $_query['taxonomy'] ) ) {
-					$supported = Helper\Taxonomy::is_supported( $_query['taxonomy'] );
+					$supported = Taxonomy::is_supported( $_query['taxonomy'] );
 					// If just one tax is supported for this query, greenlight it: all must be blocking.
 					if ( $supported ) break;
 				}

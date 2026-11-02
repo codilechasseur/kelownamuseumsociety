@@ -15,7 +15,6 @@ use The_SEO_Framework\Admin\Settings\Layout\{
 use The_SEO_Framework\Helper\{
 	Format\Markdown,
 	Post_Type,
-	Query,
 	Taxonomy,
 };
 
@@ -23,7 +22,7 @@ use The_SEO_Framework\Helper\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2016 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2016 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -138,7 +137,7 @@ switch ( $instance ) :
 
 		$character_info = HTML::make_info(
 			\__( 'The character counter is based on guidelines.', 'autodescription' ),
-			'',
+			'https://kb.theseoframework.com/?p=48#character-counters',
 			false,
 		);
 
@@ -191,6 +190,26 @@ switch ( $instance ) :
 		);
 
 		HTML::description( \__( 'Note: Hiding option fields does not remove the data once stored in them.', 'autodescription' ) );
+
+		?>
+		<hr>
+		<?php
+		HTML::header_title( \__( 'Editing Settings', 'autodescription' ) );
+
+		$editing_info = HTML::make_info(
+			\__( 'Clicking an empty input field keeps the blurred placeholder and places the cursor where you clicked. Editing makes it normal text. Clearing the field returns the placeholder.', 'autodescription' ),
+			'',
+			false,
+		);
+
+		HTML::wrap_fields(
+			Input::make_checkbox( [
+				'id'     => 'edit_proposed_values',
+				'label'  => \esc_html__( 'Edit generated values directly?', 'autodescription' ) . " $editing_info",
+				'escape' => false,
+			] ),
+			true,
+		);
 		break;
 
 	case 'performance':
@@ -213,6 +232,12 @@ switch ( $instance ) :
 			\esc_html__( 'Altering the query on the site is much faster, but can lead to inconsistent pagination. It can also lead to 404 error messages if all queried pages have been excluded.', 'autodescription' ),
 		);
 
+		/**
+		 * Values other than `in_query` and `post_query` aren't saved.
+		 *
+		 * @since 5.0.0
+		 * @param array $query_types The query alteration options by option value.
+		 */
 		$query_types = (array) \apply_filters(
 			'the_seo_framework_query_alteration_types',
 			[
@@ -283,7 +308,7 @@ switch ( $instance ) :
 				Input::make_checkbox( [
 					'id'     => 'alter_archive_query',
 					'label'  => \esc_html__( 'Enable archive query alteration?', 'autodescription' )
-						. ' ' . HTML::make_info( \__( 'This allows you to exclude pages from on-site archive listings.', 'autodescription' ), '', false ),
+						. ' ' . HTML::make_info( \__( 'This allows you to exclude pages from on-site archive listings and feeds.', 'autodescription' ), '', false ),
 					'escape' => false,
 				] ),
 				$archive_query_select_field,

@@ -8,7 +8,7 @@
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -61,6 +61,7 @@ window.tsfDescription = function () {
 	 * @return {Element}
 	 */
 	function setInputElement( element ) {
+
 		descriptionInputInstances.set( element.id, element );
 		states[ element.id ] = {
 			allowReferenceChange: true,
@@ -68,6 +69,7 @@ window.tsfDescription = function () {
 			useDefaultDescription: true,
 		};
 		_loadDescriptionActions( element );
+
 		return getInputElement( element.id );
 	}
 
@@ -146,6 +148,7 @@ window.tsfDescription = function () {
 		except = Array.isArray( except ) ? except : [ except ];
 
 		descriptionInputInstances.forEach( element => {
+
 			if ( except.includes( element.id ) ) return;
 			updateStateOf( element.id, part, value );
 		} );
@@ -177,6 +180,7 @@ window.tsfDescription = function () {
 	 * @param {Event} event
 	 */
 	function _setReferenceDescription( event ) {
+
 		const references = _getDescriptionReferences( event.target.id );
 
 		if ( ! references[0] ) return;
@@ -184,9 +188,10 @@ window.tsfDescription = function () {
 		const allowReferenceChange  = getStateOf( event.target.id, 'allowReferenceChange' ),
 			  useDefaultDescription = allowReferenceChange ? getStateOf( event.target.id, 'useDefaultDescription' ) : true;
 
-		let text = tsf.coalesceStrlen( allowReferenceChange && event.target.value.trim() )
-				?? tsf.coalesceStrlen( useDefaultDescription && getStateOf( event.target.id, 'defaultDescription' ) )
-				?? '';
+		let text =
+			   tsf.coalesceStrlen( allowReferenceChange && event.target.value.trim() )
+			?? tsf.coalesceStrlen( useDefaultDescription && getStateOf( event.target.id, 'defaultDescription' ) )
+			?? '';
 
 		const referenceValue = tsf.escapeString(
 			tsf.decodeEntities(
@@ -203,6 +208,7 @@ window.tsfDescription = function () {
 		const changeEvent = new Event( 'change' );
 
 		references.forEach( reference => {
+
 			// We require the event below when adjusting some states... Don't uncomment this.
 			// if ( reference.innerHTML = referenceValue ) return;
 
@@ -217,12 +223,16 @@ window.tsfDescription = function () {
 	 *
 	 * @since 4.0.0
 	 * @since 4.1.0 Now consistently sets a reliable placeholder.
+	 * @since 5.2.0 Now passes the placeholder to `tsfPropose.syncProposed()`.
 	 * @access private
 	 *
 	 * @param {Event} event
 	 */
 	function _updatePlaceholder( event ) {
+
 		event.target.placeholder = _getDescriptionReferences( event.target.id )[0].textContent;
+
+		window.tsfPropose?.syncProposed( event.target );
 	}
 
 	/**
@@ -235,12 +245,13 @@ window.tsfDescription = function () {
 	 * @param {Event} event
 	 */
 	function _updateCounter( event ) {
+
 		const counter   = document.getElementById( `${event.target.id}_chars` ),
 			  reference = _getDescriptionReferences( event.target.id )[0];
 
 		if ( ! counter ) return;
 
-		tsfC?.updateCharacterCounter( {
+		window.tsfC?.updateCharacterCounter( {
 			e:     counter,
 			text:  reference.innerHTML,
 			field: 'description',
@@ -257,12 +268,13 @@ window.tsfDescription = function () {
 	 * @param {Event} event
 	 */
 	function _updatePixels( event ) {
+
 		const pixels    = document.getElementById( `${event.target.id}_pixels` ),
 			  reference = _getDescriptionReferences( event.target.id )[0];
 
 		if ( ! pixels ) return;
 
-		tsfC?.updatePixelCounter( {
+		window.tsfC?.updatePixelCounter( {
 			e:     pixels,
 			text:  reference.innerHTML,
 			field: 'description',
@@ -280,6 +292,7 @@ window.tsfDescription = function () {
 	 * @param {string} id The input id. When not set, all inputs will be triggered.
 	 */
 	function triggerInput( id ) {
+
 		if ( id ) {
 			getInputElement( id )?.dispatchEvent( new Event( 'input' ) );
 		} else {
@@ -298,6 +311,7 @@ window.tsfDescription = function () {
 	 * @param {string} id The input id. When not set, all inputs will be triggered.
 	 */
 	function triggerCounter( id ) {
+
 		if ( id ) {
 			getInputElement( id )?.dispatchEvent( new CustomEvent( 'tsf-update-description-counter' ) );
 		} else {
@@ -333,6 +347,7 @@ window.tsfDescription = function () {
 	 * @param {Event} event
 	 */
 	function _onUpdateCounterTrigger( event ) {
+
 		_updateCounter( event );
 		_updatePixels( event );
 	}
@@ -391,6 +406,7 @@ window.tsfDescription = function () {
 	 * @param {string} id The input id. When not set, all inputs will be triggered.
 	 */
 	function enqueueUnregisteredInputTrigger( id ) {
+
 		( id in _unregisteredTriggerBuffer ) && clearTimeout( _unregisteredTriggerBuffer[ id ] );
 		_unregisteredTriggerBuffer[ id ] = setTimeout( () => triggerUnregisteredInput( id ), 1000/60 ); // 60 fps
 	}
@@ -452,28 +468,31 @@ window.tsfDescription = function () {
 		window.addEventListener( 'tsf-counter-updated', () => enqueueUnregisteredInputTrigger() );
 	}
 
-	return Object.assign( {
-		/**
-		 * Initialises all aspects of the scripts.
-		 * You shouldn't call this.
-		 *
-		 * @since 4.0.0
-		 * @access protected
-		 */
-		load: () => {
-			document.body.addEventListener( 'tsf-onload', _initAllDescriptionActions );
+	return Object.assign(
+		{
+			/**
+			 * Initialises all aspects of the scripts.
+			 * You shouldn't call this.
+			 *
+			 * @since 4.0.0
+			 * @access protected
+			 */
+			load: () => {
+				document.body.addEventListener( 'tsf-onload', _initAllDescriptionActions );
+			},
 		},
-	}, {
-		setInputElement,
-		getInputElement,
-		getStateOf,
-		updateStateOf,
-		updateStateAll,
-		triggerCounter,
-		triggerInput,
-		enqueueTriggerInput,
-		triggerUnregisteredInput,
-		enqueueUnregisteredInputTrigger, // FIXME: this should've been enqueueTriggerUnregisteredInput... deprecate in TSF 5.2
-	} );
+		{
+			setInputElement,
+			getInputElement,
+			getStateOf,
+			updateStateOf,
+			updateStateAll,
+			triggerCounter,
+			triggerInput,
+			enqueueTriggerInput,
+			triggerUnregisteredInput,
+			enqueueUnregisteredInputTrigger, // FIXME: this should've been enqueueTriggerUnregisteredInput... deprecate in TSF 5.2
+		},
+	);
 }();
 window.tsfDescription.load();

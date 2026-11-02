@@ -10,14 +10,14 @@ namespace The_SEO_Framework;
 
 use The_SEO_Framework\{
 	Data\Filter\Sanitize,
-	Helper\Format,
+	Helper\Format\Color,
 };
 
 // phpcs:disable WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2021 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2021 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -49,8 +49,8 @@ printf(
 		 * @since 3.1.0 It now filters the mail color, instead of accent.
 		 * @param string $colorMain A hexadecimal color.
 		 */
-		\apply_filters( 'the_seo_framework_sitemap_color_main', $colors['main'] )
-	)
+		\apply_filters( 'the_seo_framework_sitemap_color_main', $colors['main'] ),
+	),
 );
 printf(
 	'<xsl:variable name="colorAccent" select="\'%s\'"/>',
@@ -60,8 +60,8 @@ printf(
 		 * @since 3.1.0 It now filters the accent color, instead of main.
 		 * @param string $colorAccent A hexadecimal color.
 		 */
-		\apply_filters( 'the_seo_framework_sitemap_color_accent', $colors['accent'] )
-	)
+		\apply_filters( 'the_seo_framework_sitemap_color_accent', $colors['accent'] ),
+	),
 );
 printf(
 	'<xsl:variable name="relativeFontColor" select="\'%s\'"/>',
@@ -72,8 +72,8 @@ printf(
 		 */
 		\apply_filters(
 			'the_seo_framework_sitemap_relative_font_color',
-			Format\Color::get_relative_fontcolor( $colors['main'] )
-		)
-	)
+			Color::get_relative_fontcolor( $colors['main'] ),
+		),
+	),
 );
 // phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped

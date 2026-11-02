@@ -10,7 +10,7 @@ namespace The_SEO_Framework;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -28,7 +28,7 @@ namespace The_SEO_Framework;
 // Prerender sitemap.
 if (
 	   Data\Plugin::get_option( 'sitemap_cron_prerender' ) // Less likely to be true.
-	&& Data\Plugin::get_option( 'sitemaps_output' )
+	&& Sitemap\Utils::may_output_optimized_sitemap()
 ) {
 	\add_action(
 		'tsf_sitemap_cron_hook_before',

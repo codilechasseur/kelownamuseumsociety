@@ -8,7 +8,7 @@
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2024 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2024 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -62,6 +62,7 @@ window.tsfUI = function( $ ) {
 		$( document ).on(
 			'postbox-toggled',
 			( event, $postbox ) => {
+
 				if ( ! $postbox || ! $postboxes.is( $postbox ) ) return;
 
 				// WordPress bug--they send an array but should've sent it within one.
@@ -73,6 +74,7 @@ window.tsfUI = function( $ ) {
 
 				// Defer from event.
 				setTimeout( () => {
+
 					if ( $postbox.is( ':hidden' ) ) {
 						// Unhide the postbox. Then, loop back to the other parts.
 						$( `#${$postbox.attr( 'id' )}-hide` ).trigger( 'click.postboxes' );
@@ -253,31 +255,35 @@ window.tsfUI = function( $ ) {
 		};
 	}
 
-	return Object.assign( {
-		/**
-		 * Initialises all aspects of the scripts.
-		 * You shouldn't call this.
-		 *
-		 * @since 5.1.0
-		 * @access protected
-		 *
-		 * @function
-		 */
-		load: () => {
-			document.body.addEventListener( 'tsf-ready', _initPostboxToggle );
-			document.body.addEventListener( 'tsf-ready', _initNotices );
+	return Object.assign(
+		{
+			/**
+			 * Initialises all aspects of the scripts.
+			 * You shouldn't call this.
+			 *
+			 * @since 5.1.0
+			 * @access protected
+			 *
+			 * @function
+			 */
+			load: () => {
+
+				document.body.addEventListener( 'tsf-ready', _initPostboxToggle );
+				document.body.addEventListener( 'tsf-ready', _initNotices );
+			},
 		},
-	}, {
-		/**
-		 * Copies internal public functions to tsfUI for public access.
-		 * Don't overwrite these.
-		 *
-		 * @since 5.1.0
-		 * @access public
-		 */
-		fadeIn,
-		fadeOut,
-		traceAnimation,
-	} );
+		{
+			/**
+			 * Copies internal public functions to tsfUI for public access.
+			 * Don't overwrite these.
+			 *
+			 * @since 5.1.0
+			 * @access public
+			 */
+			fadeIn,
+			fadeOut,
+			traceAnimation,
+		},
+	);
 }( jQuery );
 window.tsfUI.load();

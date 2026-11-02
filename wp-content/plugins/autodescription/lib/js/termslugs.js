@@ -8,7 +8,7 @@
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2024 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2024 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -87,6 +87,7 @@ window.tsfTermSlugs = function () {
 
 		// Walk the ancestral tree, and store each anew for quick access.
 		terms.forEach( ( term, index, terms ) => {
+
 			const termId = +term.id;
 			termParentCache.has( termId ) || termParentCache.set(
 				termId,
@@ -106,11 +107,13 @@ window.tsfTermSlugs = function () {
 	 * @return {Promise<void>} A promise that resolves when the term parent slugs are fetched.
 	 */
 	function fetch( termId, taxonomy ) {
+
 		// TODO should we add a "fetchingfor" test to prevent concurrent fetches?
 		return new Promise( ( resolve, reject ) => {
 
 			if ( ! termId ) {
 				reject();
+
 				return;
 			}
 
@@ -125,6 +128,7 @@ window.tsfTermSlugs = function () {
 					timeout: 7000,
 				},
 			).done( response => {
+
 				store( tsf.convertJSONResponse( response ), taxonomy );
 				resolve();
 			} ).fail( reject );

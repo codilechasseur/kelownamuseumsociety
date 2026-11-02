@@ -8,7 +8,7 @@
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -173,6 +173,7 @@ window.tsfTitle = function () {
 	 * @param {Element} element
 	 */
 	function setInputElement( element ) {
+
 		titleInputInstances.set( element.id, element );
 		states[ element.id ] = {
 			showPrefix:           true,
@@ -180,8 +181,9 @@ window.tsfTitle = function () {
 			defaultTitle:         '',
 			separator:            l10n.states.titleSeparator,
 			prefixPlacement:      l10n.states.prefixPlacement,
-		}
+		};
 		_loadTitleActions( element );
+
 		return getInputElement( element.id );
 	}
 
@@ -273,6 +275,7 @@ window.tsfTitle = function () {
 		except = Array.isArray( except ) ? except : [ except ];
 
 		titleInputInstances.forEach( element => {
+
 			if ( except.includes( element.id ) ) return;
 			updateStateOf( element.id, part, value );
 		} );
@@ -319,6 +322,7 @@ window.tsfTitle = function () {
 	 * @return {HTMLElement[]}
 	 */
 	function _setReferenceTitle( event ) {
+
 		const references   = _getTitleReferences( event.target.id ),
 			  referencesNa = _getTitleNaReferences( event.target.id );
 
@@ -326,9 +330,10 @@ window.tsfTitle = function () {
 
 		const allowReferenceChange = getStateOf( event.target.id, 'allowReferenceChange' );
 
-		let text = tsf.coalesceStrlen( allowReferenceChange && event.target.value.trim() )
-				?? tsf.coalesceStrlen( getStateOf( event.target.id, 'defaultTitle' ) )
-				?? '';
+		let text =
+			   tsf.coalesceStrlen( allowReferenceChange && event.target.value.trim() )
+			?? tsf.coalesceStrlen( getStateOf( event.target.id, 'defaultTitle' ) )
+			?? '';
 		let textNa = text;
 
 		if ( text.length && allowReferenceChange ) {
@@ -396,6 +401,7 @@ window.tsfTitle = function () {
 		const changeEvent = new Event( 'change' );
 
 		references.forEach( reference => {
+
 			// We require the event below when adjusting some states... Don't uncomment this.
 			// if ( reference.innerHTML === referenceValue ) return;
 
@@ -405,6 +411,7 @@ window.tsfTitle = function () {
 		} );
 
 		referencesNa.forEach( referenceNa => {
+
 			// We require the event below when adjusting some states... Don't uncomment this.
 			// if ( referenceNa.innerHTML === referenceNaValue ) return;
 
@@ -424,13 +431,14 @@ window.tsfTitle = function () {
 	 * @param {string} id The input ID.
 	 */
 	function _updateAdditionsValue( id ) {
+
 		let value          = '',
 			additionsValue = '',
 			separator      = '';
 
 		if ( getStateOf( id, 'addAdditions' ) ) {
 			additionsValue = tsf.escapeString( tsf.decodeEntities( getStateOf( id, 'additionValue' ) ) );
-			separator      = getStateOf( id, 'separator' );
+			separator      = tsf.escapeString( tsf.decodeEntities( getStateOf( id, 'separator' ) ) );
 		}
 
 		if ( additionsValue ) {
@@ -459,6 +467,7 @@ window.tsfTitle = function () {
 	 * @param {string} id The input ID.
 	 */
 	function _updatePrefixValue( id ) {
+
 		let value       = '',
 			showPrefix  = getStateOf( id, 'showPrefix' ),
 			prefixValue = getStateOf( id, 'prefixValue' );
@@ -495,6 +504,7 @@ window.tsfTitle = function () {
 	 *              2. Now supports dynamic border sizes, this means that you can
 	 *                 make a skewed-proportioned input element, and the hovers
 	 *                 will align properly with the input text.
+	 * @since 5.2.0 Now vertically centers overlays when the input omits line-height (WordPress 7.0+).
 	 * @access private
 	 *
 	 * @param {Event} event
@@ -521,6 +531,7 @@ window.tsfTitle = function () {
 		if ( ! hasPrefixValue && ! hasAdditionsValue ) {
 			// Both items are emptied through settings.
 			input.style.textIndent = 'initial';
+
 			return;
 		}
 
@@ -531,6 +542,7 @@ window.tsfTitle = function () {
 				hoverPrefixElement.style.display = 'none';
 			if ( hoverAdditionsElement )
 				hoverAdditionsElement.style.display = 'none';
+
 			return;
 		}
 
@@ -543,55 +555,56 @@ window.tsfTitle = function () {
 			  borderRight   = parseFloat( inputStyles.borderRightWidth ),
 			  borderLeft    = parseFloat( inputStyles.borderLeftWidth ),
 			  marginRight   = parseFloat( inputStyles.marginRight ),
-			  marginLeft    = parseFloat( inputStyles.marginLeft );
+			  marginLeft    = parseFloat( inputStyles.marginLeft ),
+			  paddingTop    = parseFloat( inputStyles.paddingTop ),
+			  paddingBottom = parseFloat( inputStyles.paddingBottom ),
+			  borderTop     = parseFloat( inputStyles.borderTopWidth );
 
 		const offsetPosition = window.isRtl ? 'right' : 'left',
 			  corPaddingProp = window.isRtl ? 'paddingLeft' : 'paddingRight',
 			  leftOffset     = paddingLeft + borderLeft + marginLeft,
 			  rightOffset    = paddingRight + borderRight + marginRight;
 
-		const fontStyleCSS = new Map();
-
-		fontStyleCSS.set( 'border', '0 solid transparent' );
-
-		[
-			'display',
-			'lineHeight',
-			'fontFamily',
-			'fontWeight',
-			'fontSize',
-			'letterSpacing',
-			'marginTop',
-			'marginBottom',
-			'paddingTop',
-			'paddingBottom',
-			'borderTopWidth',
-			'borderBottomWidth',
-			'verticalAlign',
-			'boxSizing',
-			'textTransform',
-		].forEach(
-			type => {
-				fontStyleCSS.set( type, inputStyles?.[ type ] || '' );
-			}
-		);
+		const typeStyleCSS = {
+			lineHeight:    inputStyles.lineHeight || '',
+			fontFamily:    inputStyles.fontFamily || '',
+			fontWeight:    inputStyles.fontWeight || '',
+			fontSize:      inputStyles.fontSize || '',
+			letterSpacing: inputStyles.letterSpacing || '',
+			textTransform: inputStyles.textTransform || '',
+			whiteSpace:    'pre',
+			display:       'inline-block',
+		};
 
 		const offsetElement = document.getElementById( `tsf-title-offset_${event.target.id}` );
 		offsetElement.textContent = inputValue;
 		Object.assign(
 			offsetElement.style,
-			{
-				fontFamily:    fontStyleCSS.get( 'fontFamily' ) || '',
-				fontWeight:    fontStyleCSS.get( 'fontWeight' ) || '',
-				fontSize:      fontStyleCSS.get( 'fontSize' ) || '',
-				letterSpacing: fontStyleCSS.get( 'letterSpacing' ) || '',
-				textTransform: fontStyleCSS.get( 'textTransform' ) || '',
-			},
+			typeStyleCSS,
+			{ height: 'auto' },
 		);
-		const textWidth = offsetElement.getBoundingClientRect().width;
+		const textWidth           = offsetElement.getBoundingClientRect().width,
+			  effectiveLineHeight = parseFloat( inputStyles.lineHeight ) || offsetElement.getBoundingClientRect().height;
 
-		const oneCh              = parseFloat( fontStyleCSS.get( 'fontSize' ) ) || 0,
-			  overflowCorrection = oneCh * .33;
+		offsetElement.style.height = '';
+
+		// Center overlay text on the input's line, including wrap offset (e.g. Quick Edit margin-top).
+		const contentHeight  = input.clientHeight - paddingTop - paddingBottom,
+			  verticalOffset = input.offsetTop + borderTop + paddingTop + Math.max(
+				  0,
+				  ( contentHeight - effectiveLineHeight ) / 2,
+			  );
+
+		const oneCh              = parseFloat( typeStyleCSS.fontSize ) || 0,
+			  // One-third em: optical nudge when ellipsis truncates prefix/additions.
+			  overflowCorrection = oneCh / 3,
+			  hoverBaseStyles    = {
+				  ...typeStyleCSS,
+				  margin:   0,
+				  padding:  0,
+				  border:   0,
+				  maxWidth: 'initial',
+			  };
 
 		let additionsMaxWidth = 0,
 			additionsOffset   = 0,
@@ -610,8 +623,7 @@ window.tsfTitle = function () {
 			// Reset to recalculate intended width.
 			Object.assign(
 				hoverPrefixElement.style,
-				Object.fromEntries( fontStyleCSS.entries() ),
-				{ maxWidth: 'initial' },
+				hoverBaseStyles,
 			);
 			prefixWidth = hoverPrefixElement.getBoundingClientRect().width - ( hoverPrefixElement.dataset.tsfCorPad || 0 );
 
@@ -623,8 +635,7 @@ window.tsfTitle = function () {
 			// Reset to recalculate intended width.
 			Object.assign(
 				hoverAdditionsElement.style,
-				Object.fromEntries( fontStyleCSS.entries() ),
-				{ maxWidth: 'initial' },
+				hoverBaseStyles,
 			);
 			additionsWidth = hoverAdditionsElement.getBoundingClientRect().width - ( hoverAdditionsElement.dataset.tsfCorPad || 0 );
 
@@ -657,14 +668,16 @@ window.tsfTitle = function () {
 				// At least 0, and don't grow beyond the actual width.
 				prefixMaxWidth = Math.max( 0, Math.min( prefixMaxWidth, prefixWidth ) );
 				// If the maxWidth is lower than the initial width (minus corrective padding), apply padding to push back the text a bit.
-				prefixCorPad = additionsMaxWidth < additionsWidth ? overflowCorrection : 0;
+				prefixCorPad = prefixMaxWidth < prefixWidth ? overflowCorrection : 0;
 			}
 
 			totalIndent += prefixMaxWidth;
 
 			Object.assign(
 				hoverPrefixElement.style,
+				hoverBaseStyles,
 				{
+					top:              `${verticalOffset}px`,
 					[offsetPosition]: `${prefixOffset}px`,
 					maxWidth:         `${prefixMaxWidth}px`,
 					[corPaddingProp]: `${prefixCorPad}px`,
@@ -677,7 +690,9 @@ window.tsfTitle = function () {
 		if ( hasAdditionsValue ) {
 			Object.assign(
 				hoverAdditionsElement.style,
+				hoverBaseStyles,
 				{
+					top:              `${verticalOffset}px`,
 					[offsetPosition]: `${additionsOffset}px`,
 					maxWidth:         `${additionsMaxWidth}px`,
 					[corPaddingProp]: `${additionsCorPad}px`,
@@ -695,12 +710,27 @@ window.tsfTitle = function () {
 	 *
 	 * @since 4.0.0
 	 * @since 4.1.0 Now consistently sets a reliable placeholder.
+	 * @since 5.2.0 Now passes the generated title to `tsfPropose.syncProposed()`.
 	 * @access private
 	 *
 	 * @param {Event} event
 	 */
 	function _updatePlaceholder( event ) {
+
 		event.target.placeholder = _getTitleReferences( event.target.id )[0].textContent;
+
+		const text = tsf.coalesceStrlen( getStateOf( event.target.id, 'defaultTitle' ) ) ?? '';
+
+		window.tsfPropose?.syncProposed(
+			event.target,
+			tsf.decodeEntities(
+				tsf.sDoubleSpace(
+					tsf.sTabs(
+						tsf.sSingleLine( text ).trim(),
+					),
+				),
+			),
+		);
 	}
 
 	/**
@@ -718,7 +748,7 @@ window.tsfTitle = function () {
 
 		if ( ! counter ) return;
 
-		tsfC?.updateCharacterCounter( {
+		window.tsfC?.updateCharacterCounter( {
 			e:     counter,
 			text:  reference.innerHTML,
 			field: 'title',
@@ -741,7 +771,7 @@ window.tsfTitle = function () {
 
 		if ( ! pixels ) return;
 
-		tsfC?.updatePixelCounter( {
+		window.tsfC?.updatePixelCounter( {
 			e:     pixels,
 			text:  reference.innerHTML,
 			field: 'title',
@@ -778,6 +808,7 @@ window.tsfTitle = function () {
 	 * @param {string} id The input id. When not set, all inputs will be triggered.
 	 */
 	function triggerCounter( id ) {
+
 		if ( id ) {
 			getInputElement( id )?.dispatchEvent( new CustomEvent( 'tsf-update-title-counter' ) );
 		} else {
@@ -814,6 +845,7 @@ window.tsfTitle = function () {
 	 * @param {Event} event
 	 */
 	function _onUpdateCounterTrigger( event ) {
+
 		_updateCounter( event );
 		_updatePixels( event );
 	}
@@ -829,6 +861,7 @@ window.tsfTitle = function () {
 	 * @param {string} id The input ID.
 	 */
 	function enqueueTriggerInput( id ) {
+
 		( id in _enqueueTriggerInputBuffer ) && clearTimeout( _enqueueTriggerInputBuffer[ id ] );
 		_enqueueTriggerInputBuffer[ id ] = setTimeout( () => triggerInput( id ), 1000/60 ); // 60 fps
 	}
@@ -843,6 +876,7 @@ window.tsfTitle = function () {
 	 * @param {string} id The input id. When not set, all inputs will be triggered.
 	 */
 	function triggerUnregisteredInput( id ) {
+
 		if ( 'tsfAys' in window ) {
 			let wereSettingsChanged = tsfAys.areSettingsChanged();
 
@@ -867,6 +901,7 @@ window.tsfTitle = function () {
 	 * @param {string} id The input id. When not set, all inputs will be triggered.
 	 */
 	function enqueueUnregisteredInputTrigger( id ) {
+
 		( id in _unregisteredTriggerBuffer ) && clearTimeout( _unregisteredTriggerBuffer[ id ] );
 		_unregisteredTriggerBuffer[ id ] = setTimeout( () => triggerUnregisteredInput( id ), 1000/60 ); // 60 fps
 	}
@@ -877,7 +912,6 @@ window.tsfTitle = function () {
 	 *
 	 * @since 4.0.0
 	 * @since 4.1.0 Now supports multiple instances.
-	 * @TODO can we not just make the floaty mcfloattitle transparent to clicks?
 	 * @access private
 	 *
 	 * @param {Event} event
@@ -990,7 +1024,7 @@ window.tsfTitle = function () {
 		hoverPrefix.addEventListener( 'click', _focusTitleInput );
 		hoverAdditions.addEventListener( 'click', _focusTitleInput );
 
-		// Don't allow focus of the floating elements.
+		// Don't allow focus of the hovering elements.
 		hoverPrefix.addEventListener( 'mousedown', _preventFocus );
 		hoverAdditions.addEventListener( 'mousedown', _preventFocus );
 
@@ -999,36 +1033,40 @@ window.tsfTitle = function () {
 		enqueueUnregisteredInputTrigger( titleInput.id );
 	}
 
-	return Object.assign( {
-		/**
-		 * Initialises all aspects of the scripts.
-		 * You shouldn't call this.
-		 *
-		 * @since 4.0.0
-		 * @access protected
-		 *
-		 * @function
-		 */
-		load: () => {
-			document.body.addEventListener( 'tsf-onload', _initAllTitleActions );
+	return Object.assign(
+		{
+			/**
+			 * Initialises all aspects of the scripts.
+			 * You shouldn't call this.
+			 *
+			 * @since 4.0.0
+			 * @access protected
+			 *
+			 * @function
+			 */
+			load: () => {
+				document.body.addEventListener( 'tsf-onload', _initAllTitleActions );
+			},
 		},
-	}, {
-		setInputElement,
-		getInputElement,
-		getStateOf,
-		updateStateOf,
-		updateStateAll,
-		triggerCounter,
-		triggerInput,
-		enqueueTriggerInput,
-		triggerUnregisteredInput,
-		enqueueUnregisteredInputTrigger, // FIXME: this should've been enqueueTriggerUnregisteredInput... deprecate in TSF 5.2
-	}, {
-		l10n,
-		untitledTitle,
-		privatePrefix,
-		protectedPrefix,
-		stripTitleTags,
-	} );
+		{
+			setInputElement,
+			getInputElement,
+			getStateOf,
+			updateStateOf,
+			updateStateAll,
+			triggerCounter,
+			triggerInput,
+			enqueueTriggerInput,
+			triggerUnregisteredInput,
+			enqueueUnregisteredInputTrigger, // FIXME: this should've been enqueueTriggerUnregisteredInput... deprecate in TSF 5.2
+		},
+		{
+			l10n,
+			untitledTitle,
+			privatePrefix,
+			protectedPrefix,
+			stripTitleTags,
+		},
+	);
 }();
 window.tsfTitle.load();

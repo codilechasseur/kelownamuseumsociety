@@ -8,11 +8,9 @@ namespace The_SEO_Framework\Helper\Query;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use The_SEO_Framework\Helper\Query; // Yes, it is legal to share class and namespaces.
-
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -58,7 +56,7 @@ class Cache {
 	 * @since 5.0.0
 	 *
 	 * @param mixed $value_to_set The value to set.
-	 * @param mixed ...$args      Extra arguments, that are used to differentiaty queries.
+	 * @param mixed ...$args      Extra arguments, that are used to differentiate queries.
 	 * @return mixed $value_to_set when provided.
 	 *               Otherwise, the previously sent $value_to_set.
 	 *               When that's not set either, null.
@@ -75,7 +73,7 @@ class Cache {
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions -- This is the only efficient way.
 		$caller = debug_backtrace( \DEBUG_BACKTRACE_IGNORE_ARGS, 2 )[1]['function'] ?? '';
 
-		// We need not seralize the caller; waste of processing if we'd merge with $args.
+		// We need not serialize the caller; waste of processing if we'd merge with $args.
 		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions -- No objects are inserted, nor is this ever unserialized.
 		$hash = "$caller/" . serialize( $args );
 
@@ -97,8 +95,8 @@ class Cache {
 	 * @since 3.2.2 No longer spits out errors on production websites.
 	 * @since 5.0.0 1. No longer accepts the $method parameter.
 	 *              2. Moved from `\The_SEO_Framework\Load`.
-	 * @global \WP_Query $wp_query
-	 * @global \WP_Screen|null $current_screen
+	 * @global \WP_Query   $wp_query
+	 * @global ?\WP_Screen $current_screen
 	 *
 	 * @return bool True when wp_query or current_screen has been initialized.
 	 */
@@ -110,8 +108,12 @@ class Cache {
 		if ( \defined( 'WP_CLI' ) && \WP_CLI )
 			return self::$can_cache_query = false;
 
-		if ( isset( $GLOBALS['wp_query']->query ) || isset( $GLOBALS['current_screen'] ) )
+		if (
+			   isset( $GLOBALS['wp_query']->query )
+			|| isset( $GLOBALS['current_screen'] )
+		) {
 			return self::$can_cache_query = true;
+		}
 
 		if ( \THE_SEO_FRAMEWORK_DEBUG )
 			self::do_query_error_notice();
@@ -134,7 +136,8 @@ class Cache {
 
 		$backtrace = debug_backtrace( \DEBUG_BACKTRACE_PROVIDE_OBJECT, 8 );
 
-		if ( ! $backtrace ) return [];
+		if ( ! $backtrace )
+			return [];
 
 		/**
 		 * 0 = caller of this func

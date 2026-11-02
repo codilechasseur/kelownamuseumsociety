@@ -11,7 +11,7 @@ use function The_SEO_Framework\is_headless;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2021 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2021 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -38,6 +38,7 @@ final class PluginTable {
 	/**
 	 * Adds various links to the plugin row on the plugin's screen.
 	 *
+	 * @hook plugin_action_links_autodescription/autodescription.php 10
 	 * @since 3.1.0
 	 * @since 4.1.4 Moved to PluginTable.
 	 * @access private
@@ -74,6 +75,7 @@ final class PluginTable {
 	/**
 	 * Adds more row meta on the plugin screen.
 	 *
+	 * @hook plugin_row_meta 10
 	 * @since 3.2.4
 	 * @since 4.1.4 Moved to PluginTable.
 	 * @since 5.0.0 Exchanged API docs for GitHub link. Simplified translations.

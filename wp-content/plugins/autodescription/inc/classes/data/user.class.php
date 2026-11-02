@@ -1,6 +1,6 @@
 <?php
 /**
- * @package The_SEO_Framework\Classes\Data\Post
+ * @package The_SEO_Framework\Classes\Data\User
  * @subpackage The_SEO_Framework\Data
  */
 
@@ -8,11 +8,14 @@ namespace The_SEO_Framework\Data;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use function The_SEO_Framework\umemo;
+use function The_SEO_Framework\{
+	memo,
+	umemo,
+};
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -37,7 +40,7 @@ use function The_SEO_Framework\umemo;
 class User {
 
 	/**
-	 * Saves user profile fields.
+	 * Tests whether the user has the author-info capability on this site or any site in the network.
 	 *
 	 * @since 5.0.0
 	 * @todo add memoization?
@@ -65,7 +68,7 @@ class User {
 			// Then, we switch to the blog to extract those capabilities. This cannot be improved here for security reasons.
 			foreach ( \get_blogs_of_user( $_user->ID ) as $user_blog ) {
 				// We must use switch_to_blog() for plugins may insert custom roles for the site.
-				\switch_to_blog( $user_blog->userblog_id );
+				\switch_to_blog( $user_blog->userblog_id ); // cspell:ignore userblog
 
 				// Neither the stored nor cloned user object switches with switch_to_blog(); let's fix that:
 				$_user->for_site( $user_blog->userblog_id );
@@ -103,11 +106,35 @@ class User {
 	 */
 	public static function get_userdata( $user_id, $key = null ) {
 
-		$userdata = umemo( __METHOD__, null, $user_id )
-				 ?? umemo( __METHOD__, \get_userdata( $user_id ), $user_id );
+		$userdata =
+			   umemo( __METHOD__, null, $user_id )
+			?? umemo(
+				__METHOD__,
+				\get_userdata( $user_id ),
+				$user_id,
+			);
 
 		return isset( $key )
 			? ( $userdata->$key ?? null )
 			: ( $userdata ?: null );
+	}
+
+	/**
+	 * Tests whether the user has published posts.
+	 * Memoizes the return value.
+	 *
+	 * WordPress author archives query the `post` type unless a theme changes that.
+	 *
+	 * @since 5.2.0
+	 *
+	 * @param int $user_id The user ID.
+	 * @return bool True when the user has at least one published post.
+	 */
+	public static function has_published_posts( $user_id ) {
+		return memo( null, $user_id )
+			?? memo(
+				(bool) \count_user_posts( $user_id, 'post', true ),
+				$user_id,
+			);
 	}
 }

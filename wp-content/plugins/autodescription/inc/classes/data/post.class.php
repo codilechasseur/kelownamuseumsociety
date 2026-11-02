@@ -10,15 +10,15 @@ namespace The_SEO_Framework\Data;
 
 use function The_SEO_Framework\memo;
 
-use The_SEO_Framework\{
-	Helper,
-	Helper\Format\Time,
-	Helper\Query,
+use The_SEO_Framework\Helper\{
+	Compatibility,
+	Format\Time,
+	Query,
 };
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -104,9 +104,9 @@ class Post {
 
 		/**
 		 * @since 4.1.0
-		 * @param Boolean|null $detected Whether a builder should be detected.
-		 * @param int          $post_id The current Post ID.
-		 * @param array        $meta The current post meta.
+		 * @param ?Boolean $detected Whether a builder should be detected.
+		 * @param int      $post_id  The current Post ID.
+		 * @param array    $meta     The current post meta.
 		 */
 		$detected = \apply_filters( 'the_seo_framework_detect_non_html_page_builder', null, $post_id, $meta );
 
@@ -114,8 +114,12 @@ class Post {
 			return $detected;
 
 		// If there's no meta, or no builder active, it doesn't use a builder.
-		if ( empty( $meta ) || ! Helper\Compatibility::is_non_html_builder_active() )
+		if (
+			   empty( $meta )
+			|| ! Compatibility::is_non_html_builder_active()
+		) {
 			return false;
+		}
 
 		// Divi Builder by Elegant Themes
 		// || Visual Composer by WPBakery
@@ -135,6 +139,7 @@ class Post {
 	 *                 This currently doesn't affect how it works.
 	 * @since 4.2.0 Added caching. Can be reversed if https://core.trac.wordpress.org/ticket/50567 is fixed.
 	 * @since 5.0.0 Moved from `\The_SEO_Framework\Load`.
+	 * @since 5.2.0 Now uses the queried post instead of the loop post when no post is given.
 	 *
 	 * @param int|null|\WP_Post $post The post ID or WP Post object.
 	 * @return bool True if protected or private, false otherwise.
@@ -142,7 +147,7 @@ class Post {
 	public static function is_protected( $post = null ) {
 
 		// This is here so we don't have to create another instance hereinafter.
-		$post = \get_post( $post );
+		$post = \get_post( $post ?: Query::get_the_real_id() );
 
 		return self::is_password_protected( $post ) || self::is_private( $post );
 	}
@@ -153,6 +158,7 @@ class Post {
 	 * @since 3.0.0
 	 * @since 5.0.0 Moved from `\The_SEO_Framework\Load`.
 	 * @since 5.0.5 Now again assumes that `'0'` is an invalid password.
+	 * @since 5.2.0 Now uses the queried post instead of the loop post when no post is given.
 	 *
 	 * @param int|null|\WP_Post $post The post ID or WP Post object.
 	 * @return bool True if protected, false otherwise.
@@ -160,7 +166,11 @@ class Post {
 	public static function is_password_protected( $post = null ) {
 		// Don't get the post directly if it can be evaded, it's still quite slow.
 		// Assume '0' is an invalid password.
-		return ! empty( $post->post_password ?? \get_post( $post )->post_password ?? '' );
+		return ! empty(
+			   $post->post_password
+			?? \get_post( $post ?: Query::get_the_real_id() )->post_password
+			?? null
+		);
 	}
 
 	/**
@@ -168,14 +178,18 @@ class Post {
 	 *
 	 * @since 3.0.0
 	 * @since 5.0.0 Moved from `\The_SEO_Framework\Load`.
+	 * @since 5.2.0 Now uses the queried post instead of the loop post when no post is given.
 	 *
 	 * @param int|null|\WP_Post $post The post ID or WP Post object.
 	 * @return bool True if private, false otherwise.
 	 */
 	public static function is_private( $post = null ) {
 		// Don't get the post directly if it can be evaded, it's still quite slow.
-		// We cast type false for Zend tests strict type before identical-string-comparing.
-		return 'private' === ( $post->post_status ?? \get_post( $post )->post_status ?? false );
+		return 'private' === (
+			   $post->post_status
+			?? \get_post( $post ?: Query::get_the_real_id() )->post_status
+			?? null
+		);
 	}
 
 	/**
@@ -183,6 +197,7 @@ class Post {
 	 *
 	 * @since 3.1.0
 	 * @since 5.0.0 Moved from `\The_SEO_Framework\Load`.
+	 * @since 5.2.0 Now uses the queried post instead of the loop post when no post is given.
 	 *
 	 * @param int|null|\WP_Post $post The post ID or WP Post object.
 	 * @return bool True if draft, false otherwise.
@@ -190,7 +205,11 @@ class Post {
 	public static function is_draft( $post = null ) {
 
 		// Don't get the post directly if it can be evaded, it's still quite slow.
-		switch ( $post->post_status ?? \get_post( $post )->post_status ?? '' ) {
+		switch (
+			   $post->post_status
+			?? \get_post( $post ?: Query::get_the_real_id() )->post_status
+			?? null
+		) {
 			case 'draft':
 			case 'auto-draft':
 			case 'pending':
@@ -201,6 +220,23 @@ class Post {
 	}
 
 	/**
+	 * Determines if the current post is in the trash.
+	 *
+	 * @since 5.2.0
+	 *
+	 * @param int|null|\WP_Post $post The post ID or WP Post object.
+	 * @return bool True if trashed, false otherwise.
+	 */
+	public static function is_trash( $post = null ) {
+		// Don't get the post directly if it can be evaded, it's still quite slow.
+		return 'trash' === (
+			   $post->post_status
+			?? \get_post( $post ?: Query::get_the_real_id() )->post_status
+			?? null
+		);
+	}
+
+	/**
 	 * Fetch latest public, future, or pending post/page ID.
 	 * Memoizes the return value.
 	 *
@@ -208,16 +244,18 @@ class Post {
 	 * @since 2.9.3 1. Removed object caching.
 	 *              2. It now uses WP_Query, instead of wpdb.
 	 * @since 5.0.0 Moved from `\The_SEO_Framework\Load`.
+	 * @since 5.2.0 Now returns null when no post exists.
 	 * @slow The queried result is not stored in WP Post's cache, which would allow
 	 *       direct access to all values of the post (if requested). This is because
 	 *       we're using `'fields' => 'ids'` instead of `'fields' => 'all'`.
 	 *
-	 * @return int The latest Post ID.
+	 * @return ?int The latest Post ID. Null when no post exists.
 	 */
 	public static function get_latest_post_id() {
 
 		// phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition -- I know.
-		if ( null !== $memo = memo() ) return $memo;
+		if ( null !== $memo = memo() )
+			return $memo ?: null;
 
 		$query = new \WP_Query( [
 			'posts_per_page'   => 1,
@@ -231,7 +269,7 @@ class Post {
 			'no_found_rows'    => true,
 		] );
 
-		return memo( reset( $query->posts ) );
+		return memo( array_first( $query->posts ) ?? false ) ?: null;
 	}
 
 	/**
@@ -251,7 +289,8 @@ class Post {
 	public static function has_posts_in_pta( $post_type ) {
 
 		// phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition -- I know.
-		if ( null !== $memo = memo( null, $post_type ) ) return $memo;
+		if ( null !== $memo = memo( null, $post_type ) )
+			return $memo;
 
 		$query = new \WP_Query( [
 			'posts_per_page' => 1,

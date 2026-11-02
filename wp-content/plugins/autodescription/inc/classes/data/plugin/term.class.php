@@ -10,15 +10,15 @@ namespace The_SEO_Framework\Data\Plugin;
 
 use function The_SEO_Framework\is_headless;
 
-use The_SEO_Framework\{
-	Helper\Query,
-	Helper\Taxonomy,
-	Traits\Property_Refresher,
+use The_SEO_Framework\Helper\{
+	Query,
+	Taxonomy,
 };
+use The_SEO_Framework\Traits\Property_Refresher;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -108,8 +108,12 @@ class Term {
 		empty( static::$meta_memo ) and static::register_automated_refresh( 'meta_memo' );
 
 		// We test taxonomy support to be consistent with `get_post_meta()`.
-		if ( empty( $term_id ) || ! Taxonomy::is_supported( \get_term( $term_id )->taxonomy ?? '' ) )
+		if (
+			   empty( $term_id )
+			|| ! Taxonomy::is_supported( \get_term( $term_id )->taxonomy ?? '' )
+		) {
 			return static::$meta_memo[ $term_id ] = static::get_default_meta( $term_id );
+		}
 
 		// Keep lucky first when exceeding nice numbers. This way, we won't overload memory in memoization.
 		if ( \count( static::$meta_memo ) > 69 )
@@ -225,6 +229,7 @@ class Term {
 	 * @since 5.0.0 1. Removed 3rd and 4th parameters ($tt_id and $taxonomy).
 	 *              2. Moved from `\The_SEO_Framework\Load`.
 	 *              3. Renamed from `save_term_meta`.
+	 * @since 5.2.0 Now keeps backslashes. The value is slash-escaped for `update_term_meta()`, which unslashes before sanitizing.
 	 *
 	 * @param int   $term_id Term ID.
 	 * @param array $data    The data to save.
@@ -256,7 +261,11 @@ class Term {
 		unset( static::$meta_memo[ $term_id ] );
 
 		// Do we want to cycle through the data, so we store only the non-defaults? @see save_post_meta()
-		\update_term_meta( $term_id, \THE_SEO_FRAMEWORK_TERM_OPTIONS, $data );
+		\update_term_meta(
+			$term_id,
+			\THE_SEO_FRAMEWORK_TERM_OPTIONS,
+			\wp_slash( $data ),
+		);
 	}
 
 	/**
@@ -268,6 +277,7 @@ class Term {
 	 * @since 4.0.0 Removed 2nd, unused, parameter.
 	 * @since 5.0.0 1. Moved from `\The_SEO_Framework\Load`.
 	 *              2. Renamed from `delete_term_meta`.
+	 * @since 5.2.0 Now keeps backslashes in remaining values. The value is slash-escaped for `update_term_meta()`, which unslashes on write.
 	 * @ignore Unused internally. Public API.
 	 *
 	 * @param int $term_id Term ID.
@@ -289,7 +299,11 @@ class Term {
 		if ( empty( $data ) ) {
 			\delete_term_meta( $term_id, \THE_SEO_FRAMEWORK_TERM_OPTIONS );
 		} else {
-			\update_term_meta( $term_id, \THE_SEO_FRAMEWORK_TERM_OPTIONS, $data );
+			\update_term_meta(
+				$term_id,
+				\THE_SEO_FRAMEWORK_TERM_OPTIONS,
+				\wp_slash( $data ),
+			);
 		}
 	}
 }

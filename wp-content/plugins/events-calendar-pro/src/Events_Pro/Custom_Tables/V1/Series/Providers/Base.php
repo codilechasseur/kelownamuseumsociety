@@ -29,6 +29,7 @@ class Base extends Service_Provider {
 	 *
 	 * @since 6.0.0
 	 * @since 7.7.3 Updated 'register_post_type' action to priority 20. [CE-329]
+	 * @since 7.8.4 Clears the Series rewrite flush flag on deactivation.
 	 */
 	public function register() {
 		$this->container->singleton( static::class, $this );
@@ -37,6 +38,7 @@ class Base extends Service_Provider {
 
 		add_action( 'init', $this->container->callback( Series::class, 'register_post_type' ), 20 );
 		add_action( 'init', [ $this, 'flush_rewrite' ], 100 );
+		add_action( 'tribe_events_pro_blog_deactivate', $this->container->callback( Series::class, 'reset_flush_rewrite' ) );
 
 		add_filter( 'get_user_option_meta-box-order_' . Series::POSTTYPE, [ $this, 'reorder_series_meta_boxes' ], 10, 3 );
 
@@ -50,9 +52,10 @@ class Base extends Service_Provider {
 	 * Will potentially flush rewrite rules for the new Series post type.
 	 *
 	 * @since 6.0.0
+	 * @since 7.8.4 Removes the `init` callback at the priority it was added with.
 	 */
 	public function flush_rewrite() {
-		remove_action( 'init', [ $this, 'flush_rewrite' ] );
+		remove_action( 'init', [ $this, 'flush_rewrite' ], 100 );
 		$this->container->make( Series::class )->flush_rewrite();
 	}
 

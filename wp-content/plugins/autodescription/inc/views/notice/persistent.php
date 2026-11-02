@@ -14,7 +14,7 @@ use The_SEO_Framework\Admin\Settings\Layout\HTML;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2021 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2021 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -31,23 +31,6 @@ use The_SEO_Framework\Admin\Settings\Layout\HTML;
 
 // See _output_dismissible_persistent_notices
 [ $message, $key, $args ] = $view_args;
-
-/**
- * The SEO Framework plugin
- * Copyright (C) 2015 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 3 as published
- * by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
 
 if ( ! $message ) return;
 
@@ -104,7 +87,7 @@ vprintf(
 	'<div class="notice %s tsf-notice %s">%s%s</div>',
 	[
 		\esc_attr( $args['type'] ),
-		( $args['icon'] ? 'tsf-show-icon' : '' ),
+		$args['icon'] ? 'tsf-show-icon' : '',
 		\sprintf(
 			! $args['escape'] && 0 === stripos( $message, '<p' )
 				? '%s'

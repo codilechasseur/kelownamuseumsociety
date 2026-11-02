@@ -11,7 +11,6 @@ namespace The_SEO_Framework\RobotsTXT;
 use The_SEO_Framework\{
 	Data,
 	Helper\Compatibility,
-	Helper\Query,
 	Meta,
 	RobotsTXT, // Yes, it is legal to import the same namespace.
 	Sitemap,
@@ -19,7 +18,7 @@ use The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -59,6 +58,8 @@ class Main {
 	 * @since 5.0.0
 	 * @since 5.1.0 1. Refactored to output the directives via a priority system.
 	 *              2. Now supports blocking AI language model trainers and SEO analysis tools.
+	 * @since 5.2.0 1. Fixed WordPress Core sitemap URL extraction for robots.txt Sitemap Hinting.
+	 *              2. Now lists the optimized sitemap when may_output_optimized_sitemap() is true.
 	 * @link <https://developers.google.com/search/docs/crawling-indexing/robots/robots_txt>
 	 *
 	 * @return string Robots.txt output.
@@ -73,7 +74,7 @@ class Main {
 		if ( strrpos( rawurldecode( stripslashes( $_SERVER['REQUEST_URI'] ) ), '/' ) > 0 ) {
 			$correct_location = \esc_url(
 				\trailingslashit( Meta\URI\Utils::set_preferred_url_scheme(
-					Meta\URI\Utils::get_site_host()
+					Meta\URI\Utils::get_site_host(),
 				) ) . 'robots.txt',
 			);
 
@@ -92,7 +93,7 @@ class Main {
 			'the_seo_framework_robots_disallow_queries',
 			[ false ],
 			'5.1.0 of The SEO Framework',
-			'the_seo_framework_robots_txt_sections'
+			'the_seo_framework_robots_txt_sections',
 		) ? '/*?*'
 		  : '';
 
@@ -100,23 +101,19 @@ class Main {
 
 		// Add extra whitespace and sitemap full URL
 		if ( Data\Plugin::get_option( 'sitemaps_robots' ) ) {
-			if ( Data\Plugin::get_option( 'sitemaps_output' ) ) {
+			if ( Sitemap\Utils::may_output_optimized_sitemap() ) {
 				foreach ( Sitemap\Registry::get_sitemap_endpoint_list() as $id => $data )
 					if ( ! empty( $data['robots'] ) )
 						$sitemaps[] = \esc_url( Sitemap\Registry::get_expected_sitemap_endpoint_url( $id ) );
-
 			} elseif ( ! Compatibility::get_active_conflicting_plugin_types()['sitemaps'] && Sitemap\Utils::use_core_sitemaps() ) {
-				$wp_sitemaps_server = \wp_sitemaps_get_server();
-
-				if ( method_exists( $wp_sitemaps_server, 'add_robots' ) ) {
-					// Already escaped.
-					$sitemaps[] = trim( "\n", \wp_sitemaps_get_server()->add_robots( '', Data\Blog::is_public() ) );
-				}
+				if ( Data\Blog::is_public() )
+					$sitemaps[] = \esc_url( \wp_sitemaps_get_server()->index->get_index_url() );
 			}
 		}
 
 		/**
 		 * @since 5.1.0
+		 * @example $robots_sections `[ 'default' => [ 'user-agent' => [ '*' ], 'disallow' => [ '/wp-admin/' ] ] ]`
 		 * @param array  $robots_sections {
 		 *     The robots directives, associative by key.
 		 *     All input is expected to be escaped.

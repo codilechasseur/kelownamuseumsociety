@@ -58,6 +58,15 @@
 	clear: both;
 }
 
+/* Dashboard cards: 8px corners, title padding 12px 16px. */
+.tsf-metaboxes .postbox {
+	border-radius: 8px;
+}
+
+.tsf-metaboxes .postbox-header .hndle {
+	padding: 12px 16px;
+}
+
 #tsf-title-separator {
 	display: table;
 	width: 100%;
@@ -258,4 +267,12 @@ body.js .tsf-nav-tab-content {
 
 body.js .tsf-nav-tab-content.tsf-nav-tab-content-active {
 	display: block;
+}
+
+#tsf-sitemap-view-links details {
+	margin-block: 1em;
+}
+
+#tsf-sitemap-view-links summary {
+	cursor: pointer;
 }

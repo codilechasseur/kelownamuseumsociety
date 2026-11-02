@@ -17,7 +17,7 @@ use The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -41,7 +41,7 @@ use The_SEO_Framework\{
 final class Compatibility {
 
 	/**
-	 * Registers plugin cache checks on plugin activation.
+	 * Registers the SEO plugin conflict notice when any plugin is activated and a conflicting SEO plugin is active.
 	 *
 	 * @hook activated_plugin 10
 	 * @since 5.0.0
@@ -49,7 +49,8 @@ final class Compatibility {
 	public static function try_plugin_conflict_notification() {
 
 		// We refresh here because the list is loaded before a plugin is (de)activated.
-		if ( ! self::get_active_conflicting_plugin_types( true )['seo_tools'] ) return;
+		if ( ! self::get_active_conflicting_plugin_types( true )['seo_tools'] )
+			return;
 
 		Admin\Notice\Persistent::register_notice(
 			\__( 'Multiple SEO plugins have been detected. You should only use one.', 'autodescription' ),
@@ -69,12 +70,39 @@ final class Compatibility {
 	}
 
 	/**
-	 * Clears plugin cache checks on plugin deactivation.
+	 * Clears the SEO plugin conflict notice when no conflicting SEO plugin remains.
+	 *
+	 * Runs on `deactivated_plugin`, before the active plugin list is stored, once per plugin.
+	 * Plugins deactivated in this request count as already gone, so one action clears the
+	 * notice once. Silent updates do not fire this hook, so the notice stays.
 	 *
 	 * @hook deactivated_plugin 10
 	 * @since 5.0.0
+	 * @since 5.2.0 Now clears the notice only when no conflicting SEO plugin remains.
+	 *              Plugins deactivated in this request count as inactive, because this
+	 *              hook still runs before the active plugin list is stored.
+	 *
+	 * @param string $plugin The plugin basename just deactivated.
 	 */
-	public static function clear_plugin_conflict_notification() {
+	public static function clear_plugin_conflict_notification( $plugin = '' ) {
+
+		static $deactivated = [];
+
+		if ( $plugin )
+			$deactivated[] = $plugin;
+
+		$active = array_diff(
+			Data\Blog::get_active_plugins(),
+			$deactivated,
+		);
+
+		if ( array_intersect(
+			self::get_conflicting_plugins()['seo_tools'],
+			$active,
+		) ) {
+			return;
+		}
+
 		Admin\Notice\Persistent::clear_notice( 'seo-plugin-conflict' );
 	}
 
@@ -166,7 +194,8 @@ final class Compatibility {
 	public static function get_active_conflicting_plugin_types( $refresh = false ) {
 
 		// phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition -- I know.
-		if ( ! $refresh && null !== $memo = memo() ) return $memo;
+		if ( ! $refresh && null !== $memo = memo() )
+			return $memo;
 
 		$conflicting_types = [
 			'seo_tools'    => false,
@@ -299,7 +328,7 @@ final class Compatibility {
 					|| \defined( 'WPB_VC_VERSION' )
 					|| \defined( 'BRICKS_VERSION' )
 				),
-			)
+			),
 		);
 	}
 }

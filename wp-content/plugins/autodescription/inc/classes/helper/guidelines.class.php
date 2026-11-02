@@ -12,7 +12,7 @@ use function The_SEO_Framework\memo;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -41,7 +41,7 @@ class Guidelines {
 	 *
 	 * Memoizes the output, so the return filter will run only once.
 	 *
-	 * NB: Some scripts have wide characters. These are recognized by Google, and have been adjusted for in the chactacter
+	 * NB: Some scripts have wide characters. These are recognized by Google, and have been adjusted for in the character
 	 * guidelines. German is a special Case, where we account for the Capitalization of Nouns.
 	 *
 	 * NB: Although the Arabic & Farsi scripts are much smaller in width, Google seems to be using the 160 & 70 char limits
@@ -52,7 +52,6 @@ class Guidelines {
 	 *              2. Added $locale input parameter.
 	 * @since 5.0.0 1. Moved from `\The_SEO_Framework\Load`.
 	 *              2. Renamed from `get_input_guidelines()`.
-	 *
 	 * @TODO Consider splitting up search into Google, Bing, etc., as we might
 	 *       want users to set their preferred search engine. Now, these engines
 	 *       are barely any different.
@@ -66,9 +65,11 @@ class Guidelines {
 		$locale = substr( $locale ?? \get_locale(), 0, 5 );
 
 		// phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition -- I know.
-		if ( null !== $memo = memo( null, $locale ) ) return $memo;
+		if ( null !== $memo = memo( null, $locale ) )
+			return $memo;
 
 		// phpcs:disable WordPress.WhiteSpace.OperatorSpacing.SpacingAfter
+		// cspell:disable
 		$character_adjustments = [
 			'as'    => 148 / 160, // Assamese (অসমীয়া)
 			'de_AT' => 158 / 160, // Austrian German (Österreichisch Deutsch)
@@ -83,8 +84,10 @@ class Guidelines {
 			'zh_HK' =>  70 / 160, // Hong Kong (Chinese version) (香港中文版)
 			'zh_CN' =>  70 / 160, // Mandarin (Simplified Chinese) (简体中文)
 		];
+		// cspell:enable
 		// phpcs:enable WordPress.WhiteSpace.OperatorSpacing.SpacingAfter
 
+		// PHP 8.0+ use match().
 		// Default to 1 (160/160 = no adjustment).
 		$c_adjust = $character_adjustments[ $locale ] ?? 1;
 
@@ -100,7 +103,6 @@ class Guidelines {
 		// Default to 1 (910/910 = no adjustment).
 		$p_adjust = $pixel_adjustments[ $locale ] ?? 1;
 
-		// phpcs:disable WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned
 		/**
 		 * @since 3.1.0
 		 * @since 4.2.7 Added two more parameters (`$c_adjust` and `$locale`)
@@ -114,8 +116,8 @@ class Guidelines {
 			(array) \apply_filters(
 				'the_seo_framework_input_guidelines',
 				[
-					'title' => [
-						'search' => [
+					'title'       => [
+						'search'    => [
 							'chars'  => [
 								'lower'     => (int) ( 25 * $c_adjust ),
 								'goodLower' => (int) ( 35 * $c_adjust ),
@@ -138,7 +140,7 @@ class Guidelines {
 							],
 							'pixels' => [],
 						],
-						'twitter' => [
+						'twitter'   => [
 							'chars'  => [
 								'lower'     => 15,
 								'goodLower' => 25,
@@ -149,7 +151,7 @@ class Guidelines {
 						],
 					],
 					'description' => [
-						'search' => [
+						'search'    => [
 							'chars'  => [
 								'lower'     => (int) ( 45 * $c_adjust ),
 								'goodLower' => (int) ( 80 * $c_adjust ),
@@ -172,7 +174,7 @@ class Guidelines {
 							],
 							'pixels' => [],
 						],
-						'twitter' => [
+						'twitter'   => [
 							'chars'  => [
 								'lower'     => 45,
 								'goodLower' => 80,
@@ -188,46 +190,44 @@ class Guidelines {
 			),
 			$locale,
 		);
-		// phpcs:enable WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned
 	}
 
 	/**
 	 * Returns the title and description input guideline explanatory table.
 	 *
-	 * Already attribute-escaped.
-	 *
 	 * @since 3.1.0
 	 * @since 4.0.0 Now added a short leading-dot version for ARIA labels.
 	 * @since 5.0.0 1. Moved from `\The_SEO_Framework\Load`.
 	 *              2. Added memoization.
+	 * @since 5.2.0 Now returns the strings unescaped.
 	 *
 	 * @return array
 	 */
 	public static function get_text_size_guidelines_i18n() {
 		return memo() ?? memo( [
 			'long'     => [
-				'empty'       => \esc_attr__( "There's no content.", 'autodescription' ),
-				'farTooShort' => \esc_attr__( "It's too short and it should have more information.", 'autodescription' ),
-				'tooShort'    => \esc_attr__( "It's short and it could have more information.", 'autodescription' ),
-				'tooLong'     => \esc_attr__( "It's long and it might get truncated in search.", 'autodescription' ),
-				'farTooLong'  => \esc_attr__( "It's too long and it will get truncated in search.", 'autodescription' ),
-				'good'        => \esc_attr__( 'Length is good.', 'autodescription' ),
+				'empty'       => \__( "There's no content.", 'autodescription' ),
+				'farTooShort' => \__( "It's too short and it should have more information.", 'autodescription' ),
+				'tooShort'    => \__( "It's short and it could have more information.", 'autodescription' ),
+				'tooLong'     => \__( "It's long and it might get truncated in search.", 'autodescription' ),
+				'farTooLong'  => \__( "It's too long and it will get truncated in search.", 'autodescription' ),
+				'good'        => \__( 'Length is good.', 'autodescription' ),
 			],
 			'short'    => [
-				'empty'       => \esc_attr_x( 'Empty', 'The text field is empty', 'autodescription' ),
-				'farTooShort' => \esc_attr__( 'Far too short', 'autodescription' ),
-				'tooShort'    => \esc_attr__( 'Too short', 'autodescription' ),
-				'tooLong'     => \esc_attr__( 'Too long', 'autodescription' ),
-				'farTooLong'  => \esc_attr__( 'Far too long', 'autodescription' ),
-				'good'        => \esc_attr__( 'Good', 'autodescription' ),
+				'empty'       => \_x( 'Empty', 'The text field is empty', 'autodescription' ),
+				'farTooShort' => \__( 'Far too short', 'autodescription' ),
+				'tooShort'    => \__( 'Too short', 'autodescription' ),
+				'tooLong'     => \__( 'Too long', 'autodescription' ),
+				'farTooLong'  => \__( 'Far too long', 'autodescription' ),
+				'good'        => \__( 'Good', 'autodescription' ),
 			],
 			'shortdot' => [
-				'empty'       => \esc_attr_x( 'Empty.', 'The text field is empty', 'autodescription' ),
-				'farTooShort' => \esc_attr__( 'Far too short.', 'autodescription' ),
-				'tooShort'    => \esc_attr__( 'Too short.', 'autodescription' ),
-				'tooLong'     => \esc_attr__( 'Too long.', 'autodescription' ),
-				'farTooLong'  => \esc_attr__( 'Far too long.', 'autodescription' ),
-				'good'        => \esc_attr__( 'Good.', 'autodescription' ),
+				'empty'       => \_x( 'Empty.', 'The text field is empty', 'autodescription' ),
+				'farTooShort' => \__( 'Far too short.', 'autodescription' ),
+				'tooShort'    => \__( 'Too short.', 'autodescription' ),
+				'tooLong'     => \__( 'Too long.', 'autodescription' ),
+				'farTooLong'  => \__( 'Far too long.', 'autodescription' ),
+				'good'        => \__( 'Good.', 'autodescription' ),
 			],
 		] );
 	}
