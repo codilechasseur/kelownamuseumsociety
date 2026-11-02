@@ -17,7 +17,7 @@ use The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -238,7 +238,7 @@ class HTML {
 								implode( '|', $elements ),
 							),
 							'phrase' === $flow_type ? '' : ' ', // Add space if block, otherwise clear.
-							$input
+							$input,
 						) ?? '';
 						break;
 
@@ -267,7 +267,12 @@ class HTML {
 							$input          = preg_replace( $regex, $replacement, $input ) ?? '';
 
 							// If nothing changed, or no more HTML is present, we're done.
-							if ( $pre_pass_input === $input || ! str_contains( $input, '<' ) ) break;
+							if (
+								   $pre_pass_input === $input
+								|| ! str_contains( $input, '<' )
+							) {
+								break;
+							}
 						}
 
 						// Reset for next fall-through null-coalescing.
@@ -291,7 +296,8 @@ class HTML {
 	 * @since 4.2.7 1. No longer clears `figcaption`, `hr`, `link`, `meta`, `option`, or `tfoot`.
 	 *              2. Now clears `area`, `audio`, `datalist`, `del`, `dialog`, `dl`, `hgroup`, `menu`, `meter`, `ol`,
 	 *                 `object`, `output`, `progress`, `s`, `template`, and `ul`.
-	 *              3. Now adds spaces around `blockquote`, `details`, and `hr`.
+	 *              3. Now adds spaces around `details` and `hr`.
+	 *                 `blockquote` is cleared, so its content is removed.
 	 *              4. Now ignores `dd`, `dl`, `dt`, `li`, `main`, for they are inherently excluded or ignored anyway.
 	 *              5. Now processed the `auto_description_html_method` option for stripping tags.
 	 * @since 5.0.0 1. The first parameter is now required.
@@ -314,7 +320,8 @@ class HTML {
 	 */
 	public static function extract_content( $html, $args = [] ) {
 
-		if ( empty( $html ) ) return '';
+		if ( empty( $html ) )
+			return '';
 
 		$args += [
 			'allow_shortcodes' => true,
@@ -349,20 +356,23 @@ class HTML {
 				'clear'  =>
 					[ 'address', 'area', 'aside', 'audio', 'blockquote', 'button', 'canvas', 'code', 'datalist', 'del', 'dialog', 'dl', 'fieldset', 'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hgroup', 'iframe', 'input', 'label', 'map', 'menu', 'meter', 'nav', 'noscript', 'ol', 'object', 'output', 'pre', 'progress', 's', 'script', 'select', 'style', 'svg', 'table', 'template', 'textarea', 'ul', 'video' ],
 				'passes' => $passes,
-			]
+			],
 		);
 
-		/**
-		 * Always strip shortcodes unless specifically allowed via the filter.
-		 * Always strip shortcodes if not allowed by the arguments, ignoring the filter.
-		 *
-		 * @since 2.6.6.1
-		 * @since 5.0.0 Added the third `$args` parameter.
-		 * @param bool $allow_shortcodes Whether to allow shortcodes.
-		 * @param array $args The extraction parameters.
-		 */
-		if ( ! $args['allow_shortcodes'] || ! \apply_filters( 'the_seo_framework_allow_excerpt_shortcode_tags', false, $args ) )
+		// Always strip shortcodes if not allowed by the arguments, ignoring the filter.
+		if ( ! $args['allow_shortcodes'] || ! (
+			/**
+			 * Always strip shortcodes unless specifically allowed via the filter.
+			 *
+			 * @since 2.6.6.1
+			 * @since 5.0.0 Added the third `$args` parameter.
+			 * @param bool $allow_shortcodes Whether to allow shortcodes.
+			 * @param array $args The extraction parameters.
+			 */
+			\apply_filters( 'the_seo_framework_allow_excerpt_shortcode_tags', false, $args )
+		) ) {
 			$html = \strip_shortcodes( $html );
+		}
 
 		$html = self::strip_tags_cs( $html, $strip_args );
 

@@ -19,7 +19,7 @@ use The_SEO_Framework\Admin\Settings\Layout\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -89,7 +89,7 @@ $robots_settings = [
 				and Form::output_pixel_counter_wrap( 'autodescription-quick[doctitle]', 'title' );
 			?>
 			<div class="tsf-pad-input tsf-title-wrap">
-				<input type=text id=autodescription-quick[doctitle] name=autodescription-quick[doctitle]>
+				<input type=text id=autodescription-quick[doctitle] name=autodescription-quick[doctitle] data-tsf-proposed="">
 				<?php
 				Input::output_js_title_data( 'autodescription-quick[doctitle]', [] );
 				?>
@@ -106,7 +106,7 @@ $robots_settings = [
 				and Form::output_pixel_counter_wrap( 'autodescription-quick[description]', 'description' );
 			?>
 			<div class=tsf-pad-input>
-				<textarea id=autodescription-quick[description] name=autodescription-quick[description] rows=3 cols=22></textarea>
+				<textarea id=autodescription-quick[description] name=autodescription-quick[description] rows=3 cols=22 data-tsf-proposed=""></textarea>
 				<?php
 				Input::output_js_description_data( 'autodescription-quick[description]', [] );
 				?>
@@ -114,12 +114,12 @@ $robots_settings = [
 		</div>
 	</fieldset>
 	<fieldset class=tsf-inline-edit-col-normal>
-		<legend class=inline-edit-legend><?php \esc_html_e( 'Visibility SEO Settings', 'autodescription' ); ?></legend>
+		<legend class=inline-edit-legend><?php \esc_html_e( 'Visibility Settings', 'autodescription' ); ?></legend>
 		<div class=inline-edit-col>
 			<label>
 				<span class=title><?php \esc_html_e( 'Canonical URL', 'autodescription' ); ?></span>
 				<span class=tsf-inline-input>
-					<input type=url id=autodescription-quick[canonical] name=autodescription-quick[canonical]>
+					<input type=url id=autodescription-quick[canonical] name=autodescription-quick[canonical] data-tsf-proposed="">
 					<?php
 					Input::output_js_canonical_data( 'autodescription-quick[canonical]', [] );
 					?>
@@ -132,8 +132,10 @@ $robots_settings = [
 
 				foreach ( $robots_settings as $_setting ) {
 					// This is bad accessibility, but it's exactly as bad as WP is, and we don't want to stray away from their standards.
-					echo '<label class=clear>';
-						printf( '<span class=title>%s</span>', \esc_html( $_setting['label'] ) );
+					?>
+					<label class=clear>
+						<span class=title><?= \esc_html( $_setting['label'] ) ?></span>
+						<?php
 						// phpcs:disable WordPress.Security.EscapeOutput -- make_single_select_form() escapes.
 						echo Form::make_single_select_form( [
 							'id'       => $_setting['id'],
@@ -149,7 +151,9 @@ $robots_settings = [
 							],
 						] );
 						// phpcs:enable WordPress.Security.EscapeOutput
-					echo '</label>';
+						?>
+					</label>
+					<?php
 				}
 				?>
 			</div>
@@ -167,7 +171,7 @@ $robots_settings = [
 	/**
 	 * @since 4.0.5
 	 * @param string $post_type The post type slug, or current screen name if this is a taxonomy list table.
-	 * @param string $post_type The current taxonomy type (if any).
+	 * @param string $taxonomy  The current taxonomy type (if any).
 	 */
 	\do_action( 'the_seo_framework_after_quick_edit', $post_type, $taxonomy );
 	?>

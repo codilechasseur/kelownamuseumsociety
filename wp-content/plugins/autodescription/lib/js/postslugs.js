@@ -8,7 +8,7 @@
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2024 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2024 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -74,8 +74,10 @@ window.tsfPostSlugs = function () {
 	 * @param {Array<{id:number,slug:string}>} posts The posts to store.
 	 */
 	function store( posts ) {
+
 		// Walk the ancestral tree, and store each as anew for quick access.
 		posts.forEach( ( post, index, posts ) => {
+
 			const postId = +post.id;
 			// We may want to skip this check, for the new data might be updated? Edge-case deluxe.
 			cache.has( postId ) || cache.set(
@@ -95,11 +97,13 @@ window.tsfPostSlugs = function () {
 	 * @return {Promise<void>} A promise that resolves when the post parent slugs are fetched.
 	 */
 	function fetch( postId ) {
-		// TODO should we add a "fetchingfor" test to prevent concurrent fetches?
+
+		// TODO should we add a "fetchingFor" test to prevent concurrent fetches?
 		return new Promise( ( resolve, reject ) => {
 
 			if ( ! postId ) {
 				reject();
+
 				return;
 			}
 
@@ -113,6 +117,7 @@ window.tsfPostSlugs = function () {
 					timeout: 7000,
 				},
 			).done( response => {
+
 				store( tsf.convertJSONResponse( response ) );
 				resolve();
 			} ).fail( reject );

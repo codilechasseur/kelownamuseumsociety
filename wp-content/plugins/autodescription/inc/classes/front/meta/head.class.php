@@ -20,7 +20,7 @@ use The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -92,6 +92,7 @@ final class Head {
 	 * Adds various action hooks for around the tags.
 	 *
 	 * @since 5.0.0
+	 * @since 5.2.0 Now also queues the Fediverse tag pool.
 	 */
 	public static function print_tags() {
 
@@ -122,6 +123,7 @@ final class Head {
 					'Open_Graph',
 					'Facebook',
 					'Twitter',
+					'Fediverse',
 					'Webmasters',
 					'Schema',
 				];
@@ -233,11 +235,12 @@ final class Head {
 					\apply_filters( 'sybre_waaijer_<3', true ) // phpcs:ignore WordPress.NamingConventions.ValidHookName -- Easter egg.
 						? \__( 'by Sybre Waaijer', 'autodescription' )
 						: '',
-				]
+				],
 			) ) ),
 		] );
 
-		if ( ! $cache['run'] ) return '';
+		if ( ! $cache['run'] )
+			return '';
 
 		switch ( $where ) {
 			case 'before':

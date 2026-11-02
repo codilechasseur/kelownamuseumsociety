@@ -8,7 +8,7 @@
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2015 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2015 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -99,7 +99,8 @@ window.tsf = function () {
 	 */
 	function decodeEntities( str ) {
 
-		if ( ! str?.length ) return '';
+		if ( ! str?.length )
+			return '';
 
 		_decodeEntitiesDOMParser ||= new DOMParser();
 
@@ -126,7 +127,8 @@ window.tsf = function () {
 	 */
 	function escapeString( str ) {
 
-		if ( ! str?.length ) return '';
+		if ( ! str?.length )
+			return '';
 
 		let map = {
 			'&':  '&#x26;',
@@ -154,7 +156,9 @@ window.tsf = function () {
 	 * @return {string}
 	 */
 	function ampHTMLtoText( str ) {
+
 		deprecatedFunc( 'tsf.ampHTMLtoText', '5.1.0' );
+
 		return str.replace( /&amp;|&#x0{0,3}26;|&#38;/gi, '&' ); // why 0,3 and not * ?
 	}
 
@@ -224,6 +228,7 @@ window.tsf = function () {
 	 * @return {number}
 	 */
 	function getStringLength( str ) {
+
 		let e,
 			length = 0;
 
@@ -256,6 +261,7 @@ window.tsf = function () {
 		for ( const option of element.options )
 			if ( value == option.value ) { // Weak check
 				element.selectedIndex = option.index;
+
 				return;
 			}
 
@@ -263,6 +269,7 @@ window.tsf = function () {
 		for ( const option of element.options )
 			if ( value == option.label || value == option.innerHTML ) { // Weak check
 				element.selectedIndex = option.index;
+
 				return;
 			}
 	}
@@ -333,11 +340,11 @@ window.tsf = function () {
 		if ( 'string' === typeof target )
 			return document.querySelectorAll( target ).forEach( el => unsetAjaxLoader( el, success ) );
 
-		let newclass = 'tsf-success',
+		let newClass = 'tsf-success',
 			fadeTime = 2500;
 
 		if ( ! success ) {
-			newclass = 'tsf-error';
+			newClass = 'tsf-error';
 			fadeTime = 5000;
 		}
 
@@ -347,7 +354,7 @@ window.tsf = function () {
 
 		if ( target ) {
 			target.classList.remove( 'tsf-loading', 'tsf-error', 'tsf-success', 'tsf-unknown' );
-			target.classList.add( newclass );
+			target.classList.add( newClass );
 			tsfUI.fadeOut( target, fadeTime );
 		}
 	}
@@ -388,6 +395,7 @@ window.tsf = function () {
 	 * @param {string} replacement
 	 */
 	function deprecatedFunc( name, version, replacement ) {
+
 		// This will be removed during minification, because we have "removeConsole" enabled via babel-tsf.
 		console.warn(
 			`[DEPRECATED]: ${name} is deprecated${version ? ` since The SEO Framework ${version}` : ''}.${replacement ? ` Use ${replacement} instead.` : ''}`
@@ -422,6 +430,7 @@ window.tsf = function () {
 	 * @access private
 	 */
 	function _loopDispatchAtInteractive() {
+
 		_dispatchEvents.forEach( ( [ element, eventName ] ) => {
 			element.dispatchEvent( new Event( eventName ) );
 		} );
@@ -484,6 +493,7 @@ window.tsf = function () {
 	 * @access private
 	 */
 	function _triggerInteractive() {
+
 		if ( ! isInteractive ) {
 			isInteractive = true;
 			document.body.dispatchEvent( new CustomEvent( 'tsf-interactive' ) );
@@ -555,66 +565,70 @@ window.tsf = function () {
 		setTimeout( _triggerInteractive, 100 ); // Magic number. Low enough to be negligible. High enough to let other scripts finish.
 	}
 
-	return Object.assign( {
-		/**
-		 * Initialises all aspects of the scripts.
-		 * You shouldn't call this.
-		 *
-		 * @since 4.0.0
-		 * @access protected
-		 *
-		 * @function
-		 */
-		load: () => {
-
+	return Object.assign(
+		{
 			/**
-			 * From: https://developer.akamai.com/blog/2017/12/04/beware-performancetimingdominteractive
-			 * "Overall, I found that pages with external (not in the HTML) CSS, JavaScript, or fonts
-			 * could lead to inaccurate estimations of domInteractive"
-			 */
-			// document.addEventListener( 'readystatechange', () => {
-			// 	// Interactive means that the document was fully read. However, we cannot reliably determine if all dependencies have been loaded?
-			// 	[ 'interactive', 'complete' ].includes( document.readyState ) && _doReady();
-			// } );
-
-			/**
-			 * The code below isn't affected by the above mentioned issues; albeit not as smoothly executed as we'd like...
-			 * such as any page on theseoframework.com; which benefit from considering load order & inline scripts, making for seamless rendering.
+			 * Initialises all aspects of the scripts.
+			 * You shouldn't call this.
 			 *
-			 * WordPress admin always forces us to load JS assets last–at least, when we do things by their book. We should
-			 * honor this, at the expense of extra layout shifts and delayed rendering of critical markup.
+			 * @since 4.0.0
+			 * @access protected
+			 *
+			 * @function
 			 */
-			if ( 'complete' === document.readyState ) {
-				// Handle it asynchronously to allow scripts the opportunity to delay ready.
-				setTimeout( _doReady() );
-			} else {
-				document.addEventListener( 'DOMContentLoaded', _doReady );
-				document.addEventListener( 'load', _doReady );
-			}
+			load: () => {
 
-			// Trigger tsf-resize event.
-			window.addEventListener( 'resize', _triggerResize );
+				/**
+				 * From: https://developer.akamai.com/blog/2017/12/04/beware-performancetimingdominteractive
+				 * "Overall, I found that pages with external (not in the HTML) CSS, JavaScript, or fonts
+				 * could lead to inaccurate estimations of domInteractive"
+				 */
+				// document.addEventListener( 'readystatechange', () => {
+				// 	// Interactive means that the document was fully read. However, we cannot reliably determine if all dependencies have been loaded?
+				// 	[ 'interactive', 'complete' ].includes( document.readyState ) && _doReady();
+				// } );
+
+				/**
+				 * The code below isn't affected by the above mentioned issues; albeit not as smoothly executed as we'd like...
+				 * such as any page on theseoframework.com; which benefit from considering load order & inline scripts, making for seamless rendering.
+				 *
+				 * WordPress admin always forces us to load JS assets last–at least, when we do things by their book. We should
+				 * honor this, at the expense of extra layout shifts and delayed rendering of critical markup.
+				 */
+				if ( 'complete' === document.readyState ) {
+					// Handle it asynchronously to allow scripts the opportunity to delay ready.
+					setTimeout( _doReady() );
+				} else {
+					document.addEventListener( 'DOMContentLoaded', _doReady );
+					document.addEventListener( 'load', _doReady );
+				}
+
+				// Trigger tsf-resize event.
+				window.addEventListener( 'resize', _triggerResize );
+			},
 		},
-	}, {
-		stripTags,
-		decodeEntities,
-		escapeString,
-		ampHTMLtoText,
-		sDoubleSpace,
-		sSingleLine,
-		sTabs,
-		coalesceStrlen,
-		getStringLength,
-		selectByValue,
-		convertJSONResponse,
-		setAjaxLoader,
-		unsetAjaxLoader,
-		resetAjaxLoader,
-		deprecatedFunc,
-		triggerNoticeReset,
-		dispatchAtInteractive,
-	}, {
-		l10n,
-	} );
+		{
+			stripTags,
+			decodeEntities,
+			escapeString,
+			ampHTMLtoText,
+			sDoubleSpace,
+			sSingleLine,
+			sTabs,
+			coalesceStrlen,
+			getStringLength,
+			selectByValue,
+			convertJSONResponse,
+			setAjaxLoader,
+			unsetAjaxLoader,
+			resetAjaxLoader,
+			deprecatedFunc,
+			triggerNoticeReset,
+			dispatchAtInteractive,
+		},
+		{
+			l10n,
+		},
+	);
 }();
 window.tsf.load();

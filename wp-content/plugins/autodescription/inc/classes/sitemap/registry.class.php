@@ -15,15 +15,17 @@ use function The_SEO_Framework\{
 
 use The_SEO_Framework\{
 	Data,
-	Helper,
-	Helper\Query,
-	Helper\Template,
 	Meta,
+};
+use The_SEO_Framework\Helper\{
+	Headers,
+	Query,
+	Template,
 };
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -139,9 +141,10 @@ class Registry {
 	 * @since 5.0.0
 	 * @access private
 	 *
-	 * @param \WP_Query $wp_query The WordPress WC_Query instance.
+	 * @param \WP_Query $wp_query The WordPress query instance.
 	 */
 	public static function _override_query_parameters( $wp_query ) {
+
 		$wp_query->is_home = false;
 		// $wp_query allows dynamic properties. This one is proposed in https://core.trac.wordpress.org/ticket/51117#comment:7
 		$wp_query->is_sitemap = true;
@@ -166,7 +169,8 @@ class Registry {
 
 		$list = self::get_sitemap_endpoint_list();
 
-		if ( ! isset( $list[ $id ] ) ) return false;
+		if ( ! isset( $list[ $id ] ) )
+			return false;
 
 		$host      = Meta\URI\Utils::set_preferred_url_scheme( Meta\URI\Utils::get_site_host() );
 		$path_info = self::get_sitemap_base_path_info();
@@ -183,6 +187,7 @@ class Registry {
 	 *
 	 * @since 4.0.0
 	 * @since 5.0.0 Is now static.
+	 * @since 5.2.0 Now registers the `css` endpoint.
 	 *
 	 * @return array[] The sitemap endpoints with their callbacks.
 	 */
@@ -191,25 +196,30 @@ class Registry {
 			/**
 			 * @since 4.0.0
 			 * @since 4.0.2 Made the endpoints' regex case-insensitive.
+			 * @since 5.2.0 1. Now includes a `css` endpoint in the default list.
+			 *              2. A null `lock_id` now uses the endpoint id. A sitemap is not cached without a `cache_id`.
 			 * @link Example: https://github.com/sybrew/tsf-term-sitemap
+			 * @example $list `[ 'base' => [ 'endpoint' => 'sitemap.xml', 'robots' => true ] ]`
 			 * @param array[] $list {
 			 *     A list of sitemap endpoints keyed by ID.
 			 *
-			 *     @type string|false $lock_id  Optional. The cache key to use for locking. Defaults to index 'id'.
-			 *                                  Set to false to disable locking.
-			 *     @type string|false $cache_id Optional. The cache key to use for storing. Defaults to index 'id'.
-			 *                                  Set to false to disable caching.
-			 *     @type string       $endpoint The expected "pretty" endpoint, meant for administrative display.
-			 *     @type string       $epregex  The endpoint regex, following the home path regex.
+			 *     @type array {$id} {
+			 *         The sitemap endpoint.
+			 *
+			 *         @type ?string  $lock_id  Optional. The cache key to use for locking. Null uses the endpoint id.
+			 *         @type ?string  $cache_id Optional. The cache key to use for storing. Null or omitted means the sitemap is not cached.
+			 *         @type string   $endpoint The expected "pretty" endpoint, meant for administrative display.
+			 *         @type string   $regex    The endpoint regex, following the home path regex.
 			 *                                  N.B. Be wary of case sensitivity. Append the i-flag.
 			 *                                  N.B. Trailing slashes will cause the match to fail.
 			 *                                  N.B. Use ASCII-endpoints only. Don't play with UTF-8 or translation strings.
-			 *     @type callable     $callback The callback for the sitemap output.
+			 *         @type callable $callback The callback for the sitemap output.
 			 *                                  Tip: You can pass arbitrary indexes. Prefix them with an underscore to ensure forward compatibility.
 			 *                                  Tip: In the callback, use
 			 *                                       `\The_SEO_Framework\Sitemap\Registry::get_sitemap_endpoint_list()[$sitemap_id]`
 			 *                                       It returns the arguments you've passed in this filter; including your arbitrary indexes.
-			 *     @type bool         $robots   Whether the endpoint should be mentioned in the robots.txt file.
+			 *         @type bool     $robots   Whether the endpoint should be mentioned in the robots.txt file.
+			 *     }
 			 * }
 			 */
 			(array) \apply_filters(
@@ -232,10 +242,18 @@ class Registry {
 						'robots'   => false,
 					],
 					'xsl-stylesheet' => [
-						'lock_id'  => false,
-						'cache_id' => false,
+						'lock_id'  => null,
+						'cache_id' => null,
 						'endpoint' => 'sitemap.xsl',
 						'regex'    => '/^sitemap\.xsl/i',
+						'callback' => [ self::class, 'output_stylesheet' ],
+						'robots'   => false,
+					],
+					'css'            => [
+						'lock_id'  => null,
+						'cache_id' => null,
+						'endpoint' => 'sitemap.css',
+						'regex'    => '/^sitemap\.css/i',
 						'callback' => [ self::class, 'output_stylesheet' ],
 						'robots'   => false,
 					],
@@ -245,7 +263,7 @@ class Registry {
 	}
 
 	/**
-	 * Deletes transients for sitemaps. Also engages pings for or pings search engines.
+	 * Deletes sitemap transients and schedules prerender.
 	 * Can only run once per request.
 	 *
 	 * @hook "update_option_ . THE_SEO_FRAMEWORK_SITE_OPTIONS" 10
@@ -255,7 +273,8 @@ class Registry {
 	 */
 	public static function refresh_sitemaps() {
 
-		if ( has_run( __METHOD__ ) ) return false;
+		if ( has_run( __METHOD__ ) )
+			return false;
 
 		Cache::clear_sitemap_caches();
 
@@ -274,13 +293,11 @@ class Registry {
 	/**
 	 * Refreshes sitemaps on post change.
 	 *
-	 * @hook publish_post 10
-	 * @hook publish_page 10
+	 * @hook wp_insert_post 10
 	 * @hook deleted_post 10
-	 * @hook deleted_page 10
-	 * @hook post_updated 10
-	 * @hook page_updated 10
 	 * @since 5.0.0
+	 * @since 5.2.0 1. Now runs on `wp_insert_post` and `deleted_post`.
+	 *              2. Now skips auto-drafts.
 	 * @access private
 	 *
 	 * @param int $post_id The Post ID that has been updated.
@@ -288,14 +305,19 @@ class Registry {
 	 */
 	public static function _refresh_sitemap_on_post_change( $post_id ) {
 
-		// Don't refresh sitemap on revision.
-		if ( ! $post_id || \wp_is_post_revision( $post_id ) ) return false;
+		if (
+			   ! $post_id
+			|| \wp_is_post_revision( $post_id )
+			|| 'auto-draft' === \get_post_status( $post_id )
+		) {
+			return false;
+		}
 
 		return self::refresh_sitemaps();
 	}
 
 	/**
-	 * Checks whether the permalink structure is updated.
+	 * Refreshes sitemaps when the Permalinks form is submitted and the nonce passes.
 	 *
 	 * @hook load-options-permalink.php 20
 	 * @since 5.0.0
@@ -335,11 +357,11 @@ class Registry {
 			exit;
 		}
 
-		Helper\Headers::clean_response_header();
+		Headers::clean_response_header();
 
 		if ( ! headers_sent() ) {
 			\status_header( 200 );
-			header( 'Content-type: text/xml; charset=utf-8', true );
+			header( 'Content-type: text/xml; charset=utf-8' );
 		}
 
 		// Fetch sitemap content and add trailing line. Already escaped internally.
@@ -351,7 +373,7 @@ class Registry {
 	}
 
 	/**
-	 * Sitemap XSL stylesheet output.
+	 * Sitemap stylesheet output.
 	 *
 	 * @since 2.8.0
 	 * @since 3.1.0 1. Now outputs 200-response code.
@@ -360,20 +382,32 @@ class Registry {
 	 * @since 4.0.0 1. Moved to \The_SEO_Framework\Bridges\Sitemap
 	 *              2. Renamed from `output_sitemap_xsl_stylesheet()`
 	 * @since 4.1.2 Is now static.
+	 * @since 5.2.0 1. Now sends a nofollow header to prevent crawlers from following non-existent template links in the XSL.
+	 *              2. Now also outputs the CSS when `$sitemap_id` is `css`.
+	 *
+	 * @param string $sitemap_id The sitemap ID. Accepts 'xsl-stylesheet' and 'css'.
 	 */
-	public static function output_stylesheet() {
+	public static function output_stylesheet( $sitemap_id = 'xsl-stylesheet' ) {
 
-		Helper\Headers::clean_response_header();
+		Headers::clean_response_header();
+
+		$is_css       = 'css' === $sitemap_id;
+		$content_type = $is_css ? 'text/css' : 'text/xsl';
 
 		if ( ! headers_sent() ) {
 			\status_header( 200 );
-			header( 'Content-type: text/xsl; charset=utf-8', true );
-			header( 'Cache-Control: max-age=1800', true );
+			header( "Content-type: $content_type; charset=utf-8" );
+			header( 'Cache-Control: max-age=1800' );
+			header( 'X-Robots-Tag: nofollow', false );
 		}
 
-		Optimized\XSL::register_hooks();
+		if ( $is_css ) {
+			Template::output_view( 'sitemap/css/styles' );
+		} else {
+			Optimized\XSL::register_hooks();
+			Template::output_view( 'sitemap/xsl-stylesheet' );
+		}
 
-		Template::output_view( 'sitemap/xsl-stylesheet' );
 		exit;
 	}
 
@@ -383,6 +417,7 @@ class Registry {
 	 * @since 4.0.0
 	 * @since 4.1.3 Added a trailing newline to the stylesheet-tag for readability.
 	 * @since 5.0.0 Is now static.
+	 * @since 5.2.0 Now also emits a CSS xml-stylesheet processing instruction after the XSL one.
 	 */
 	public static function output_sitemap_header() {
 
@@ -393,6 +428,11 @@ class Registry {
 				'<?xml-stylesheet type="text/xsl" href="%s"?>' . "\n",
 				// phpcs:ignore WordPress.Security.EscapeOutput
 				self::get_expected_sitemap_endpoint_url( 'xsl-stylesheet' ),
+			);
+			printf(
+				'<?xml-stylesheet type="text/css" href="%s"?>' . "\n",
+				// phpcs:ignore WordPress.Security.EscapeOutput
+				self::get_expected_sitemap_endpoint_url( 'css' ),
 			);
 		}
 	}
@@ -425,7 +465,7 @@ class Registry {
 			$schemas,
 			function ( &$schema, $key ) {
 				$schema = \sprintf( '%s="%s"', $key, implode( ' ', (array) $schema ) );
-			}
+			},
 		);
 
 		// phpcs:ignore WordPress.Security.EscapeOutput -- Output is expected to be escaped.
@@ -501,6 +541,7 @@ class Registry {
 	 * }
 	 */
 	private static function get_sitemap_base_path_info() {
+
 		global $wp_rewrite;
 
 		$base_path = self::get_sitemap_base_path();
@@ -554,7 +595,8 @@ class Registry {
 	 */
 	private static function clean_up_globals( $get_freed_memory = false ) {
 
-		if ( $get_freed_memory ) return memo() ?? 0;
+		if ( $get_freed_memory )
+			return memo() ?? 0;
 
 		$memory = memory_get_usage();
 

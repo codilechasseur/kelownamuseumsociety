@@ -8,7 +8,7 @@
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -48,8 +48,10 @@ window.tsfTT = function () {
 	// Yes, I'm too lazy to copy/paste whatever's above again to prepend a dot, so I spent half an hour figuring this.
 	const ttSelectors = Object.fromEntries( Object.entries( ttNames ).map( ( [ i, v ] ) => [ i, `.${v}` ] ) );
 
+	let _activeTooltipItem = void 0;
 	const _activeToolTipHandles = {
 		updateDesc: event => {
+
 			if ( ! event.target.classList.contains( ttNames.item ) ) return;
 
 			let tooltipText = event.target.querySelector( ttSelectors.text );
@@ -58,26 +60,37 @@ window.tsfTT = function () {
 				event.target.dispatchEvent( new Event( 'mousemove' ) ); // event time: <.3ms.
 			}
 		},
-		pointerEnter: async event => {
-			let desc = event.target.dataset.desc || event.target.title || '';
+		touchDismiss: event => {
+
+			// If tapping the same or another tooltip item, let the normal flow handle it.
+			if ( event.target.closest( ttSelectors.item ) ) return;
+
+			if ( _activeTooltipItem )
+				_activeToolTipHandles.pointerLeave( { target: _activeTooltipItem } );
+		},
+		pointerEnter: async ( event, item ) => {
+
+			let desc = item.dataset.desc || item.title || '';
 
 			// Don't create tooltip if bubbled.
-			if ( desc && ! event.target.getElementsByClassName( ttNames.base ).length ) {
+			if ( desc && ! item.getElementsByClassName( ttNames.base ).length ) {
 				// Exchanges data-desc with found desc to sustain easy access.
-				event.target.dataset.desc = desc;
+				item.dataset.desc = desc;
 				// Clear title to prevent default browser tooltip.
-				event.target.removeAttribute( 'title' );
+				item.removeAttribute( 'title' );
 
-				return await doTooltip( event, event.target, desc );
+				return await doTooltip( event, item, desc );
 			}
 
 			return false;
 		},
 		pointerMove: event => {
+
 			_pointer.currPos.x     = event.pageX || NaN;
 			_pointer.lastMoveEvent = event;
 		},
 		pointerLeave: event => {
+
 			removeTooltip( event.target );
 			_events( event.target ).unset();
 
@@ -89,23 +102,33 @@ window.tsfTT = function () {
 	}
 
 	function _events( target ) {
+
 		const commonEvents = {
-			mousemove:  _activeToolTipHandles.pointerMove,
-			mouseleave: _activeToolTipHandles.pointerLeave,
-			mouseout:   _activeToolTipHandles.pointerLeave,
-			blur:       _activeToolTipHandles.pointerLeave,
+			mousemove:   _activeToolTipHandles.pointerMove,
+			mouseleave:  _activeToolTipHandles.pointerLeave,
+			mouseout:    _activeToolTipHandles.pointerLeave,
+			touchcancel: _activeToolTipHandles.pointerLeave,
+			blur:        _activeToolTipHandles.pointerLeave,
 		};
 
 		return {
 			set: () => {
+
 				for ( const [ event, callBack ] of Object.entries( commonEvents ) )
 					target.addEventListener( event, callBack );
 
 				target.addEventListener( 'tsf-tooltip-update', _activeToolTipHandles.updateDesc );
+
+				_activeTooltipItem = target;
+				document.body.addEventListener( 'click', _activeToolTipHandles.touchDismiss );
 			},
 			unset: () => {
+
 				for ( const [ event, callBack ] of Object.entries( commonEvents ) )
 					target.removeEventListener( event, callBack );
+
+				_activeTooltipItem = void 0;
+				document.body.removeEventListener( 'click', _activeToolTipHandles.touchDismiss );
 			},
 		};
 	}
@@ -124,6 +147,7 @@ window.tsfTT = function () {
 		currPos:       { x: void 0 },
 		lastMoveEvent: void 0,
 		reset:         () => {
+
 			_pointer.lastMoveEvent = void 0;
 			// Before and after should have objects assigned separately.
 			// For otherwise they get the same pointer. Yes, a memory pointer: reference.
@@ -137,6 +161,7 @@ window.tsfTT = function () {
 		_cancelArrowAnimation,
 		_requestArrowAnimationOnce,
 	} = ( () => {
+
 		let _pointerAnimationId = void 0;
 
 		const _requestArrowAnimation = () => {
@@ -144,6 +169,7 @@ window.tsfTT = function () {
 		}
 
 		const _cancelArrowAnimation = () => {
+
 			cancelAnimationFrame( _pointerAnimationId );
 			_pointer.lastMoveEvent = void 0;
 			_activeTooltipElements.reset();
@@ -151,16 +177,19 @@ window.tsfTT = function () {
 		}
 
 		const _requestArrowAnimationOnce = () => {
+
 			animate();
 			_cancelArrowAnimation();
 		}
 
 		const animate = () => {
+
 			let isMouseEvent = ! [ _pointer.currPos.x ].includes( NaN );
 
 			if ( isMouseEvent ) {
 				if ( _pointer.currPos.x === _pointer.lastPos.x ) {
 					_requestArrowAnimation();
+
 					return;
 				}
 			}
@@ -170,11 +199,12 @@ window.tsfTT = function () {
 			const event   = _pointer.lastMoveEvent,
 				  element = event.target;
 
-			let	tooltip = _activeTooltipElements.tooltip || ( element.querySelector( ttSelectors.base ) );
+			let	tooltip = _activeTooltipElements.tooltip || element.querySelector( ttSelectors.base );
 
 			// Browser lagged, no tooltip exists (yet). Bail.
 			if ( ! tooltip ) {
 				_requestArrowAnimation();
+
 				return;
 			}
 
@@ -245,6 +275,7 @@ window.tsfTT = function () {
 	function _clickLocker( element ) {
 		return {
 			lock: () => {
+
 				element.dataset.preventedClick = 1;
 
 				// If the element is a label with a "for"-attribute, then we must forward this
@@ -259,6 +290,7 @@ window.tsfTT = function () {
 				}
 			},
 			release: () => {
+
 				if ( ! ( element instanceof Element ) ) return;
 
 				delete element.dataset.preventedClick;
@@ -301,13 +333,16 @@ window.tsfTT = function () {
 		 */
 		try {
 			( () => {
+
 				const options = {
 					get passive() {
 						passiveSupported = true;
+
 						return false;
 					},
 					get capture() {
 						captureSupported = true;
+
 						return false;
 					},
 				};
@@ -323,11 +358,12 @@ window.tsfTT = function () {
 		/**
 		 * Loads tooltips within wrapper.
 		 * @function
-		 * @param {Event} event
+		 * @param {Event}   event
+		 * @param {Element} item  The tooltip item element.
 		 */
-		const loadToolTip = async event => {
+		const loadToolTip = async ( event, item ) => {
 
-			if ( event.target.dataset.hasTooltip ) return;
+			if ( item.dataset.hasTooltip ) return;
 
 			let isTouch = false;
 
@@ -347,11 +383,12 @@ window.tsfTT = function () {
 			}
 
 			if ( ! isTouch )
-				_clickLocker( event.target ).lock();
+				_clickLocker( item ).lock();
 
 			_cancelArrowAnimation();
 
-			if ( ! ( await _activeToolTipHandles.pointerEnter( event ) ) ) return;
+			if ( ! ( await _activeToolTipHandles.pointerEnter( event, item ) ) )
+				return;
 
 			// Initiate arrow placement directly.
 			_activeToolTipHandles.pointerMove( event );
@@ -363,7 +400,7 @@ window.tsfTT = function () {
 			}
 
 			// Set other events, like removal when tapping elsewhere, or hitting "tab."
-			_events( event.target ).set();
+			_events( item ).set();
 		}
 
 		/**
@@ -376,6 +413,7 @@ window.tsfTT = function () {
 		 * @param {Event} event
 		 */
 		const preventTooltipHandleClick = event => {
+
 			if ( _clickLocker( event.target ).isLocked() ) return;
 			event.preventDefault();
 			// iOS 12 bug causes two clicks at once. Let's set this asynchronously.
@@ -398,8 +436,9 @@ window.tsfTT = function () {
 
 			instigatingTooltip = true;
 
-			if ( event.target.classList.contains( ttNames.item ) )
-				loadToolTip( event );
+			const item = event.target.closest( ttSelectors.item );
+			if ( item )
+				loadToolTip( event, item );
 
 			event.stopPropagation();
 
@@ -412,6 +451,7 @@ window.tsfTT = function () {
 		 * @function
 		 */
 		const init = () => {
+
 			let wraps   = document.querySelectorAll( ttSelectors.wrap ),
 				actions = 'mouseenter pointerdown touchstart focus'.split( ' ' );
 			// TODO why not foreach and const?
@@ -468,7 +508,7 @@ window.tsfTT = function () {
 		const boundaryRect  = boundary.getBoundingClientRect(),
 			  boundaryTop   = boundaryRect.top - ( boundary.scrollTop || 0 ),
 			  boundaryWidth = boundaryRect.width,
-			  maxWidth      = 250; // Gutenberg is 262. The tooltip has 24px padding (12*2)...
+			  maxWidth      = 256;
 
 		const hoverItemSuperWrap = element.closest( ttSelectors.superWrap ),
 			  hoverItemWrap      = element.closest( ttSelectors.wrap ) || element.parentElement,
@@ -491,21 +531,13 @@ window.tsfTT = function () {
 			// Overflown the boundary size. Squeeze the box. (thank you, Gutenberg.)
 
 			// Use the bounding box minus appeal. Don't double the appeal since that'll mess up the arrow.
-			// Maximum 250px.
+			// Maximum 256px, same as flex basis.
 			textWrap.style.flexBasis = `${Math.min( maxWidth, boundaryWidth - appeal )}px`;
 			resetTextRects();
-
-			// Halve appeal from here. So each side gets a bit.
-			appeal /= 2;
-		} else if ( textWrapRect.width > maxWidth ) {
-			textWrap.style.flexBasis = `${maxWidth}px`; // Is this redundant?
-			// Limit the text wrap if it exceeds 250px on auto-grow. Flex ignores box-sizing?
-			textWrap.style.maxWidth = `${maxWidth}px`;
-			resetTextRects();
-		} else {
-			// Text wrap is small. Halve the appeal.
-			appeal /= 2;
 		}
+
+		// Halve appeal from here. So each side gets half of it henceforth.
+		appeal /= 2;
 
 		const boundaryLeft  = boundaryRect.left - ( boundary.scrollLeft || 0 ),
 			  boundaryRight = boundaryLeft + boundaryWidth;
@@ -652,7 +684,8 @@ window.tsfTT = function () {
 			_events( element ).unset();
 		}
 
-		if ( ! desc.length ) return false;
+		if ( ! desc.length )
+			return false;
 
 		return _renderTooltip( event, element, desc );
 	}
@@ -725,6 +758,7 @@ window.tsfTT = function () {
 	 * @access public
 	 */
 	function triggerReset() {
+
 		clearTimeout( _debounceTriggerReset );
 		_debounceTriggerReset = setTimeout(
 			() => window.dispatchEvent( new CustomEvent( 'tsf-tooltip-reset' ) ),
@@ -756,33 +790,36 @@ window.tsfTT = function () {
 		}
 	}
 
-	return Object.assign( {
-		/**
-		 * Initialises all aspects of the scripts.
-		 * You shouldn't call this.
-		 *
-		 * @since 3.1.0
-		 * @access protected
-		 *
-		 * @function
-		 */
-		load: () => {
-			document.body.addEventListener( 'tsf-ready', _initToolTips );
+	return Object.assign(
+		{
+			/**
+			 * Initialises all aspects of the scripts.
+			 * You shouldn't call this.
+			 *
+			 * @since 3.1.0
+			 * @access protected
+			 *
+			 * @function
+			 */
+			load: () => {
+				document.body.addEventListener( 'tsf-ready', _initToolTips );
+			},
 		},
-	}, {
-		/**
-		 * Copies internal public functions to tsfTT for public access.
-		 * Don't overwrite these.
-		 *
-		 * @since 3.1.0
-		 * @access public
-		 */
-		doTooltip,
-		removeTooltip,
-		getTooltip,
-		addBoundary,
-		triggerReset,
-		triggerUpdate,
-	} );
+		{
+			/**
+			 * Copies internal public functions to tsfTT for public access.
+			 * Don't overwrite these.
+			 *
+			 * @since 3.1.0
+			 * @access public
+			 */
+			doTooltip,
+			removeTooltip,
+			getTooltip,
+			addBoundary,
+			triggerReset,
+			triggerUpdate,
+		},
+	);
 }();
 window.tsfTT.load();

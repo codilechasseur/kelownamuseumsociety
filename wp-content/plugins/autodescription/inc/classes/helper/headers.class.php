@@ -10,7 +10,7 @@ namespace The_SEO_Framework\Helper;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -40,15 +40,20 @@ class Headers {
 	 * @since 2.8.0
 	 * @since 2.9.0 Now flushes all levels rather than just the latest one.
 	 * @since 4.0.0 Is now public.
+	 * @since 5.2.0 Now discourages page caches from storing scrubbed buffers.
 	 *
 	 * @return bool True on clear. False otherwise.
 	 */
 	public static function clean_response_header() {
 
+		if ( ! \defined( 'DONOTCACHEPAGE' ) )
+			\define( 'DONOTCACHEPAGE', true );
+
 		$level = ob_get_level();
 
 		if ( $level ) {
 			while ( $level-- ) ob_end_clean();
+
 			return true;
 		}
 
@@ -58,7 +63,7 @@ class Headers {
 	/**
 	 * Sets the X-Robots tag headers to 'noindex'.
 	 *
-	 * @hook do_robots 10
+	 * @hook do_robots 9
 	 * @hook the_seo_framework_sitemap_header 10
 	 * @since 5.0.0
 	 */

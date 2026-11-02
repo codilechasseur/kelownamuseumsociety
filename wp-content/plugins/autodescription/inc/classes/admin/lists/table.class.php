@@ -9,13 +9,12 @@ namespace The_SEO_Framework\Admin\Lists;
 
 use The_SEO_Framework\Helper\{
 	Post_Type,
-	Query,
 	Taxonomy,
 };
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -92,7 +91,7 @@ abstract class Table {
 	 * @since 5.0.0 Renamed from `_prepare_columns`.
 	 * @access private
 	 *
-	 * @param \WP_Screen|string $screen \WP_Screen
+	 * @param \WP_Screen $screen The current screen.
 	 */
 	public function prepare_columns( $screen ) {
 		$this->init_columns( $screen );
@@ -111,7 +110,9 @@ abstract class Table {
 		if (
 			   ! \check_ajax_referer( 'add-tag', '_wpnonce_add-tag', false )
 			|| empty( $_POST['taxonomy'] )
-		) return;
+		) {
+			return;
+		}
 
 		$taxonomy   = stripslashes( $_POST['taxonomy'] );
 		$tax_object = $taxonomy ? \get_taxonomy( $taxonomy ) : false;
@@ -139,7 +140,9 @@ abstract class Table {
 				'page' === $_POST['post_type'] ? 'edit_page' : 'edit_post',
 				(int) $_POST['post_ID'],
 			)
-		) return;
+		) {
+			return;
+		}
 
 		$this->init_columns_ajax();
 	}
@@ -158,7 +161,9 @@ abstract class Table {
 			   ! \check_ajax_referer( 'taxinlineeditnonce', '_inline_edit', false )
 			|| empty( $_POST['tax_ID'] )
 			|| ! \current_user_can( 'edit_term', (int) $_POST['tax_ID'] )
-		) return;
+		) {
+			return;
+		}
 
 		$this->init_columns_ajax();
 	}
@@ -167,24 +172,33 @@ abstract class Table {
 	 * Initializes columns.
 	 *
 	 * @since 4.0.0
+	 * @since 5.2.0 Now prepares the users list columns.
 	 *
 	 * @param \WP_Screen $screen The current screen.
 	 */
 	private function init_columns( $screen ) {
 
-		if (
-			   ! Query::is_wp_lists_edit()
-			|| empty( $screen->id )
-		) return;
+		if ( empty( $screen->id ) ) return;
 
 		$post_type = $screen->post_type ?? '';
 		$taxonomy  = $screen->taxonomy ?? '';
 
-		if ( $taxonomy ) {
-			if ( ! Taxonomy::is_supported( $taxonomy ) )
-				return;
-		} else {
-			if ( ! Post_Type::is_supported( $post_type ) )
+		switch ( $screen->base ) {
+			case 'edit-tags':
+				if ( ! Taxonomy::is_supported( $taxonomy ) ) return;
+
+				break;
+
+			case 'edit':
+				if ( ! Post_Type::is_supported( $post_type ) ) return;
+
+				break;
+
+			case 'users':
+			case 'users-network':
+				break;
+
+			default:
 				return;
 		}
 
@@ -195,12 +209,21 @@ abstract class Table {
 			\add_filter( "manage_{$taxonomy}_custom_column", [ $this, 'output_column_contents_for_term' ], 1, 3 );
 
 		\add_filter( "manage_{$screen->id}_columns", [ $this, 'add_column' ] );
-		/**
-		 * Always load pages and posts.
-		 * Many CPT plugins rely on these.
-		 */
-		\add_action( 'manage_posts_custom_column', [ $this, 'output_column_contents_for_post' ], 1, 2 );
-		\add_action( 'manage_pages_custom_column', [ $this, 'output_column_contents_for_post' ], 1, 2 );
+
+		switch ( $screen->base ) {
+			case 'users':
+			case 'users-network':
+				\add_filter( 'manage_users_custom_column', [ $this, 'output_column_contents_for_user' ], 1, 3 );
+				break;
+
+			default:
+				/**
+				 * Always load pages and posts.
+				 * Many CPT plugins rely on these.
+				 */
+				\add_action( 'manage_posts_custom_column', [ $this, 'output_column_contents_for_post' ], 1, 2 );
+				\add_action( 'manage_pages_custom_column', [ $this, 'output_column_contents_for_post' ], 1, 2 );
+		}
 	}
 
 	/**
@@ -214,21 +237,21 @@ abstract class Table {
 	 *    `_prepare_columns_wp_ajax_inline_save_tax()`
 	 */
 	private function init_columns_ajax() {
+
 		// phpcs:disable WordPress.Security.NonceVerification -- _prepare_columns_wp_ajax_* verifies this.
 
 		$taxonomy  = isset( $_POST['taxonomy'] ) ? stripslashes( $_POST['taxonomy'] ) : '';
 		$post_type = isset( $_POST['post_type'] ) ? stripslashes( $_POST['post_type'] ) : '';
 
 		// /wp-admin/js/inline-edit-tax.js doesn't send post_type, instead, it sends tax_type, which is the same.
-		$post_type = $post_type
-				?: ( isset( $_POST['tax_type'] ) ? stripslashes( $_POST['tax_type'] ) : '' );
+		$post_type =
+			   $post_type
+			?: ( isset( $_POST['tax_type'] ) ? stripslashes( $_POST['tax_type'] ) : '' );
 
 		if ( $taxonomy ) {
-			if ( ! Taxonomy::is_supported( $taxonomy ) )
-				return;
+			if ( ! Taxonomy::is_supported( $taxonomy ) ) return;
 		} else {
-			if ( ! Post_Type::is_supported( $post_type ) )
-				return;
+			if ( ! Post_Type::is_supported( $post_type ) ) return;
 		}
 
 		$this->doing_ajax = true;
@@ -284,7 +307,7 @@ abstract class Table {
 	 * Add column on edit(-tags).php
 	 *
 	 * @hook manage_{$screen_id}_columns 10
-	 * @hook manage_edit-{$taxonomy}_columns 1
+	 * @hook manage_edit-{$taxonomy}_columns 10
 	 * @since 4.0.0
 	 * @since 5.0.0 Renamed from `_add_column`.
 	 * @access private

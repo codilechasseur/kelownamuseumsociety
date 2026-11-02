@@ -9,7 +9,7 @@ namespace The_SEO_Framework;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2018 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2018 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -32,7 +32,7 @@ namespace The_SEO_Framework;
 \define( 'THE_SEO_FRAMEWORK_PRESENT', true );
 
 /**
- * The user capability required to access the extension overview page.
+ * The user capability required to access the SEO Settings page.
  *
  * == WARNING ==
  * When this constant is used incorrectly, you can expose your site to unforeseen
@@ -73,7 +73,7 @@ namespace The_SEO_Framework;
  * The plugin's main settings page slug.
  *
  * @since 5.0.0
- * @param bool
+ * @param string
  */
 \defined( 'THE_SEO_FRAMEWORK_SITE_OPTIONS_SLUG' )
 	or \define( 'THE_SEO_FRAMEWORK_SITE_OPTIONS_SLUG', 'theseoframework-settings' );
@@ -83,7 +83,7 @@ namespace The_SEO_Framework;
  *
  * Used for storing the SEO options array.
  *
- * @since 2.2.2
+ * @since 2.2.5
  * @since 5.0.0 Removed its filter.
  */
 \define( 'THE_SEO_FRAMEWORK_SITE_OPTIONS', 'autodescription-site-settings' );
@@ -105,6 +105,13 @@ namespace The_SEO_Framework;
 \define( 'THE_SEO_FRAMEWORK_USER_OPTIONS', 'autodescription-user-settings' );
 
 /**
+ * Plugin user preference key.
+ *
+ * @since 5.2.0
+ */
+\define( 'THE_SEO_FRAMEWORK_USER_PREFERENCES', 'autodescription-user-preferences' );
+
+/**
  * Plugin updates cache key.
  *
  * @since 3.1.0
@@ -117,7 +124,7 @@ namespace The_SEO_Framework;
  * The plugin folder URL. Has a trailing slash.
  * Used for calling browser files.
  *
- * @since 2.2.2
+ * @since 2.2.5
  */
 \define( 'THE_SEO_FRAMEWORK_DIR_URL', \plugin_dir_url( \THE_SEO_FRAMEWORK_PLUGIN_BASE_FILE ) );
 
@@ -131,7 +138,7 @@ namespace The_SEO_Framework;
 /**
  * The plugin folder absolute path. Used for calling php files.
  *
- * @since 2.2.2
+ * @since 2.2.5
  */
 \define( 'THE_SEO_FRAMEWORK_DIR_PATH', \dirname( \THE_SEO_FRAMEWORK_PLUGIN_BASE_FILE ) . \DIRECTORY_SEPARATOR );
 

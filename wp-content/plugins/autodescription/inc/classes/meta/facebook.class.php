@@ -12,7 +12,7 @@ use The_SEO_Framework\Data;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -28,7 +28,7 @@ use The_SEO_Framework\Data;
  */
 
 /**
- * Holds getters for meta tag output.
+ * Holds getters for Facebook output.
  *
  * @since 5.0.0
  * @access protected
@@ -39,7 +39,7 @@ class Facebook {
 	/**
 	 * @since 5.0.0
 	 *
-	 * @return string Facebook author's value if API type is 'article'.
+	 * @return ?string Facebook author URL when the Open Graph type is `article`. Null otherwise.
 	 */
 	public static function get_author() {
 
@@ -52,7 +52,7 @@ class Facebook {
 	/**
 	 * @since 5.0.0
 	 *
-	 * @return string Facebook publisher value if API type is 'article'.
+	 * @return ?string Facebook publisher URL when the Open Graph type is `article`. Null otherwise.
 	 */
 	public static function get_publisher() {
 

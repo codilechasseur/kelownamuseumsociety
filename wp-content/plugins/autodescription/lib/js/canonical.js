@@ -9,7 +9,7 @@
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2024 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2024 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -79,6 +79,7 @@ window.tsfCanonical = function () {
 	 * @return {Element}
 	 */
 	function setInputElement( element ) {
+
 		canonicalInputInstances.set( element.id, element );
 		states[ element.id ] = {
 			allowReferenceChange: true,
@@ -89,6 +90,7 @@ window.tsfCanonical = function () {
 			urlDataParts:         {},
 		};
 		_loadCanonicalActions( element );
+
 		return getInputElement( element.id );
 	}
 
@@ -166,6 +168,7 @@ window.tsfCanonical = function () {
 		except = Array.isArray( except ) ? except : [ except ];
 
 		canonicalInputInstances.forEach( element => {
+
 			if ( except.includes( element.id ) ) return;
 			updateStateOf( element.id, part, value );
 		} );
@@ -187,7 +190,8 @@ window.tsfCanonical = function () {
 	function sanitizeSlug( slug ) {
 
 		// If it's a number, it's fine. If it's neither, it'll crash, which is also fine.
-		if ( 'string' !== typeof slug || ! slug.length ) return slug;
+		if ( 'string' !== typeof slug || ! slug.length )
+			return slug;
 
 		// Define character mappings
 		const chars = {
@@ -199,7 +203,9 @@ window.tsfCanonical = function () {
 		slug = slug.replace(
 			/./g,
 			char => {
+
 				const index = chars.in.indexOf( char );
+
 				return -1 !== index ? chars.out[ index ] : char;
 			},
 		);
@@ -260,27 +266,54 @@ window.tsfCanonical = function () {
 	}
 
 	/**
+	 * Tests whether the URL structure uses query parameters.
+	 *
+	 * @since 5.2.0
+	 * @access public
+	 *
+	 * @param {string} urlStructure The URL structure to test.
+	 * @return {Boolean}
+	 */
+	function isQueryStructure( urlStructure ) {
+		return 'string' === typeof urlStructure && urlStructure.startsWith( '?' );
+	}
+
+	/**
+	 * Tests whether the Canonical URL Notation Tracker can predict URLs for the input.
+	 *
+	 * @since 5.2.0
+	 * @access public
+	 *
+	 * @param {string} id The input element ID.
+	 * @return {Boolean}
+	 */
+	function canTrackUrlStructure( id ) {
+		return usingPermalinks || isQueryStructure( getStateOf( id, 'urlStructure' ) );
+	}
+
+	/**
 	 * Updates the title placeholder.
 	 *
 	 * @since 5.1.0
+	 * @since 5.2.0 1. Now parses query-based structures as query strings relative to the site path.
+	 *              2. Now passes the placeholder to `tsfPropose.syncProposed()`.
 	 * @access private
 	 *
 	 * @param {Event} event
 	 */
 	function _updatePlaceholder( event ) {
 
-		let placeholder = '',
-			id          = event.target.id;
+		let placeholder = '';
+
+		const id = event.target.id;
 
 		if ( getStateOf( id, 'showUrlPlaceholder' ) ) {
-			const rootUrl         = l10n.params.rootUrl;
-			const usingPermalinks = l10n.params.usingPermalinks;
+			const rootUrl = l10n.params.rootUrl;
 
 			// We had plans for dynamic non-'usingPermalinks', but (aside from tags), it's often static and predetermined on load.
-			// Removing the usingPermalinks check will break plain permalink URLs for terms, for we haven't implemented an ID fill.
 			if (
 				   l10n.params.allowCanonicalURLNotationTracker
-				&& usingPermalinks // TEMP: Remove this line when we implement dynamic non-permalinks support.
+				&& canTrackUrlStructure( id )
 				&& rootUrl.host
 				&& getStateOf( id, 'allowReferenceChange' )
 			) {
@@ -289,11 +322,12 @@ window.tsfCanonical = function () {
 				const urlStructure    = getStateOf( id, 'urlStructure' ),
 					  urlDataParts    = getStateOf( id, 'urlDataParts' ),
 					  preferredScheme = getStateOf( id, 'preferredScheme' ),
-					  queryReplace    = usingPermalinks ? [] : rewrite.queryReplace;
+					  hasQueryString  = isQueryStructure( urlStructure );
 
 				let struct = urlStructure;
 
 				rewrite.code.forEach( ( code, index ) => {
+
 					// Skip unregistered structs.
 					if ( ! struct.includes( code ) ) return;
 
@@ -317,23 +351,33 @@ window.tsfCanonical = function () {
 					}
 
 					if ( null !== replacement ) {
-						struct = struct.replace(
-							code,
-							( queryReplace[ index ] ?? '' ) + replacement,
-						);
+						struct = struct.replace( code, replacement );
 					} else {
 						struct = struct.replace( code, '' );
 					}
 				} );
 
-				// Prepend rootUrl path, remove consecutive slashes, and replace spaces with dashes.
-				struct = `${rootUrl.path}/${struct}`
-					.replace( /\/{2,}/g, '/' )
-					.replace( /\s+/g, '-' );
+				// Tags omitted from `$wp_rewrite->rewritecode`, such as `%term_id%`.
+				for ( const [ code, replacement ] of Object.entries( urlDataParts ) ) {
+					if ( struct.includes( code ) )
+						struct = struct.replaceAll( code, `${replacement}` );
+				}
+
+				if ( ! hasQueryString ) {
+					// Prepend rootUrl path, remove consecutive slashes, and replace spaces with dashes.
+					struct = `${rootUrl.path}/${struct}`
+						.replace( /\/{2,}/g, '/' )
+						.replace( /\s+/g, '-' );
+				}
+
+				// `?…` is relative to the site path. See `home_url( '?p=' )`.
+				let basePath = rootUrl.path || '/';
+				if ( ! basePath.endsWith( '/' ) )
+					basePath += '/';
 
 				const placeholderUrl = URL.parse(
 					struct,
-					`${rootUrl.scheme}://${rootUrl.host}${rootUrl.port ? `:${rootUrl.port}` : ''}`
+					`${rootUrl.scheme}://${rootUrl.host}${rootUrl.port ? `:${rootUrl.port}` : ''}${basePath}`,
 				);
 
 				placeholderUrl.protocol = `${preferredScheme}:`;
@@ -345,6 +389,8 @@ window.tsfCanonical = function () {
 		}
 
 		event.target.placeholder = tsf.decodeEntities( placeholder );
+
+		window.tsfPropose?.syncProposed( event.target );
 	}
 
 	/**
@@ -356,6 +402,7 @@ window.tsfCanonical = function () {
 	 * @param {string} id The input id. When not set, all inputs will be triggered.
 	 */
 	function triggerInput( id ) {
+
 		if ( id ) {
 			getInputElement( id )?.dispatchEvent( new Event( 'input' ) );
 		} else {
@@ -387,6 +434,7 @@ window.tsfCanonical = function () {
 	 * @param {string} id The input ID.
 	 */
 	function enqueueTriggerInput( id ) {
+
 		( id in _enqueueTriggerInputBuffer ) && clearTimeout( _enqueueTriggerInputBuffer[ id ] );
 		_enqueueTriggerInputBuffer[ id ] = setTimeout( () => triggerInput( id ), 1000/60 ); // 60fps
 	}
@@ -401,6 +449,7 @@ window.tsfCanonical = function () {
 	 * @param {string} id The input id. When not set, all inputs will be triggered.
 	 */
 	function triggerUnregisteredInput( id ) {
+
 		if ( 'tsfAys' in window ) {
 			let wereSettingsChanged = tsfAys.areSettingsChanged();
 
@@ -424,6 +473,7 @@ window.tsfCanonical = function () {
 	 * @param {string} id The input id. When not set, all inputs will be triggered.
 	 */
 	function enqueueTriggerUnregisteredInput( id ) {
+
 		( id in _unregisteredTriggerBuffer ) && clearTimeout( _unregisteredTriggerBuffer[ id ] );
 		_unregisteredTriggerBuffer[ id ] = setTimeout( () => triggerUnregisteredInput( id ), 1000/60 ); // 60 fps
 	}
@@ -445,20 +495,25 @@ window.tsfCanonical = function () {
 		enqueueTriggerUnregisteredInput( canonicalInput.id );
 	}
 
-	return Object.assign( {
-		setInputElement,
-		getInputElement,
-		getStateOf,
-		updateStateOf,
-		updateStateAll,
-		structIncludes,
-		sanitizeSlug,
-		triggerInput,
-		enqueueTriggerInput,
-		triggerUnregisteredInput,
-		enqueueTriggerUnregisteredInput,
-	}, {
-		l10n,
-		usingPermalinks,
-	} );
+	return Object.assign(
+		{
+			setInputElement,
+			getInputElement,
+			getStateOf,
+			updateStateOf,
+			updateStateAll,
+			structIncludes,
+			isQueryStructure,
+			canTrackUrlStructure,
+			sanitizeSlug,
+			triggerInput,
+			enqueueTriggerInput,
+			triggerUnregisteredInput,
+			enqueueTriggerUnregisteredInput,
+		},
+		{
+			l10n,
+			usingPermalinks,
+		},
+	);
 }();

@@ -12,7 +12,7 @@ use The_SEO_Framework\Data;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -37,7 +37,8 @@ final class Webmasters {
 
 	/**
 	 * @since 5.0.0
-	 * @var callable[] GENERATORS A list of autoloaded meta callbacks.
+	 * @since 5.2.0 Added the Facebook domain verification generator.
+	 * @var callable[] GENERATORS A list of auto-loaded meta callbacks.
 	 */
 	public const GENERATORS = [
 		[ __CLASS__, 'generate_google_verification' ],
@@ -45,6 +46,7 @@ final class Webmasters {
 		[ __CLASS__, 'generate_yandex_verification' ],
 		[ __CLASS__, 'generate_baidu_verification' ],
 		[ __CLASS__, 'generate_pinterest_verification' ],
+		[ __CLASS__, 'generate_facebook_verification' ],
 	];
 
 	/**
@@ -73,7 +75,7 @@ final class Webmasters {
 		$code = Data\Plugin::get_option( 'bing_verification' );
 
 		if ( $code )
-			yield 'msvalidate.01' => [
+			yield 'msvalidate.01' => [ // cspell:ignore msvalidate
 				'attributes' => [
 					'name'    => 'msvalidate.01',
 					'content' => $code,
@@ -127,6 +129,23 @@ final class Webmasters {
 			yield 'p:domain_verify' => [
 				'attributes' => [
 					'name'    => 'p:domain_verify',
+					'content' => $code,
+				],
+			];
+	}
+
+	/**
+	 * @since 5.2.0
+	 * @generator
+	 */
+	public static function generate_facebook_verification() {
+
+		$code = Data\Plugin::get_option( 'facebook_verification' );
+
+		if ( $code )
+			yield 'facebook-domain-verification' => [
+				'attributes' => [
+					'name'    => 'facebook-domain-verification',
 					'content' => $code,
 				],
 			];

@@ -19,7 +19,7 @@ use The_SEO_Framework\Data\Filter\Sanitize;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2017 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2017 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -49,7 +49,7 @@ $generator_args = [
 $show_og = (bool) Data\Plugin::get_option( 'og_tags' );
 $show_tw = (bool) Data\Plugin::get_option( 'twitter_tags' );
 
-$tw_suported_cards = Meta\Twitter::get_supported_cards();
+$tw_supported_cards = Meta\Twitter::get_supported_cards();
 
 $image_placeholder = Meta\Image::get_first_generated_image_url( $generator_args, 'social' );
 
@@ -148,7 +148,7 @@ $_default_i18n = \__( 'Default (%s)', 'autodescription' );
 			</th>
 			<td>
 				<div class=tsf-title-wrap>
-					<input type=text name="autodescription-meta[doctitle]" id="autodescription-meta[doctitle]" value="<?= \esc_html( Sanitize::metadata_content( $meta['doctitle'] ) ) ?>" size=40 autocomplete=off data-form-type=other>
+					<input type=text name="autodescription-meta[doctitle]" id="autodescription-meta[doctitle]" value="<?= \esc_html( Sanitize::metadata_content( $meta['doctitle'] ) ) ?>" size=40 autocomplete=off data-form-type=other data-tsf-proposed="">
 					<?php
 					Input::output_js_title_data(
 						'autodescription-meta[doctitle]',
@@ -196,7 +196,7 @@ $_default_i18n = \__( 'Default (%s)', 'autodescription' );
 				?>
 			</th>
 			<td>
-				<textarea name="autodescription-meta[description]" id="autodescription-meta[description]" rows=4 cols=50 class=large-text autocomplete=off><?= \esc_html( Sanitize::metadata_content( $meta['description'] ) ) ?></textarea>
+				<textarea name="autodescription-meta[description]" id="autodescription-meta[description]" rows=4 cols=50 class=large-text autocomplete=off data-tsf-proposed=""><?= \esc_html( Sanitize::metadata_content( $meta['description'] ) ) ?></textarea>
 				<?php
 				Input::output_js_description_data(
 					'autodescription-meta[description]',
@@ -214,7 +214,7 @@ $_default_i18n = \__( 'Default (%s)', 'autodescription' );
 	</tbody>
 </table>
 
-<h2><?php \esc_html_e( 'Social SEO Settings', 'autodescription' ); ?></h2>
+<h2><?php \esc_html_e( 'Social Settings', 'autodescription' ); ?></h2>
 <?php
 
 Input::output_js_social_data(
@@ -252,7 +252,7 @@ Input::output_js_social_data(
 			</th>
 			<td>
 				<div id=tsf-og-title-wrap>
-					<input name="autodescription-meta[og_title]" id="autodescription-meta[og_title]" type=text value="<?= \esc_html( Sanitize::metadata_content( $meta['og_title'] ) ) ?>" size=40 autocomplete=off data-form-type=other data-tsf-social-group=autodescription_social_tt data-tsf-social-type=ogTitle>
+					<input name="autodescription-meta[og_title]" id="autodescription-meta[og_title]" type=text value="<?= \esc_html( Sanitize::metadata_content( $meta['og_title'] ) ) ?>" size=40 autocomplete=off data-form-type=other data-tsf-social-group=autodescription_social_tt data-tsf-social-type=ogTitle data-tsf-proposed="">
 				</div>
 			</td>
 		</tr>
@@ -268,14 +268,14 @@ Input::output_js_social_data(
 				?>
 			</th>
 			<td>
-				<textarea name="autodescription-meta[og_description]" id="autodescription-meta[og_description]" rows=4 cols=50 class=large-text autocomplete=off data-tsf-social-group=autodescription_social_tt data-tsf-social-type=ogDesc><?= \esc_html( Sanitize::metadata_content( $meta['og_description'] ) ) ?></textarea>
+				<textarea name="autodescription-meta[og_description]" id="autodescription-meta[og_description]" rows=4 cols=50 class=large-text autocomplete=off data-tsf-social-group=autodescription_social_tt data-tsf-social-type=ogDesc data-tsf-proposed=""><?= \esc_html( Sanitize::metadata_content( $meta['og_description'] ) ) ?></textarea>
 			</td>
 		</tr>
 
 		<tr class=form-field <?= $show_tw ? '' : 'style=display:none' ?>>
 			<th scope=row valign=top>
 				<label for="autodescription-meta[tw_title]">
-					<strong><?php \esc_html_e( 'Twitter Title', 'autodescription' ); ?></strong>
+					<strong><?php \esc_html_e( 'Twitter Card Title', 'autodescription' ); ?></strong>
 				</label>
 				<?php
 				Data\Plugin::get_option( 'display_character_counter' )
@@ -284,7 +284,7 @@ Input::output_js_social_data(
 			</th>
 			<td>
 				<div id=tsf-tw-title-wrap>
-					<input name="autodescription-meta[tw_title]" id="autodescription-meta[tw_title]" type=text value="<?= \esc_html( Sanitize::metadata_content( $meta['tw_title'] ) ) ?>" size=40 autocomplete=off data-form-type=other data-tsf-social-group=autodescription_social_tt data-tsf-social-type=twTitle>
+					<input name="autodescription-meta[tw_title]" id="autodescription-meta[tw_title]" type=text value="<?= \esc_html( Sanitize::metadata_content( $meta['tw_title'] ) ) ?>" size=40 autocomplete=off data-form-type=other data-tsf-social-group=autodescription_social_tt data-tsf-social-type=twTitle data-tsf-proposed="">
 				</div>
 			</td>
 		</tr>
@@ -292,7 +292,7 @@ Input::output_js_social_data(
 		<tr class=form-field <?= $show_tw ? '' : 'style=display:none' ?>>
 			<th scope=row valign=top>
 				<label for="autodescription-meta[tw_description]">
-					<strong><?php \esc_html_e( 'Twitter Description', 'autodescription' ); ?></strong>
+					<strong><?php \esc_html_e( 'Twitter Card Description', 'autodescription' ); ?></strong>
 				</label>
 				<?php
 				Data\Plugin::get_option( 'display_character_counter' )
@@ -300,7 +300,7 @@ Input::output_js_social_data(
 				?>
 			</th>
 			<td>
-				<textarea name="autodescription-meta[tw_description]" id="autodescription-meta[tw_description]" rows=4 cols=50 class=large-text autocomplete=off data-tsf-social-group=autodescription_social_tt data-tsf-social-type=twDesc><?= \esc_html( Sanitize::metadata_content( $meta['tw_description'] ) ) ?></textarea>
+				<textarea name="autodescription-meta[tw_description]" id="autodescription-meta[tw_description]" rows=4 cols=50 class=large-text autocomplete=off data-tsf-social-group=autodescription_social_tt data-tsf-social-type=twDesc data-tsf-proposed=""><?= \esc_html( Sanitize::metadata_content( $meta['tw_description'] ) ) ?></textarea>
 			</td>
 		</tr>
 
@@ -311,27 +311,28 @@ Input::output_js_social_data(
 					<?php
 					echo ' ';
 					HTML::make_info(
-						\__( 'The Twitter Card type is used to determine whether an image appears on the side or as a large cover. This affects X, but also other social platforms like Discord.', 'autodescription' ),
-						'https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/abouts-cards',
+						\__( 'The Twitter Card type controls the link preview layout. On X, the summary card shows a small thumbnail beside truncated title and description; the large-image card overlays the title on the image with no description. On Discord, the image appears small at the side or large below; both card types show the description.', 'autodescription' ),
+						'https://kb.theseoframework.com/?p=451#card-types',
 					);
 					?>
 				</label>
 			</th>
 			<td>
-				<?php
-				// phpcs:disable WordPress.Security.EscapeOutput -- make_single_select_form() escapes.
-				echo Form::make_single_select_form( [
-					'id'       => 'autodescription-meta[tw_card_type]',
-					'class'    => 'tsf-term-select-wrap',
-					'name'     => 'autodescription-meta[tw_card_type]',
-					'options'  => array_merge(
-						[ '' => \sprintf( $_default_i18n, Meta\Twitter::get_generated_card_type( $generator_args ) ) ],
-						array_combine( $tw_suported_cards, $tw_suported_cards ),
-					),
-					'selected' => $meta['tw_card_type'],
-				] );
-				// phpcs:enable WordPress.Security.EscapeOutput
-				?>
+				<div class=tsf-term-select-wrap>
+					<?php
+					// phpcs:disable WordPress.Security.EscapeOutput -- make_single_select_form() escapes.
+					echo Form::make_single_select_form( [
+						'id'       => 'autodescription-meta[tw_card_type]',
+						'name'     => 'autodescription-meta[tw_card_type]',
+						'options'  => array_merge(
+							[ '' => \sprintf( $_default_i18n, Meta\Twitter::get_generated_card_type( $generator_args ) ) ],
+							array_combine( $tw_supported_cards, $tw_supported_cards ),
+						),
+						'selected' => $meta['tw_card_type'],
+					] );
+					// phpcs:enable WordPress.Security.EscapeOutput
+					?>
+				</div>
 			</td>
 		</tr>
 
@@ -349,7 +350,7 @@ Input::output_js_social_data(
 				</label>
 			</th>
 			<td>
-				<input type=url name="autodescription-meta[social_image_url]" id=autodescription_meta_socialimage-url placeholder="<?= \esc_attr( $image_placeholder ) ?>" value="<?= \esc_attr( $meta['social_image_url'] ) ?>" size=40 autocomplete=off>
+				<input type=url name="autodescription-meta[social_image_url]" id=autodescription_meta_socialimage-url placeholder="<?= \esc_attr( $image_placeholder ) ?>" value="<?= \esc_attr( $meta['social_image_url'] ) ?>" size=40 autocomplete=off data-tsf-proposed="<?= \esc_attr( $image_placeholder ) ?>">
 				<input type=hidden name="autodescription-meta[social_image_id]" id=autodescription_meta_socialimage-id value="<?= \absint( $meta['social_image_id'] ) ?>" disabled class=tsf-enable-media-if-js>
 				<div class="hide-if-no-tsf-js tsf-term-button-wrap">
 					<?php
@@ -363,7 +364,7 @@ Input::output_js_social_data(
 	</tbody>
 </table>
 
-<h2><?php \esc_html_e( 'Visibility SEO Settings', 'autodescription' ); ?></h2>
+<h2><?php \esc_html_e( 'Visibility Settings', 'autodescription' ); ?></h2>
 
 <table class="form-table tsf-term-meta">
 	<tbody>
@@ -381,13 +382,13 @@ Input::output_js_social_data(
 				</label>
 			</th>
 			<td>
-				<input type=url name="autodescription-meta[canonical]" id="autodescription-meta[canonical]" placeholder="<?= \esc_url( $default_canonical ) ?>" value="<?= \esc_attr( $meta['canonical'] ) ?>" size=40 autocomplete=off>
+				<input type=url name="autodescription-meta[canonical]" id="autodescription-meta[canonical]" placeholder="<?= \esc_url( $default_canonical ) ?>" value="<?= \esc_attr( $meta['canonical'] ) ?>" size=40 autocomplete=off data-tsf-proposed="<?= \esc_url( $default_canonical ) ?>">
 				<?php
 				$tax_object  = \get_taxonomy( $taxonomy );
 				$permastruct = Meta\URI\Utils::get_url_permastruct( $generator_args );
 
 				$parent_term_slugs        = [];
-				$is_taxonomy_hierarchical = $tax_object->hierarchical && $tax_object->rewrite['hierarchical'];
+				$is_taxonomy_hierarchical = $tax_object->hierarchical && ( $tax_object->rewrite['hierarchical'] ?? false );
 
 				if ( $is_taxonomy_hierarchical && str_contains( $permastruct, "%$taxonomy%" ) ) {
 					// self is filled by current term name.
@@ -431,25 +432,30 @@ Input::output_js_social_data(
 			<td>
 				<?php
 				foreach ( $robots_settings as $_s ) {
-					// phpcs:disable WordPress.Security.EscapeOutput -- make_single_select_form() escapes.
-					echo Form::make_single_select_form( [
-						'id'       => $_s['id'],
-						'class'    => 'tsf-term-select-wrap',
-						'name'     => $_s['name'],
-						'label'    => $_s['label'],
-						'options'  => [
-							0  => \sprintf( $_default_i18n, $_s['_default'] ),
-							-1 => $_s['force_on'],
-							1  => $_s['force_off'],
-						],
-						'selected' => $_s['_value'],
-						'info'     => $_s['_info'],
-						'data'     => [
-							'defaultUnprotected' => $_s['_default'],
-							'defaultI18n'        => $_default_i18n,
-						],
-					] );
-					// phpcs:enable WordPress.Security.EscapeOutput
+					?>
+					<div class=tsf-term-select-wrap>
+						<?php
+						// phpcs:disable WordPress.Security.EscapeOutput -- make_single_select_form() escapes.
+						echo Form::make_single_select_form( [
+							'id'       => $_s['id'],
+							'name'     => $_s['name'],
+							'label'    => $_s['label'],
+							'options'  => [
+								0  => \sprintf( $_default_i18n, $_s['_default'] ),
+								-1 => $_s['force_on'],
+								1  => $_s['force_off'],
+							],
+							'selected' => $_s['_value'],
+							'info'     => $_s['_info'],
+							'data'     => [
+								'defaultUnprotected' => $_s['_default'],
+								'defaultI18n'        => $_default_i18n,
+							],
+						] );
+						// phpcs:enable WordPress.Security.EscapeOutput
+						?>
+					</div>
+					<?php
 				}
 				?>
 			</td>

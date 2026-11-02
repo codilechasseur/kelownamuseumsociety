@@ -8,7 +8,7 @@
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -81,11 +81,13 @@ window.tsfAys = function () {
 	 * @return {Boolean}
 	 */
 	function getChangedState() {
+
 		tsf.deprecatedFunc(
 			'tsfAys.getChangedState()',
 			'5.1.0',
 			'tsfAys.areSettingsChanged()',
 		);
+
 		return areSettingsChanged();
 	}
 
@@ -148,6 +150,7 @@ window.tsfAys = function () {
 	 * @access public
 	 */
 	function reset() {
+
 		deregisterChange();
 
 		_loadedListeners && reloadDefaultListenersDebouncer();
@@ -167,6 +170,7 @@ window.tsfAys = function () {
 		deregisterChange();
 
 		setTimeout( () => {
+
 			reset();
 			wereSettingsChanged && registerChange();
 		}, 1000 );
@@ -183,6 +187,7 @@ window.tsfAys = function () {
 	 * @param {event} event
 	 */
 	function _triggerChange( event ) {
+
 		if ( ! event.isTrusted ) return;
 		registerChange();
 		_exemptFutureChanges();
@@ -196,6 +201,7 @@ window.tsfAys = function () {
 	 * @access private
 	 */
 	function _exemptFutureChanges() {
+
 		_registeredChangeListeners.forEach( ( eventType, element ) => {
 			element.removeEventListener( eventType, _triggerChange );
 		} );
@@ -215,9 +221,11 @@ window.tsfAys = function () {
 	 * @param {string}                    eventType The event type to listen to.
 	 */
 	function registerChangeListener( elements, eventType ) {
+
 		_getNodeArray( elements )
 			.filter( el => ! el.classList.contains( 'tsf-input-not-saved' ) && 'hidden' !== el.type )
 			.forEach( el => {
+
 				_registeredChangeListeners.set( el, eventType );
 				el.addEventListener( eventType, _triggerChange )
 			} );
@@ -234,6 +242,7 @@ window.tsfAys = function () {
 	 * @param {string}                    eventType The event type to listen to.
 	 */
 	function registerResetListener( elements, eventType ) {
+
 		_getNodeArray( elements ).forEach( el => {
 			el.addEventListener( eventType, reset );
 		} );
@@ -250,6 +259,7 @@ window.tsfAys = function () {
 	 * @param {string}                    eventType The event type to listen to.
 	 */
 	function registerUnloadListener( elements, eventType ) {
+
 		_getNodeArray( elements ).forEach( el => {
 			el.addEventListener( eventType, _triggerUnload )
 		} );
@@ -329,6 +339,7 @@ window.tsfAys = function () {
 	 * @param {event} event
 	 */
 	function _alertUserBeforeunload( event ) {
+
 		if ( areSettingsChanged() ) {
 			// Every other browser:
 			event.preventDefault();
@@ -345,6 +356,7 @@ window.tsfAys = function () {
 	 * @access private
 	 */
 	function _readyAys() {
+
 		// Initialise form field changing flag.
 		reloadDefaultListeners();
 
@@ -356,29 +368,33 @@ window.tsfAys = function () {
 		window.addEventListener( 'beforeunload', _alertUserBeforeunload );
 	}
 
-	return Object.assign( {
-		/**
-		 * Initialises all aspects of the scripts.
-		 * You shouldn't call this.
-		 *
-		 * @since 4.0.0
-		 * @access protected
-		 */
-		load: () => {
-			document.body.addEventListener( 'tsf-interactive', _readyAys );
+	return Object.assign(
+		{
+			/**
+			 * Initialises all aspects of the scripts.
+			 * You shouldn't call this.
+			 *
+			 * @since 4.0.0
+			 * @access protected
+			 */
+			load: () => {
+				document.body.addEventListener( 'tsf-interactive', _readyAys );
+			},
 		},
-	}, {
-		reset,
-		getChangedState,
-		areSettingsChanged,
-		registerChange,
-		deregisterChange,
-		registerChangeListener,
-		registerResetListener,
-		registerUnloadListener,
-		reloadDefaultListeners,
-	}, {
-		l10n,
-	} );
+		{
+			reset,
+			getChangedState,
+			areSettingsChanged,
+			registerChange,
+			deregisterChange,
+			registerChangeListener,
+			registerResetListener,
+			registerUnloadListener,
+			reloadDefaultListeners,
+		},
+		{
+			l10n,
+		},
+	);
 }();
 window.tsfAys.load();

@@ -12,7 +12,7 @@ use The_SEO_Framework\Meta;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -31,7 +31,10 @@ use The_SEO_Framework\Meta;
  * Abstract class of Schema.org referential structured data entity builder.
  *
  * @since 5.0.0
- * @access private
+ * @access protected
+ *         Access via tsf()->schema()->entities['Reference'] instead.
+ *         Note: This class is not meant to be used directly, but to be extended by other entities.
+ *               So this "access" is for consistency's sake and probably has no good use case.
  *
  * @NOTE: All static:: calls within this class are intentional to allow overrides in subclasses.
  *
@@ -54,8 +57,8 @@ abstract class Reference {
 	/**
 	 * @since 5.0.0
 	 *
-	 * @param array|null $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                         Leave null to autodetermine query.
+	 * @param ?array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                     Leave null to autodetermine query.
 	 * @return string The entity ID for $args.
 	 */
 	public static function get_id( $args = null ) { // phpcs:ignore Generic.CodeAnalysis -- abstract ref.
@@ -65,8 +68,8 @@ abstract class Reference {
 	/**
 	 * @since 5.0.0
 	 *
-	 * @param array|null $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                         Leave null to autodetermine query.
+	 * @param ?array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                     Leave null to autodetermine query.
 	 * @return array The instant reference by args.
 	 */
 	public static function get_instant_ref( $args = null ) {
@@ -76,8 +79,8 @@ abstract class Reference {
 	/**
 	 * @since 5.0.0
 	 *
-	 * @param array|null $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                         Leave null to autodetermine query.
+	 * @param ?array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                     Leave null to autodetermine query.
 	 * @return reference   The dynamic reference by args.
 	 */
 	public static function &get_dynamic_ref( $args = null ) {
@@ -105,8 +108,8 @@ abstract class Reference {
 	/**
 	 * @since 5.0.0
 	 *
-	 * @param array|null $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                         Leave null to autodetermine query.
+	 * @param ?array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                     Leave null to autodetermine query.
 	 * @return ?array $entity The Schema.org graph entity. Null on failure.
 	 */
 	abstract public static function build( $args = null );

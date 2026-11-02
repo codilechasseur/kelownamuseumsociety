@@ -22,7 +22,7 @@ use The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -117,7 +117,10 @@ class Utils {
 	 */
 	public static function get_parsed_front_page_url() {
 		return umemo( __METHOD__ )
-			?? umemo( __METHOD__, parse_url( Data\Blog::get_front_page_url() ) );
+			?? umemo(
+				__METHOD__,
+				parse_url( Data\Blog::get_front_page_url() ),
+			);
 	}
 
 	/**
@@ -160,7 +163,8 @@ class Utils {
 	public static function get_preferred_url_scheme() {
 
 		// phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition -- I know.
-		if ( null !== $memo = memo() ) return $memo;
+		if ( null !== $memo = memo() )
+			return $memo;
 
 		// May be 'https', 'http', or 'automatic'.
 		switch ( Data\Plugin::get_option( 'canonical_scheme' ) ) {
@@ -283,6 +287,26 @@ class Utils {
 	}
 
 	/**
+	 * Percent-encodes non-ASCII octets so the URL is a valid RFC 3986 URI.
+	 *
+	 * WordPress's `sanitize_url()` keeps UTF-8 bytes. Consumers that require an
+	 * ASCII URI, such as Facebook's `og:image` crawler, then ignore the tag.
+	 * Already-percent-encoded sequences and reserved ASCII characters are left intact.
+	 *
+	 * @since 5.2.0
+	 *
+	 * @param string $url The URL to encode.
+	 * @return string The URL with non-ASCII octets percent-encoded.
+	 */
+	public static function encode_url( $url ) {
+		return preg_replace_callback(
+			'/[^\x21-\x7E]+/',
+			fn( $matches ) => rawurlencode( $matches[0] ),
+			$url,
+		);
+	}
+
+	/**
 	 * Tests if input URL matches current domain.
 	 *
 	 * @since 5.0.0
@@ -320,19 +344,28 @@ class Utils {
 
 	/**
 	 * Converts absolute URLs to relative URLs, if they weren't already.
-	 * Returns the path, query, and fragment.
+	 * Returns the path, query, and fragment with a leading slash.
 	 *
 	 * @since 2.6.5
 	 * @since 2.8.0 Method is now public.
 	 * @since 4.0.0 No longer strips the prepended / path.
 	 * @since 5.0.0 1. Moved from `\The_SEO_Framework\Load`.
-	 *              2. Renamed from `s_relative_url()`
+	 *              2. Renamed from `s_relative_url()`.
+	 * @since 5.2.0 1. Now also strips any scheme and a schemeless host, such as `facebook.com./YourPage`.
+	 *              2. Now returns `/` when nothing follows that host, and keeps a pathless query or fragment.
 	 *
 	 * @param string $url An absolute or relative URL.
 	 * @return string $url The URL's path.
 	 */
 	public static function get_relative_part_from_url( $url ) {
-		return preg_replace( '/^(?:https?:)?\/\/[^\/]+(\/.*)/i', '$1', $url );
+		return '/' . ltrim(
+			preg_replace(
+				'/^(?:\w+:\/*|\/\/|(?=[^@]*[.\/]))[^\/#?]*/',
+				'',
+				ltrim( $url ),
+			) ?? $url,
+			'/',
+		);
 	}
 
 	/**
@@ -423,12 +456,12 @@ class Utils {
 	 * @since 4.2.0 Now properly removes pagination from search links.
 	 * @since 5.0.0 Moved from `\The_SEO_Framework\Load`.
 	 *
-	 * @param string    $url  The fully qualified URL to remove pagination from.
-	 * @param int|null  $page The page number to remove. If null, it will get number from query.
-	 * @param bool|null $use_base Whether to remove the pagination base.
-	 *                            If null, it will autodetermine.
-	 *                            Should be true on archives and the homepage (blog and static!).
-	 *                            False on singular post types.
+	 * @param string $url      The fully qualified URL to remove pagination from.
+	 * @param ?int   $page     The page number to remove. If null, it will get number from query.
+	 * @param ?bool  $use_base Whether to remove the pagination base.
+	 *                         If null, it will autodetermine.
+	 *                         Should be true on archives and the homepage (blog and static!).
+	 *                         False on singular post types.
 	 * @return string $url The fully qualified URL without pagination.
 	 */
 	public static function remove_pagination_from_url( $url, $page = null, $use_base = null ) {
@@ -511,14 +544,23 @@ class Utils {
 	 *
 	 * Ref, WP Core:
 	 * - `get_permalink()`, leads to: `get_page_link()`, `get_attachment_link()`, `get_post_permalink()`
-	 * - `get_term_link()`
+	 * - `get_term_link()`, `get_post_type_archive_link()`, `get_author_posts_url()`
 	 *
 	 * @since 5.1.0
+	 * @since 5.2.0 1. Now returns query-based permastructures when WordPress has no extra permastruct (plain permalinks
+	 *                 or rewrite disabled), matching Core's `get_permalink()`, `get_page_link()`,
+	 *                 `get_attachment_link()`, `get_post_permalink()`, `get_term_link()`,
+	 *                 `get_post_type_archive_link()`, and `get_author_posts_url()` fallbacks.
+	 *              2. Now uses the extra permastruct for hierarchical custom post types, matching
+	 *                 `get_post_permalink()`, instead of the page permastruct.
+	 *              3. Now returns the site root for the static front page and the blog-on-front homepage,
+	 *                 matching `get_page_link()` / `home_url( '/' )`, instead of `$wp_rewrite->front`.
 	 *
 	 * @param array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
 	 * @return string The URL permastructure for the given query.
 	 */
 	public static function get_url_permastruct( $args ) {
+
 		global $wp_rewrite;
 
 		normalize_generation_args( $args );
@@ -526,14 +568,21 @@ class Utils {
 		switch ( get_query_type_from_args( $args ) ) {
 			case 'single':
 				if ( Query::is_static_front_page( $args['id'] ) ) {
-					$permastruct = $wp_rewrite->front;
+					// Site root. `$wp_rewrite->front` is the post permalink prefix (e.g. `/blog/`).
+					$permastruct = '';
 				} else {
 					$post_type = Query::get_post_type_real_id( $args['id'] );
 
 					switch ( $post_type ) {
 						case 'page':
-							// Both translate to the post's name; this translation eases later processing.
-							$permastruct = str_replace( '%pagename%', '%postname%', $wp_rewrite->get_page_permastruct() );
+							$permastruct = $wp_rewrite->get_page_permastruct();
+
+							if ( $permastruct ) {
+								// Both translate to the post's name; this translation eases later processing.
+								$permastruct = str_replace( '%pagename%', '%postname%', $permastruct );
+							} else {
+								$permastruct = '?page_id=%post_id%';
+							}
 							break;
 						case 'attachment':
 							if ( Query\Utils::using_pretty_permalinks() ) {
@@ -565,36 +614,99 @@ class Utils {
 								} else {
 									$permastruct = '%postname%';
 								}
-								break;
-							} // else: ?attachment_id=%post_id%, but this is handled via default.
+							} else {
+								$permastruct = '?attachment_id=%post_id%';
+							}
 							break;
 						case 'post':
-							$permastruct = $wp_rewrite->permalink_structure;
+							$permastruct = $wp_rewrite->permalink_structure ?: '?p=%post_id%';
 							break;
-						// actually: `\in_array( $post_type, \get_post_types( [ '_builtin' => false ] ), true )`, but we covered all others above.
 						default:
-							$permastruct = \is_post_type_hierarchical( $post_type )
-								? $wp_rewrite->get_page_permastruct()
-								: $wp_rewrite->get_extra_permastruct( $post_type );
+							$post_type_obj = \get_post_type_object( $post_type );
 
-							// Both translate to the post's name; this translation eases later processing.
-							$permastruct = str_replace( "%{$post_type}%", '%postname%', $permastruct );
+							if ( $post_type_obj ) {
+								$permastruct = $wp_rewrite->get_extra_permastruct( $post_type );
+
+								if ( empty( $permastruct ) )
+									$permastruct = self::get_query_permastruct_for_post_type( $post_type_obj );
+
+								if ( ! str_starts_with( $permastruct, '?' ) )
+									$permastruct = str_replace( "%{$post_type}%", '%postname%', $permastruct );
+							}
 					}
 				}
 				break;
 			case 'homeblog':
-				$permastruct = $wp_rewrite->front;
+				// Same as the static front page: site root, not `$wp_rewrite->front`.
+				$permastruct = '';
 				break;
 			case 'term':
 				$permastruct = $wp_rewrite->get_extra_permastruct( $args['tax'] );
+
+				if ( empty( $permastruct ) )
+					$permastruct = self::get_query_permastruct_for_taxonomy( $args['tax'] );
 				break;
 			case 'pta':
 				$permastruct = $wp_rewrite->get_extra_permastruct( $args['pta'] );
+
+				if ( empty( $permastruct ) ) {
+					$post_type_obj = \get_post_type_object( $args['pta'] );
+
+					if ( $post_type_obj && $post_type_obj->has_archive )
+						$permastruct = '?post_type=' . $args['pta'];
+				}
 				break;
 			case 'user':
-				$permastruct = $wp_rewrite->get_author_permastruct();
+				$permastruct = $wp_rewrite->get_author_permastruct() ?: '?author=%author_id%';
 		}
 
-		return '/' . ltrim( \user_trailingslashit( $permastruct ?? '' ), '/' );
+		$permastruct ??= '';
+
+		if ( str_starts_with( (string) $permastruct, '?' ) )
+			return $permastruct;
+
+		return '/' . ltrim( \user_trailingslashit( $permastruct ), '/' );
+	}
+
+	/**
+	 * Returns the query permastruct for a post type with no extra permastruct.
+	 * Matches WordPress's `get_post_permalink()` fallback.
+	 *
+	 * @since 5.2.0
+	 *
+	 * @param \WP_Post_Type $post_type_obj The post type object.
+	 * @return string The query permastruct.
+	 */
+	private static function get_query_permastruct_for_post_type( $post_type_obj ) {
+
+		if ( $post_type_obj->query_var )
+			return "?{$post_type_obj->query_var}=%postname%";
+
+		return "?post_type={$post_type_obj->name}&p=%post_id%";
+	}
+
+	/**
+	 * Returns the query permastruct for a taxonomy with no extra permastruct.
+	 * Matches WordPress's `get_term_link()` fallback.
+	 *
+	 * @since 5.2.0
+	 *
+	 * @param string $taxonomy The taxonomy name.
+	 * @return string The query permastruct. Empty when the taxonomy does not exist.
+	 */
+	private static function get_query_permastruct_for_taxonomy( $taxonomy ) {
+
+		if ( 'category' === $taxonomy )
+			return '?cat=%term_id%';
+
+		$tax = \get_taxonomy( $taxonomy );
+
+		if ( ! $tax )
+			return '';
+
+		if ( $tax->query_var )
+			return "?{$tax->query_var}=%{$taxonomy}%";
+
+		return "?taxonomy={$taxonomy}&term=%{$taxonomy}%";
 	}
 }

@@ -22,7 +22,7 @@ use The_SEO_Framework\Helper\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2016 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2016 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -58,6 +58,11 @@ switch ( $instance ) :
 				'callback' => [ Admin\Settings\Plugin::class, '_social_metabox_twitter_tab' ],
 				'dashicon' => 'twitter',
 			],
+			'fediverse' => [
+				'name'     => 'Fediverse',
+				'callback' => [ Admin\Settings\Plugin::class, '_social_metabox_fediverse_tab' ],
+				'dashicon' => 'share',
+			],
 			'oembed'    => [
 				'name'     => 'oEmbed',
 				'callback' => [ Admin\Settings\Plugin::class, '_social_metabox_oembed_tab' ],
@@ -76,7 +81,7 @@ switch ( $instance ) :
 			 * @since 2.2.2
 			 * @param array $defaults The default tabs.
 			 */
-			(array) \apply_filters( 'the_seo_framework_social_settings_tabs', $tabs )
+			(array) \apply_filters( 'the_seo_framework_social_settings_tabs', $tabs ),
 		);
 		break;
 
@@ -118,7 +123,7 @@ switch ( $instance ) :
 			Input::make_checkbox( [
 				'id'          => 'twitter_tags',
 				'label'       => \__( 'Output Twitter Card meta tags?', 'autodescription' ),
-				'description' => \__( 'X (formerly Twitter), Discord, LinkedIn, and some other networks make use of these meta tags.', 'autodescription' ),
+				'description' => \__( 'X, Discord, LinkedIn, and some other networks make use of these meta tags.', 'autodescription' ),
 			] ),
 			true,
 		);
@@ -142,7 +147,7 @@ switch ( $instance ) :
 			HTML::description( \__( 'Most social sites and third-party services automatically include the website URL inside their embeds. When the site title is described well in the site URL, including it in the social title will be redundant.', 'autodescription' ) );
 
 			$info = HTML::make_info(
-				\__( 'When you provide a custom Open Graph or Twitter title, the site title will be omitted automatically.', 'autodescription' ),
+				\__( 'When you provide a custom Open Graph or Twitter Card title, the site title will be omitted automatically.', 'autodescription' ),
 				'',
 				false,
 			);
@@ -219,11 +224,8 @@ switch ( $instance ) :
 		break;
 
 	case 'facebook':
-		$fb_author             = Data\Plugin::get_option( 'facebook_author' );
-		$fb_author_placeholder = \_x( 'https://www.facebook.com/YourPersonalProfile', 'Example Facebook Personal URL', 'autodescription' );
-
-		$fb_publisher             = Data\Plugin::get_option( 'facebook_publisher' );
-		$fb_publisher_placeholder = \_x( 'https://www.facebook.com/YourBusinessProfile', 'Example Facebook Business URL', 'autodescription' );
+		$fb_author    = Data\Plugin::get_option( 'facebook_author' );
+		$fb_publisher = Data\Plugin::get_option( 'facebook_publisher' );
 
 		HTML::header_title( \__( 'Facebook Integration Settings', 'autodescription' ) );
 		HTML::description( \__( 'Facebook post sharing works mostly through Open Graph. However, you can also link your Business and Personal Facebook pages, among various other options.', 'autodescription' ) );
@@ -244,8 +246,15 @@ switch ( $instance ) :
 			</label>
 		</p>
 		<p>
-			<input type=url name="<?php Input::field_name( 'facebook_publisher' ); ?>" class=large-text id="<?php Input::field_id( 'facebook_publisher' ); ?>" placeholder="<?= \esc_attr( $fb_publisher_placeholder ) ?>" value="<?= \esc_attr( $fb_publisher ) ?>">
+			<input type=url name="<?php Input::field_name( 'facebook_publisher' ); ?>" class=large-text id="<?php Input::field_id( 'facebook_publisher' ); ?>" value="<?= \esc_attr( $fb_publisher ) ?>">
 		</p>
+		<?php
+		HTML::description_noesc( \sprintf(
+			/* translators: %s = example value */
+			\esc_html__( 'Example: %s', 'autodescription' ),
+			HTML::code_wrap( \_x( 'https://www.facebook.com/YourBusinessProfile', 'Example Facebook Business URL', 'autodescription' ) ),
+		) );
+		?>
 
 		<p>
 			<label for="<?php Input::field_id( 'facebook_author' ); ?>">
@@ -261,34 +270,47 @@ switch ( $instance ) :
 		</p>
 		<?php HTML::description( \__( 'Authors can override this option on their profile page.', 'autodescription' ) ); ?>
 		<p>
-			<input type=url name="<?php Input::field_name( 'facebook_author' ); ?>" class=large-text id="<?php Input::field_id( 'facebook_author' ); ?>" placeholder="<?= \esc_attr( $fb_author_placeholder ) ?>" value="<?= \esc_attr( $fb_author ) ?>">
+			<input type=url name="<?php Input::field_name( 'facebook_author' ); ?>" class=large-text id="<?php Input::field_id( 'facebook_author' ); ?>" value="<?= \esc_attr( $fb_author ) ?>">
 		</p>
 		<?php
+		HTML::description_noesc( \sprintf(
+			/* translators: %s = example value */
+			\esc_html__( 'Example: %s', 'autodescription' ),
+			HTML::code_wrap( \_x( 'https://www.facebook.com/YourPersonalProfile', 'Example Facebook Personal URL', 'autodescription' ) ),
+		) );
 		break;
 
 	case 'twitter':
-		$tw_site             = Data\Plugin::get_option( 'twitter_site' );
-		$tw_site_placeholder = \_x( '@your-site-username', 'Twitter @username', 'autodescription' );
-
-		$tw_creator             = Data\Plugin::get_option( 'twitter_creator' );
-		$tw_creator_placeholder = \_x( '@your-personal-username', 'Twitter @username', 'autodescription' );
+		$tw_site    = Data\Plugin::get_option( 'twitter_site' );
+		$tw_creator = Data\Plugin::get_option( 'twitter_creator' );
 
 		$supported_twitter_cards = Meta\Twitter::get_supported_cards();
 
 		HTML::header_title( \__( 'Twitter Integration Settings', 'autodescription' ) );
-		HTML::description( \__( 'Sharing posts on X (formerly Twitter) works mostly via Twitter Cards and may fall back to use Open Graph. However, you can also link your Business and Personal X pages, among various other options.', 'autodescription' ) );
+		HTML::description( \__( 'Sharing posts on X works mostly via Twitter Cards and may fall back to use Open Graph. However, you can also link your Business and Personal X pages, among various other options.', 'autodescription' ) );
 
 		?>
 		<hr>
 
 		<fieldset id=tsf-twitter-cards>
-			<legend><?php HTML::header_title( \__( 'Twitter Card Type', 'autodescription' ) ); ?></legend>
+			<legend>
+				<h4>
+					<?php
+					\esc_html_e( 'Twitter Card Type', 'autodescription' );
+					echo ' ';
+					HTML::make_info(
+						\__( 'Learn more about this card.', 'autodescription' ),
+						'https://kb.theseoframework.com/?p=451#card-types',
+					);
+					?>
+				</h4>
+			</legend>
 			<?php
 			HTML::description(
-				\__( 'When you share a link on X (formerly Twitter), an image can appear on the side or as a large cover.', 'autodescription' )
+				\__( 'When you share a link on X, the summary card type shows a small thumbnail beside truncated title and description; the summary large image card type shows a large image with the title overlaid on it and no description.', 'autodescription' ),
 			);
 			HTML::description(
-				\__( 'The Twitter Card type also affects images in Discord embeds; either displayed small at the side or large below.', 'autodescription' )
+				\__( 'On Discord, the image appears as a small thumbnail at the side or large below the text; both card types still show the description.', 'autodescription' ),
 			);
 			?>
 
@@ -302,31 +324,6 @@ switch ( $instance ) :
 						<span>
 							<?php
 							echo HTML::code_wrap( $type ); // phpcs:ignore WordPress.Security.EscapeOutput
-
-							switch ( $type ) {
-								case 'summary':
-									$twep = 'summary';
-									break;
-								case 'summary_large_image':
-									$twep = 'summary-card-with-large-image';
-									break;
-								case 'player':
-									// No break: write $twep.
-									$twep = 'player-card';
-									break;
-								case 'app':
-									// No break: write $twep.
-									$twep = 'app-card';
-							}
-
-							if ( ! empty( $twep ) ) {
-								echo ' ';
-								HTML::make_info(
-									\__( 'Learn more about this card.', 'autodescription' ),
-									"https://developer.x.com/en/docs/twitter-for-websites/cards/overview/$twep",
-								);
-								unset( $twep );
-							}
 							?>
 						</span>
 					</label>
@@ -340,8 +337,8 @@ switch ( $instance ) :
 		<hr>
 		<?php
 		HTML::header_title( \__( 'Card and Content Attribution', 'autodescription' ) );
-		/* source: https://developer.twitter.com/en/docs/tweets/optimize-with-cards/guides/getting-started#attribution */
-		HTML::description( \__( 'X (formerly Twitter) claims users will be able to follow and view the profiles of attributed accounts directly from the card when these fields are filled in.', 'autodescription' ) );
+		/* See: https://kb.theseoframework.com/?p=451#attribution */
+		HTML::description( \__( 'X claims users will be able to follow and view the profiles of attributed accounts directly from the card when these fields are filled in.', 'autodescription' ) );
 		HTML::description( \__( 'However, for now, these fields seem to have no discernible effect.', 'autodescription' ) );
 		?>
 
@@ -358,8 +355,15 @@ switch ( $instance ) :
 			</label>
 		</p>
 		<p>
-			<input type=text name="<?php Input::field_name( 'twitter_site' ); ?>" class="large-text ltr" id="<?php Input::field_id( 'twitter_site' ); ?>" placeholder="<?= \esc_attr( $tw_site_placeholder ) ?>" value="<?= \esc_attr( $tw_site ) ?>">
+			<input type=text name="<?php Input::field_name( 'twitter_site' ); ?>" class="large-text ltr" id="<?php Input::field_id( 'twitter_site' ); ?>" value="<?= \esc_attr( $tw_site ) ?>">
 		</p>
+		<?php
+		HTML::description_noesc( \sprintf(
+			/* translators: %s = example value */
+			\esc_html__( 'Example: %s', 'autodescription' ),
+			HTML::code_wrap( \_x( '@your-site-username', 'Twitter @username', 'autodescription' ) ),
+		) );
+		?>
 
 		<p>
 			<label for="<?php Input::field_id( 'twitter_creator' ); ?>" class=tsf-toblock>
@@ -375,9 +379,147 @@ switch ( $instance ) :
 		</p>
 		<?php HTML::description( \__( 'Authors can override this option on their profile page.', 'autodescription' ) ); ?>
 		<p>
-			<input type=text name="<?php Input::field_name( 'twitter_creator' ); ?>" class="large-text ltr" id="<?php Input::field_id( 'twitter_creator' ); ?>" placeholder="<?= \esc_attr( $tw_creator_placeholder ) ?>" value="<?= \esc_attr( $tw_creator ) ?>">
+			<input type=text name="<?php Input::field_name( 'twitter_creator' ); ?>" class="large-text ltr" id="<?php Input::field_id( 'twitter_creator' ); ?>" value="<?= \esc_attr( $tw_creator ) ?>">
 		</p>
 		<?php
+		HTML::description_noesc( \sprintf(
+			/* translators: %s = example value */
+			\esc_html__( 'Example: %s', 'autodescription' ),
+			HTML::code_wrap( \_x( '@username', 'Twitter @username', 'autodescription' ) ),
+		) );
+		break;
+
+	case 'fediverse':
+		$fv_site     = Data\Plugin::get_option( 'fediverse_site' );
+		$fv_site_url = Data\Plugin::get_option( 'fediverse_site_url' );
+		$fv_creator  = Data\Plugin::get_option( 'fediverse_creator' );
+
+		$fv_handle_example = \_x( '@your-username@example.social', 'Fediverse handle', 'autodescription' );
+		$fv_url_example    = \_x( 'https://example.social/@your-username', 'Fediverse profile URL', 'autodescription' );
+
+		$fv_site_url_placeholder = Meta\Fediverse::get_profile_url( $fv_site );
+
+		if ( $fv_creator ) {
+			$fv_creator_url_placeholder = Meta\Fediverse::get_profile_url( $fv_creator );
+		} else {
+			$fv_creator_url_placeholder = Meta\Fediverse::get_profile_url(
+				$fv_site,
+				$fv_site_url,
+			);
+		}
+
+		$fv_creator_url = Data\Plugin::get_option( 'fediverse_creator_url' );
+
+		HTML::header_title( \__( 'Fediverse Integration Settings', 'autodescription' ) );
+		HTML::description( \__( 'Mastodon and other Fediverse platforms can credit a profile when a link to your website is shared, and can verify that you own this website.', 'autodescription' ) );
+		HTML::description_noesc( Markdown::convert(
+			/* translators: the backticks are Markdown! Preserve them as-is! */
+			\esc_html__( 'When these options are filled in, a `fediverse:creator` meta tag and a `rel=me` profile link are added to your pages.', 'autodescription' ),
+			[ 'code' ],
+		) );
+		/* See: https://kb.theseoframework.com/?p=484 */
+		HTML::description_noesc( Markdown::convert(
+			\sprintf(
+				/* translators: %s = Documentation URL. Markdown! */
+				\esc_html__( 'On the credited profile, open Preferences -> Public profile -> Verification. Add this website\'s domain under Author attribution, and add this website as a website field for the green checkmark. [Learn more](%s).', 'autodescription' ),
+				'https://kb.theseoframework.com/?p=484',
+			),
+			[ 'a' ],
+			[ 'a_internal' => false ],
+		) );
+		HTML::description( \__( 'Enter the @username@domain handle from Author attribution. A pasted profile URL fills both fields; correct the handle if the guessed domain is wrong.', 'autodescription' ) );
+		?>
+		<hr>
+
+		<p>
+			<label for="<?php Input::field_id( 'fediverse_site' ); ?>" class=tsf-toblock>
+				<strong><?php \esc_html_e( 'Website Fediverse Profile', 'autodescription' ); ?></strong>
+				<?php
+				echo ' ';
+				HTML::make_info(
+					\__( 'Copy the handle from Preferences -> Public profile -> Verification -> Author attribution.', 'autodescription' ),
+					'https://kb.theseoframework.com/?p=484#author-attribution',
+				);
+				?>
+			</label>
+		</p>
+		<p>
+			<input type=text name="<?php Input::field_name( 'fediverse_site' ); ?>" class="large-text ltr" id="<?php Input::field_id( 'fediverse_site' ); ?>" value="<?= \esc_attr( $fv_site ) ?>">
+		</p>
+		<?php
+		HTML::description_noesc( \sprintf(
+			/* translators: %s = example value */
+			\esc_html__( 'Example: %s', 'autodescription' ),
+			HTML::code_wrap( $fv_handle_example ),
+		) );
+		?>
+		<p>
+			<label for="<?php Input::field_id( 'fediverse_site_url' ); ?>" class=tsf-toblock>
+				<strong><?php \esc_html_e( 'Website Fediverse Profile URL', 'autodescription' ); ?></strong>
+				<?php
+				echo ' ';
+				HTML::make_info(
+					\__( 'The public profile URL. Fill this when it differs from the handle domain.', 'autodescription' ),
+					'https://kb.theseoframework.com/?p=484#website-verification',
+				);
+				?>
+			</label>
+		</p>
+		<p>
+			<input type=url name="<?php Input::field_name( 'fediverse_site_url' ); ?>" class="large-text ltr" id="<?php Input::field_id( 'fediverse_site_url' ); ?>" placeholder="<?= \esc_attr( $fv_site_url_placeholder ) ?>" value="<?= \esc_attr( $fv_site_url ) ?>" data-tsf-proposed="<?= \esc_attr( $fv_site_url_placeholder ) ?>">
+		</p>
+		<?php
+		HTML::description_noesc( \sprintf(
+			/* translators: %s = example value */
+			\esc_html__( 'Example: %s', 'autodescription' ),
+			HTML::code_wrap( $fv_url_example ),
+		) );
+		?>
+
+		<p>
+			<label for="<?php Input::field_id( 'fediverse_creator' ); ?>" class=tsf-toblock>
+				<strong><?php \esc_html_e( 'Fediverse Author Fallback Profile', 'autodescription' ); ?></strong>
+				<?php
+				echo ' ';
+				HTML::make_info(
+					\__( 'Copy the handle from Preferences -> Public profile -> Verification -> Author attribution.', 'autodescription' ),
+					'https://kb.theseoframework.com/?p=484#author-attribution',
+				);
+				?>
+			</label>
+		</p>
+		<?php HTML::description( \__( 'Authors can override this option on their profile page.', 'autodescription' ) ); ?>
+		<p>
+			<input type=text name="<?php Input::field_name( 'fediverse_creator' ); ?>" class="large-text ltr" id="<?php Input::field_id( 'fediverse_creator' ); ?>" placeholder="<?= \esc_attr( $fv_site ) ?>" value="<?= \esc_attr( $fv_creator ) ?>" data-tsf-proposed="<?= \esc_attr( $fv_site ) ?>">
+		</p>
+		<?php
+		HTML::description_noesc( \sprintf(
+			/* translators: %s = example value */
+			\esc_html__( 'Example: %s', 'autodescription' ),
+			HTML::code_wrap( $fv_handle_example ),
+		) );
+		?>
+		<p>
+			<label for="<?php Input::field_id( 'fediverse_creator_url' ); ?>" class=tsf-toblock>
+				<strong><?php \esc_html_e( 'Fediverse Author Fallback Profile URL', 'autodescription' ); ?></strong>
+				<?php
+				echo ' ';
+				HTML::make_info(
+					\__( 'The public profile URL. Fill this when it differs from the handle domain.', 'autodescription' ),
+					'https://kb.theseoframework.com/?p=484#website-verification',
+				);
+				?>
+			</label>
+		</p>
+		<p>
+			<input type=url name="<?php Input::field_name( 'fediverse_creator_url' ); ?>" class="large-text ltr" id="<?php Input::field_id( 'fediverse_creator_url' ); ?>" placeholder="<?= \esc_attr( $fv_creator_url_placeholder ) ?>" value="<?= \esc_attr( $fv_creator_url ) ?>" data-tsf-proposed="<?= \esc_attr( $fv_creator_url_placeholder ) ?>">
+		</p>
+		<?php
+		HTML::description_noesc( \sprintf(
+			/* translators: %s = example value */
+			\esc_html__( 'Example: %s', 'autodescription' ),
+			HTML::code_wrap( $fv_url_example ),
+		) );
 		break;
 
 	case 'oembed':

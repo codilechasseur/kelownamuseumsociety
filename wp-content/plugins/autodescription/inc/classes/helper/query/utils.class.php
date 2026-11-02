@@ -19,7 +19,7 @@ use The_SEO_Framework\Helper\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -46,13 +46,16 @@ class Utils {
 	/**
 	 * Determines whether pretty permalinks are enabled.
 	 *
+	 * NOTE: This is a sitewide test, not a per-post test.
+	 *
 	 * @since 5.0.0
-	 * @todo consider wp_force_plain_post_permalink()
+	 * @see `wp_force_plain_post_permalink()`
 	 *
 	 * @return bool
 	 */
 	public static function using_pretty_permalinks() {
-		return memo() ?? memo( '' !== \get_option( 'permalink_structure' ) );
+		return memo()
+			?? memo( '' !== \get_option( 'permalink_structure' ) );
 	}
 
 	/**
@@ -76,12 +79,13 @@ class Utils {
 	public static function query_supports_seo() {
 
 		// phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition -- I know.
-		if ( null !== $memo = memo() ) return $memo;
+		if ( null !== $memo = memo() )
+			return $memo;
 
 		switch ( true ) {
 			case \is_feed():
 			case \is_customize_preview():
-			case \defined( 'REST_REQUEST' ) && \REST_REQUEST: // TODO WP 6.5+ wp_is_serving_rest_request()
+			case \wp_is_serving_rest_request():
 				$supported = false;
 				break;
 			case Query::is_singular():
@@ -143,8 +147,8 @@ class Utils {
 	 * Example 4: `/?hour=nonnumeric`, the same issue as Example 1. The canonical URL is malformed, noindex is set, and
 	 * link relationships will be active. A complete mess. `minute` and `second` are also affected the same way.
 	 *
-	 * Example 5: `/page/2/?p=0`, this is the trickiest. It's indicative of a paginated blog, but also the homepage. When
-	 * the homepage is not a blog, then this query is malformed. Otherwise, however, it's a good query.
+	 * Example 5: `/page/2/?p=0` is flagged. `p=0` fails the numeric rule on any request without a real ID,
+	 * including a blog homepage.
 	 *
 	 * @since 4.0.5
 	 * @since 4.2.7 1. Added detection `not_home_as_page`, specifically for query variable `search`.
@@ -163,7 +167,8 @@ class Utils {
 	public static function is_query_exploited() {
 
 		// phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition -- I know.
-		if ( null !== $memo = memo() ) return $memo;
+		if ( null !== $memo = memo() )
+			return $memo;
 
 		if ( ! Data\Plugin::get_option( 'advanced_query_protection' ) )
 			return memo( false );
@@ -181,7 +186,7 @@ class Utils {
 		/**
 		 * @since 4.0.5
 		 * @since 4.2.7 Added index `not_home_as_page` with value `search`.
-		 * @since 5.0.5 Added index `not_front_page` with values `sitemap` and `sitemap-subtype`.
+		 * @since 5.0.5 Added index `should_be_404` with values `sitemap` and `sitemap-subtype`.
 		 * @param array $exploitables The exploitable endpoints by type.
 		 */
 		$exploitables = \apply_filters(
@@ -226,13 +231,17 @@ class Utils {
 
 		foreach ( $exploitables as $type => $qvs ) {
 			foreach ( $qvs as $qv ) {
-				// Only test isset, because falsey or empty-array is what we need to test against.
+				// Only test isset, because falsy or empty-array is what we need to test against.
 				if ( ! isset( $query[ $qv ] ) ) continue;
 
 				switch ( $type ) {
 					case 'numeric':
-						if ( '0' === $query[ $qv ] || ! is_numeric( $query[ $qv ] ) )
+						if (
+							   '0' === $query[ $qv ]
+							|| ! is_numeric( $query[ $qv ] )
+						) {
 							return memo( true );
+						}
 						break;
 
 					case 'numeric_array':
@@ -259,7 +268,7 @@ class Utils {
 							// No need to test other 'not_home_as_page' types. Go to next type (if any).
 							continue 3; // 1: switch, 2: loop $qvs, 3: loop $exploitables.
 						}
-						break; // unreachable?
+						break; // Unreachable. Keep to prevent mistakes.
 
 					case 'should_be_404':
 						// isset($query[$qv]) is already executed. Just test if we're also on a 404 page.

@@ -15,7 +15,7 @@ use The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -103,9 +103,9 @@ final class Post {
 	 * @since 5.0.0 1. Moved from `\The_SEO_Framework\Load`.
 	 *              2. Renamed from `_save_inpost_primary_term`.
 	 * @since 5.1.3 Now supports quick-edit and bulk-edit.
+	 * @since 5.2.0 Now does not clear a primary term during bulk edit.
 	 *
 	 * @param int $post_id The post ID.
-	 * @return void
 	 */
 	public static function update_primary_term( $post_id ) {
 
@@ -121,7 +121,12 @@ final class Post {
 		 * @link https://github.com/sybrew/the-seo-framework/issues/48
 		 * @link https://johnblackbourn.com/post-meta-revisions-wordpress
 		 */
-		if ( \wp_is_post_autosave( $post_id ) || \wp_is_post_revision( $post_id ) ) return;
+		if (
+			   \wp_is_post_autosave( $post_id )
+			|| \wp_is_post_revision( $post_id )
+		) {
+			return;
+		}
 
 		if ( ! \current_user_can( 'edit_post', $post_id ) ) return;
 
@@ -136,8 +141,9 @@ final class Post {
 				if ( ! \wp_verify_nonce(
 					$_POST[ self::SAVE_NONCES['post-edit']['name'] . "_pt_{$taxonomy}" ] ?? '',
 					self::SAVE_NONCES['post-edit']['action'] . '_pt',
-				) )
+				) ) {
 					continue;
+				}
 
 				Data\Plugin\Post::update_primary_term_id(
 					$post_id,
@@ -147,10 +153,12 @@ final class Post {
 			}
 		} elseif ( ! empty( $_POST['autodescription-quick'] ) ) {
 			// Quick-edit
-			if ( ! \check_ajax_referer( 'inlineeditnonce', '_inline_edit', false ) ) return;
+			if ( ! \check_ajax_referer( 'inlineeditnonce', '_inline_edit', false ) )
+				return;
 
 			foreach ( Taxonomy::get_hierarchical( 'names', $post_type ) as $taxonomy ) {
-				if ( ! isset( $_POST['autodescription-quick'][ "primary_term_{$taxonomy}" ] ) ) continue;
+				if ( ! isset( $_POST['autodescription-quick'][ "primary_term_{$taxonomy}" ] ) )
+					continue;
 
 				$term_id = \absint( \wp_unslash( $_POST['autodescription-quick'][ "primary_term_{$taxonomy}" ] ) );
 
@@ -167,7 +175,8 @@ final class Post {
 			}
 
 			foreach ( Taxonomy::get_hierarchical( 'names', $post_type ) as $taxonomy ) {
-				if ( ! isset( $_REQUEST['autodescription-bulk'][ "primary_term_{$taxonomy}" ] ) ) continue;
+				if ( ! isset( $_REQUEST['autodescription-bulk'][ "primary_term_{$taxonomy}" ] ) )
+					continue;
 
 				$value = $_REQUEST['autodescription-bulk'][ "primary_term_{$taxonomy}" ];
 
@@ -184,8 +193,6 @@ final class Post {
 						if ( \in_array( $term_id, $valid_term_ids, true ) )
 							Data\Plugin\Post::update_primary_term_id( $post_id, $taxonomy, $term_id );
 					}
-				} else {
-					Data\Plugin\Post::update_primary_term_id( $post_id, $taxonomy, 0 );
 				}
 			}
 		}
@@ -199,7 +206,6 @@ final class Post {
 	 *              2. Renamed from `update_post_edit_post_meta`.
 	 *
 	 * @param int $post_id The post ID.
-	 * @return void
 	 */
 	private static function update_via_post_edit( $post_id ) {
 
@@ -216,14 +222,21 @@ final class Post {
 		 * @link https://core.trac.wordpress.org/ticket/20299#comment:64
 		 * @link https://make.wordpress.org/core/2023/10/24/framework-for-storing-revisions-of-post-meta-in-6-4/
 		 */
-		if ( \wp_is_post_autosave( $post_id ) || \wp_is_post_revision( $post_id ) ) return;
+		if (
+			   \wp_is_post_autosave( $post_id )
+			|| \wp_is_post_revision( $post_id )
+		) {
+			return;
+		}
 
 		// Check that the user is allowed to edit the post. This is redundant and may need to be removed for full Gutenberg support.
 		if (
 			   ! \current_user_can( 'edit_post', $post_id )
 			|| ! isset( $_POST[ self::SAVE_NONCES['post-edit']['name'] ] )
 			|| ! \wp_verify_nonce( $_POST[ self::SAVE_NONCES['post-edit']['name'] ], self::SAVE_NONCES['post-edit']['action'] )
-		) return;
+		) {
+			return;
+		}
 
 		// Trim, sanitize, and save the metadata.
 		Data\Plugin\Post::save_meta(
@@ -241,7 +254,6 @@ final class Post {
 	 *              2. Renamed from `update_quick_edit_post_meta`.
 	 *
 	 * @param int $post_id The post ID.
-	 * @return void
 	 */
 	private static function update_via_quick_edit( $post_id ) {
 
@@ -256,7 +268,9 @@ final class Post {
 			|| ! \check_ajax_referer( 'inlineeditnonce', '_inline_edit', false )
 			|| ! isset( $_POST[ self::SAVE_NONCES['quick-edit']['name'] ] )
 			|| ! \wp_verify_nonce( $_POST[ self::SAVE_NONCES['quick-edit']['name'] ], self::SAVE_NONCES['quick-edit']['action'] )
-		) return;
+		) {
+			return;
+		}
 
 		$new_data = [];
 
@@ -294,14 +308,13 @@ final class Post {
 	}
 
 	/**
-	 * Overwrites a park of the post meta on bulk-edit.
+	 * Overwrites a part of the post meta on bulk-edit.
 	 *
 	 * @since 4.0.0
 	 * @since 5.0.0 1. Moved from `\The_SEO_Framework\Load`.
 	 *              2. Renamed from `update_bulk_edit_post_meta`.
 	 *
 	 * @param int $post_id The post ID.
-	 * @return void
 	 */
 	private static function update_via_bulk_edit( $post_id ) {
 
@@ -321,7 +334,9 @@ final class Post {
 			if (
 				   ! isset( $_REQUEST[ self::SAVE_NONCES['bulk-edit']['name'] ] )
 				|| ! \wp_verify_nonce( $_REQUEST[ self::SAVE_NONCES['bulk-edit']['name'] ], self::SAVE_NONCES['bulk-edit']['action'] )
-			) return;
+			) {
+				return;
+			}
 
 			$verified_referer = true;
 		}
@@ -337,8 +352,7 @@ final class Post {
 					case 'noindex':
 					case 'nofollow':
 					case 'noarchive':
-						if ( 'nochange' === $value )
-							break;
+						if ( 'nochange' === $value ) break;
 						$new_data[ "_genesis_$key" ] = $value;
 				}
 			}

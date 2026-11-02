@@ -15,7 +15,7 @@ use The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2021 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2021 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -118,7 +118,7 @@ class Input {
 	 *     @type string|string[] $id          The option index or map of indexes therefor, used as field ID.
 	 *     @type string          $class       The checkbox class.
 	 *     @type string          $label       The checkbox label description, placed inline of the checkbox.
-	 *     @type null|mixed      $value       The option value. If not set, it'll try to retrieve the value based on $id.
+	 *     @type ?mixed          $value       The option value. If not set, it'll try to retrieve the value based on $id.
 	 *     @type string          $description The checkbox additional description, placed underneat.
 	 *     @type array           $data        The checkbox field data. Sub-items are expected to be escaped if they're not an array.
 	 *     @type bool            $escape      Whether to enable escaping of the $label and $description.
@@ -164,7 +164,7 @@ class Input {
 				'<label for="%s"%s>%s</label>',
 				[
 					Escape::option_name_attribute( $field_id ),
-					( $args['disabled'] ? ' class=tsf-disabled' : '' ),
+					$args['disabled'] ? ' class=tsf-disabled' : '',
 					vsprintf(
 						'<input type=checkbox class="%s" name="%s" id="%s" value=1 %s%s %s /> %s',
 						[
@@ -172,7 +172,7 @@ class Input {
 							Escape::option_name_attribute( $field_name ),
 							Escape::option_name_attribute( $field_id ),
 							\checked( $value, true, false ),
-							( $args['disabled'] ? ' disabled' : '' ),
+							$args['disabled'] ? ' disabled' : '',
 							HTML::make_data_attributes( $args['data'] ),
 							$args['label'],
 						],

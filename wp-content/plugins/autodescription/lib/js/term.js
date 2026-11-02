@@ -8,7 +8,7 @@
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -115,6 +115,7 @@ window.tsfTerm = function () {
 		 * @function
 		 */
 		const updateCanonicalPlaceholder = () => {
+
 			tsfCanonical.updateStateOf(
 				_canonicalId,
 				'showUrlPlaceholder',
@@ -127,15 +128,19 @@ window.tsfTerm = function () {
 			);
 		}
 
-		if ( tsfCanonical.usingPermalinks && canonicalInput ) {
-			const writeTaxonomy = tsfCanonical.structIncludes( _canonicalId, `%${taxonomy}%` );
+		if ( tsfCanonical.canTrackUrlStructure( _canonicalId ) && canonicalInput ) {
+			const writeTaxonomy  = tsfCanonical.structIncludes( _canonicalId, `%${taxonomy}%` );
+			const writeTermId    = tsfCanonical.structIncludes( _canonicalId, '%term_id%' );
+			const hasQueryString = tsfCanonical.isQueryStructure(
+				tsfCanonical.getStateOf( _canonicalId, 'urlStructure' ),
+			);
 
 			let termSlug    = '',
 				termName    = '',
 				parentSlugs = [];
 
 			// Unpack post slugs.
-			if ( writeTaxonomy ) {
+			if ( writeTaxonomy && ! hasQueryString ) {
 				tsfTermSlugs.store( state.parentTermSlugs, taxonomy );
 				// We preemptively write here because the selection might be unavailable.
 				parentSlugs = state.parentTermSlugs.map( term => term.slug ); // isHierarchical is checked in PHP for this.
@@ -143,10 +148,12 @@ window.tsfTerm = function () {
 
 			/**
 			 * @since 5.1.0
+			 * @since 5.2.0 Now omits parent slugs for query-based term permalinks. See `get_term_link()`.
 			 *
 			 * @function
 			 */
 			const updateCanonical = () => {
+
 				if ( writeTaxonomy ) {
 					let activeSlug = '';
 
@@ -166,8 +173,14 @@ window.tsfTerm = function () {
 					if ( ! activeSlug.length )
 						activeSlug = l10n.params.id;
 
-					urlDataParts.set( `%${taxonomy}%`, [ ...parentSlugs, activeSlug ].join( '/' ) );
+					urlDataParts.set(
+						`%${taxonomy}%`,
+						hasQueryString ? activeSlug : [ ...parentSlugs, activeSlug ].join( '/' ),
+					);
 				}
+
+				if ( writeTermId )
+					urlDataParts.set( '%term_id%', l10n.params.id );
 
 				updateCanonicalPlaceholder();
 			}
@@ -179,6 +192,7 @@ window.tsfTerm = function () {
 					  parentIdInput = document.getElementById( 'parent' );
 
 				const updateTermName = () => {
+
 					// Title isn't used directly, but may be used if the slug isn't set.
 					termName = termNameInput?.value ?? '';
 					termSlug = termSlugInput?.value ?? ''
@@ -188,9 +202,10 @@ window.tsfTerm = function () {
 				termNameInput?.addEventListener( 'input', updateTermName );
 				updateTermName();
 
-				if ( parentIdInput ) {
+				if ( parentIdInput && ! hasQueryString ) {
 					const updateParentSlug = tsfUtils.debounce(
 						async () => {
+
 							parentSlugs = await tsfTermSlugs.get( parentIdInput.value, taxonomy );
 							queueUpdateCanonical();
 						},
@@ -211,6 +226,7 @@ window.tsfTerm = function () {
 		 * @param {Number} value
 		 */
 		const setRobotsIndexingState = value => {
+
 			let type = '';
 
 			switch ( +value ) {
@@ -274,6 +290,7 @@ window.tsfTerm = function () {
 		 * @param {Event} event
 		 */
 		const updateTitleAdditions = event => {
+
 			let addAdditions = ! event.target.checked;
 
 			if ( l10n.params.additionsForcedDisabled )
@@ -294,10 +311,12 @@ window.tsfTerm = function () {
 		 * @param {string} value
 		 */
 		const updateDefaultTitle = val => {
+
 			val = val?.trim();
 
-			let title   = tsfTitle.stripTitleTags ? tsf.stripTags( val ) : val;
-			    title ||= tsfTitle.untitledTitle;
+			let title = tsfTitle.stripTitleTags ? tsf.stripTags( val ) : val;
+
+			title ||= tsfTitle.untitledTitle;
 
 			let defaultTitle;
 
@@ -331,12 +350,8 @@ window.tsfTerm = function () {
 		const state = JSON.parse(
 			document.getElementById( `tsf-description-data_${_descId}` )?.dataset.state || 0,
 		);
-		if ( state ) {
-			// tsfDescription.updateState( 'allowReferenceChange', ! state.refDescriptionLocked );
+		if ( state )
 			tsfDescription.updateStateOf( _descId, 'defaultDescription', state.defaultDescription.trim() );
-		}
-
-		// TODO set term-description-content (via ajax) listeners?
 
 		tsfDescription.enqueueUnregisteredInputTrigger( _descId );
 	}
@@ -378,6 +393,7 @@ window.tsfTerm = function () {
 	 * @access private
 	 */
 	function _loadSettings() {
+
 		// One is not reliant on the other; this way, if one crashes, the rest still works.
 		[
 			_initVisibilityListeners,
@@ -393,22 +409,25 @@ window.tsfTerm = function () {
 		} );
 	}
 
-	return Object.assign( {
-		/**
-		 * Initialises all aspects of the scripts.
-		 * You shouldn't call this.
-		 *
-		 * @since 4.0.0
-		 * @access protected
-		 *
-		 * @function
-		 */
-		load: () => {
-			document.body.addEventListener( 'tsf-onload', _loadSettings );
+	return Object.assign(
+		{
+			/**
+			 * Initialises all aspects of the scripts.
+			 * You shouldn't call this.
+			 *
+			 * @since 4.0.0
+			 * @access protected
+			 *
+			 * @function
+			 */
+			load: () => {
+				document.body.addEventListener( 'tsf-onload', _loadSettings );
+			},
 		},
-	}, {
-		l10n,
-		taxonomy,
-	} );
+		{
+			l10n,
+			taxonomy,
+		},
+	);
 }();
 window.tsfTerm.load();

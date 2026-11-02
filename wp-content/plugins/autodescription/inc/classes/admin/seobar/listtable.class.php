@@ -12,7 +12,7 @@ use The_SEO_Framework\Admin;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -36,6 +36,7 @@ use The_SEO_Framework\Admin;
  * @since 4.0.0
  * @since 5.0.0 1. Moved from `\The_SEO_Framework\Bridges`.
  *              2. Renamed from `SEOBar`.
+ * @since 5.2.0 Now also adds the SEO Bar column to the users list.
  * @access private
  */
 final class ListTable extends Admin\Lists\Table {
@@ -59,11 +60,11 @@ final class ListTable extends Admin\Lists\Table {
 	/**
 	 * Adds SEO column on edit(-tags).php
 	 *
-	 * Also determines where the column should be placed. Preferred before comments, then data, then tags.
+	 * Also determines where the column should be placed. Preferred before comments, then posts, then date, then tags.
 	 * When none found, it will add the column to the end.
 	 *
 	 * @hook manage_{$screen_id}_columns 10
-	 * @hook manage_edit-{$taxonomy}_columns 1
+	 * @hook manage_edit-{$taxonomy}_columns 10
 	 * @since 4.0.0
 	 * @since 5.0.0 Renamed from `_add_column`.
 	 * @abstract
@@ -92,11 +93,12 @@ final class ListTable extends Admin\Lists\Table {
 		 */
 		$order_keys = (array) \apply_filters( 'the_seo_framework_seo_column_keys_order', $order_keys );
 
+		$offset = false; // Initialize: empty $order_keys prevents loop.
+
 		foreach ( $order_keys as $key ) {
 			// Put value in $offset, if not false, break loop.
 			$offset = array_search( $key, $column_keys, true );
-			if ( false !== $offset )
-				break;
+			if ( false !== $offset ) break;
 		}
 
 		// It tried but found nothing
@@ -136,10 +138,7 @@ final class ListTable extends Admin\Lists\Table {
 		if ( $this->column_name !== $column_name ) return;
 
 		// phpcs:disable WordPress.Security.EscapeOutput -- generate_bar escapes.
-		echo Builder::generate_bar( [
-			'id'        => $post_id,
-			'post_type' => $this->post_type,
-		] );
+		echo Builder::generate_bar( [ 'id' => $post_id ] );
 		// phpcs:enable WordPress.Security.EscapeOutput
 
 		if ( $this->doing_ajax )
@@ -165,7 +164,8 @@ final class ListTable extends Admin\Lists\Table {
 	 */
 	public function output_column_contents_for_term( $string, $column_name, $term_id ) {
 
-		if ( $this->column_name !== $column_name ) return $string;
+		if ( $this->column_name !== $column_name )
+			return $string;
 
 		if ( $this->doing_ajax )
 			$string .= $this->get_ajax_dispatch_updated_event();
@@ -174,5 +174,27 @@ final class ListTable extends Admin\Lists\Table {
 			'id'  => $term_id,
 			'tax' => $this->taxonomy,
 		] ) . $string;
+	}
+
+	/**
+	 * Returns the SEO Bar for users.
+	 *
+	 * @hook manage_users_custom_column 1
+	 * @since 5.2.0
+	 * @access private
+	 * @NOTE Unlike output_column_contents_for_post(), this is a filter callback.
+	 *       Because of this, the first parameter is a useless string, which must be extended.
+	 *
+	 * @param string $string      Blank string.
+	 * @param string $column_name Name of the column.
+	 * @param int    $user_id     User ID.
+	 * @return string
+	 */
+	public function output_column_contents_for_user( $string, $column_name, $user_id ) {
+
+		if ( $this->column_name !== $column_name )
+			return $string;
+
+		return Builder::generate_bar( [ 'uid' => $user_id ] ) . $string;
 	}
 }

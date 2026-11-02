@@ -12,7 +12,7 @@ use The_SEO_Framework\Data;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -100,7 +100,6 @@ final class Term {
 	 *
 	 * @param int    $term_id  Term ID.
 	 * @param string $taxonomy Taxonomy slug.
-	 * @return void
 	 */
 	private static function update_via_quick_edit( $term_id, $taxonomy ) {
 
@@ -114,7 +113,9 @@ final class Term {
 			|| ! \check_ajax_referer( 'taxinlineeditnonce', '_inline_edit', false )
 			|| ! isset( $_POST[ self::SAVE_NONCES['quick-edit']['name'] ] )
 			|| ! \wp_verify_nonce( $_POST[ self::SAVE_NONCES['quick-edit']['name'] ], self::SAVE_NONCES['quick-edit']['action'] )
-		) return;
+		) {
+			return;
+		}
 
 		// Unlike the term-edit saving, we don't reset the data, just overwrite what's given.
 		// This is because we only update a portion of the meta.
@@ -139,7 +140,6 @@ final class Term {
 	 *
 	 * @param int    $term_id  Term ID.
 	 * @param string $taxonomy Taxonomy slug.
-	 * @return void
 	 */
 	private static function update_via_term_edit( $term_id, $taxonomy ) {
 
@@ -152,7 +152,9 @@ final class Term {
 			|| ! \current_user_can( 'edit_term', $term->term_id )
 			|| ! isset( $_POST[ self::SAVE_NONCES['term-edit']['name'] ] )
 			|| ! \wp_verify_nonce( $_POST[ self::SAVE_NONCES['term-edit']['name'] ], self::SAVE_NONCES['term-edit']['action'] )
-		) return;
+		) {
+			return;
+		}
 
 		// Trim, sanitize, and save the metadata.
 		Data\Plugin\Term::save_meta(

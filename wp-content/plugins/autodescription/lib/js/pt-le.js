@@ -8,7 +8,7 @@
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2025 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -147,6 +147,7 @@ window.tsfPTLE = function () {
 			}
 
 			new MutationObserver( () => {
+
 				registerListeners(); // A new listener might've been added. Reregister.
 				tick();
 			} ).observe(
@@ -190,13 +191,16 @@ window.tsfPTLE = function () {
 
 		const get = () => +( _primaryTermField()?.value ?? 0 );
 		const set = ( id, fallback ) => {
+
 			id = +id;
 			_primaryTermField().value = id;
 			dispatchUpdateEvent( id || +fallback, taxonomySlug );
+
 			return id;
 		};
 
 		const revalidate = selectedTerms => {
+
 			const primaryTerm = get();
 
 			if ( selectedTerms.includes( primaryTerm ) )
@@ -206,6 +210,7 @@ window.tsfPTLE = function () {
 		}
 
 		const registerPostField = defaultValue => {
+
 			const wrap = getFieldContainer();
 			if ( ! wrap ) return;
 
@@ -214,7 +219,7 @@ window.tsfPTLE = function () {
 			if ( ! field ) {
 				wrap.insertAdjacentHTML(
 					'beforeend',
-					`<input type="hidden" id="${fieldName}" name="${fieldName}" value="0">`,
+					`<input type=hidden id="${fieldName}" name="${fieldName}" value=0>`,
 				);
 				field = _primaryTermField();
 			}
@@ -237,12 +242,13 @@ window.tsfPTLE = function () {
 
 	/**
 	 * @since 5.1.3
+	 * @since 5.2.0 Now stores `nochange` until a primary term is chosen.
 	 * @access private
 	 *
 	 * @param {String} taxonomySlug The taxonomy slug.
 	 * @returns {{
 	 *     get:                   () => Integer,
-	 *     set:                   ( id: Integer, fallback?: Integer ) => Integer,
+	 *     set:                   ( id: Integer|String ) => Integer,
 	 *     revalidate:            ( selectedTerms: Integer[] ) => Integer,
 	 *     registerPostField:     ( defaultValue?: Integer ) => void,
 	 *     isPostFieldRegistered: () => Boolean,
@@ -254,15 +260,24 @@ window.tsfPTLE = function () {
 		const _primaryTermField  = () => document.getElementById( fieldName );
 		const getFieldContainer  = () => document.getElementById( 'bulk-edit' );
 
-		const get = () => +( _primaryTermField()?.value ?? 0 );
-		const set = ( id, fallback ) => {
-			id = +id;
-			_primaryTermField().value = id;
-			dispatchUpdateEvent( id || +fallback, taxonomySlug );
+		const get = () => +( _primaryTermField()?.value ) || 0;
+
+		const set = id => {
+
+			// get() reads "nochange" as 0. Store that string so bulk save skips it.
+			id = +id || 0;
+
+			if ( get() === id )
+				return id;
+
+			_primaryTermField().value = id || 'nochange';
+			dispatchUpdateEvent( id, taxonomySlug );
+
 			return id;
 		};
 
 		const revalidate = selectedTerms => {
+
 			const primaryTerm = get();
 
 			if ( selectedTerms.includes( primaryTerm ) )
@@ -272,6 +287,7 @@ window.tsfPTLE = function () {
 		}
 
 		const registerPostField = defaultValue => {
+
 			const wrap = getFieldContainer();
 			if ( ! wrap ) return;
 
@@ -280,7 +296,7 @@ window.tsfPTLE = function () {
 			if ( ! field ) {
 				wrap.insertAdjacentHTML(
 					'beforeend',
-					`<input type="hidden" id="${fieldName}" name="${fieldName}" value="0">`,
+					`<input type=hidden id="${fieldName}" name="${fieldName}" value=nochange>`,
 				);
 				field = _primaryTermField();
 			}
@@ -332,6 +348,7 @@ window.tsfPTLE = function () {
 			const storedTermValue  = getStoredTermValue( taxonomySlug );
 
 			const repopulateSelect = () => {
+
 				const optionElement = document.createElement( 'option' ),
 					  selectElement = document.getElementById( selectId );
 
@@ -339,9 +356,11 @@ window.tsfPTLE = function () {
 				selectElement.append(
 					...termCheckboxes.getInputsChecked().map(
 						el => {
+
 							const option = optionElement.cloneNode();
 							option.value = el.value;
 							option.label = tsf.decodeEntities( el.parentElement.textContent.trim() );
+
 							return option;
 						},
 					),
@@ -350,6 +369,7 @@ window.tsfPTLE = function () {
 				tsf.selectByValue( selectElement, `${primaryTerm.get()}` );
 			}
 			const showSelectorWrap = () => {
+
 				let selectElement = document.getElementById( selectId );
 
 				if ( ! selectElement ) {
@@ -385,6 +405,7 @@ window.tsfPTLE = function () {
 			}
 
 			termCheckboxes.subscribe( () => {
+
 				if ( termCheckboxes.getInputsChecked().length > 1 ) {
 					if ( ! selectorWrapShown ) {
 						selectorWrapShown = true;
@@ -424,11 +445,13 @@ window.tsfPTLE = function () {
 	 * Prepares primary term selectors for bulk edit.
 	 *
 	 * @since 5.1.3
+	 * @since 5.2.0 Now restores `nochange` when the primary term selection is cleared or hidden.
 	 * @access private
 	 */
 	function _prepareBulkEditTerms() {
 
 		const initBulkSelector = taxonomySlug => {
+
 			const termCheckboxes = _termCheckboxes( taxonomySlug, 'bulk' );
 			const primaryTerm    = _primaryTermSelectorBulk( taxonomySlug );
 			const checklist      = termCheckboxes.getWrap();
@@ -438,6 +461,7 @@ window.tsfPTLE = function () {
 			let selectorWrapShown = false;
 
 			const showSelectorWrap = () => {
+
 				let selectElement = document.getElementById( selectId );
 
 				if ( ! selectElement ) {
@@ -461,9 +485,6 @@ window.tsfPTLE = function () {
 					selectElement?.addEventListener(
 						'change',
 						event => {
-							if ( 'nochange' === event.target.value )
-								return;
-
 							primaryTerm.set( event.target.value );
 						},
 					);
@@ -475,6 +496,7 @@ window.tsfPTLE = function () {
 				return selectElement;
 			};
 			const repopulateSelect = () => {
+
 				const optionElement = document.createElement( 'option' ),
 					  selectElement = document.getElementById( selectId );
 
@@ -492,6 +514,7 @@ window.tsfPTLE = function () {
 				selectElement.append(
 					...termCheckboxes.getInputsChecked().map(
 						el => {
+
 							const option = optionElement.cloneNode();
 							option.value = el.value;
 							option.label = tsf.decodeEntities( el.parentElement.textContent.trim() );
@@ -506,20 +529,24 @@ window.tsfPTLE = function () {
 
 				const nextValue = restorePreviousValue ? previousValue : 'nochange';
 				tsf.selectByValue( selectElement, nextValue );
+				primaryTerm.set( nextValue );
 			}
 			termCheckboxes.subscribe( () => {
+
 				if ( termCheckboxes.getInputsChecked().length > 1 ) {
 					if ( ! selectorWrapShown ) {
 						selectorWrapShown = true;
 						showSelectorWrap();
 					}
 					repopulateSelect();
+
 					return;
 				}
 
 				if ( selectorWrapShown ) {
 					document.getElementById( selectorWrapId )?.remove();
 					selectorWrapShown = false;
+					primaryTerm.set( 0 );
 				}
 			} );
 		};

@@ -12,16 +12,17 @@ use The_SEO_Framework\{
 	Admin,
 	Admin\Settings\Layout\HTML,
 	Data,
-	Data\Filter\Sanitize,
-	Helper\Query,
-	Helper\Taxonomy,
-	Helper\Template,
 	Meta,
+};
+use The_SEO_Framework\Helper\{
+	Query,
+	Taxonomy,
+	Template,
 };
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -62,7 +63,28 @@ final class ListEdit extends Admin\Lists\Table {
 		$instance = new self;
 
 		\add_action( 'current_screen', [ $instance, 'prepare_edit_box' ] );
-		\add_filter( 'hidden_columns', [ $instance, 'hide_quick_edit_column' ], 10, 1 );
+		\add_filter( 'hidden_columns', [ $instance, 'hide_quick_edit_column' ] );
+	}
+
+	/**
+	 * Skips column setup on the users list.
+	 *
+	 * @hook current_screen 10
+	 * @since 5.2.0
+	 * @access private
+	 *
+	 * @param \WP_Screen $screen The current screen.
+	 */
+	public function prepare_columns( $screen ) {
+
+		// User screens don't have quick/bulk edit.
+		switch ( $screen->base ) {
+			case 'users':
+			case 'users-network':
+				return;
+		}
+
+		parent::prepare_columns( $screen );
 	}
 
 	/**
@@ -97,7 +119,9 @@ final class ListEdit extends Admin\Lists\Table {
 	 * @return array $columns the column data
 	 */
 	public function hide_quick_edit_column( $hidden ) {
+
 		$hidden[] = $this->column_name;
+
 		return $hidden;
 	}
 
@@ -106,7 +130,7 @@ final class ListEdit extends Admin\Lists\Table {
 	 * This column is a dummy, but it's required to display quick/bulk edit items.
 	 *
 	 * @hook manage_{$screen_id}_columns 10
-	 * @hook manage_edit-{$taxonomy}_columns 1
+	 * @hook manage_edit-{$taxonomy}_columns 10
 	 * @since 4.0.0
 	 * @since 5.0.0 Renamed from `_add_column`.
 	 * @abstract
@@ -115,8 +139,10 @@ final class ListEdit extends Admin\Lists\Table {
 	 * @return array $columns the column data
 	 */
 	public function add_column( $columns ) {
+
 		// Don't set a title, otherwise it's displayed in the screen settings.
 		$columns[ $this->column_name ] = '';
+
 		return $columns;
 	}
 
@@ -172,6 +198,7 @@ final class ListEdit extends Admin\Lists\Table {
 	 * @hook manage_pages_custom_column 1
 	 * @since 4.0.0
 	 * @since 5.0.0 Renamed from `_output_column_contents_for_post`.
+	 * @since 5.2.0 Now ignores password protection when building the Indexing default.
 	 * @abstract
 	 *
 	 * @param string $column_name The name of the column to display.
@@ -182,14 +209,16 @@ final class ListEdit extends Admin\Lists\Table {
 		if (
 			   $this->column_name !== $column_name
 			|| ! \current_user_can( 'edit_post', $post_id )
-		) return;
+		) {
+			return;
+		}
 
 		$generator_args = [ 'id' => $post_id ];
 
 		$r_defaults = Meta\Robots::get_generated_meta(
 			$generator_args,
 			[ 'noindex', 'nofollow', 'noarchive' ],
-			\The_SEO_Framework\ROBOTS_IGNORE_SETTINGS,
+			\The_SEO_Framework\ROBOTS_IGNORE_SETTINGS | \The_SEO_Framework\ROBOTS_IGNORE_PROTECTION,
 		);
 
 		$meta        = Data\Plugin\Post::get_meta( $post_id );
@@ -236,13 +265,18 @@ final class ListEdit extends Admin\Lists\Table {
 		 * @since 4.0.5
 		 * @since 4.1.0 Now has `doctitle` and `description` indexes in its first parameter.
 		 * @since 4.2.3 Now supports the `placeholder` index for $data.
+		 * @example $data `[ 'noindex' => [ 'value' => 0, 'isSelect' => true, 'default' => 'index' ] ]`
 		 * @param array $data           {
 		 *     The current data keyed by input field name.
 		 *
-		 *     @type mixed  $value       The current value.
-		 *     @type bool   $isSelect    Optional. Whether the field is a select field.
-		 *     @type string $default     Optional. Only works when $isSelect is true. The default value to be set in select index 0.
-		 *     @type string $placeholder Optional. Only works when $isSelect is false. Sets a placeholder for the input field.
+		 *     @type array {$field} {
+		 *         The input field data.
+		 *
+		 *         @type mixed  $value       The current value.
+		 *         @type bool   $isSelect    Optional. Whether the field is a select field.
+		 *         @type string $default     Optional. Only works when $isSelect is true. The default value to be set in select index 0.
+		 *         @type string $placeholder Optional. Only works when $isSelect is false. Sets a placeholder for the input field.
+		 *     }
 		 * }
 		 * @param array $generator_args The query data. Contains 'id' or 'taxonomy'.
 		 */
@@ -474,8 +508,11 @@ final class ListEdit extends Admin\Lists\Table {
 	 */
 	public function output_column_contents_for_term( $string, $column_name, $term_id ) {
 
-		if ( $this->column_name !== $column_name )          return $string;
-		if ( ! \current_user_can( 'edit_term', $term_id ) ) return $string;
+		if ( $this->column_name !== $column_name )
+			return $string;
+
+		if ( ! \current_user_can( 'edit_term', $term_id ) )
+			return $string;
 
 		$taxonomy = $this->taxonomy;
 
@@ -530,13 +567,18 @@ final class ListEdit extends Admin\Lists\Table {
 		 * @since 4.0.5
 		 * @since 4.1.0 Now has `doctitle` and `description` indexes in its first parameter.
 		 * @since 4.2.3 Now supports the `placeholder` index for $data.
+		 * @example $data `[ 'noindex' => [ 'value' => 0, 'isSelect' => true, 'default' => 'index' ] ]`
 		 * @param array $data           {
 		 *     The current data keyed by input field name.
 		 *
-		 *     @type mixed  $value       The current value.
-		 *     @type bool   $isSelect    Optional. Whether the field is a select field.
-		 *     @type string $default     Optional. Only works when $isSelect is true. The default value to be set in select index 0.
-		 *     @type string $placeholder Optional. Only works when $isSelect is false. Sets a placeholder for the input field.
+		 *     @type array {$field} {
+		 *         The input field data.
+		 *
+		 *         @type mixed  $value       The current value.
+		 *         @type bool   $isSelect    Optional. Whether the field is a select field.
+		 *         @type string $default     Optional. Only works when $isSelect is true. The default value to be set in select index 0.
+		 *         @type string $placeholder Optional. Only works when $isSelect is false. Sets a placeholder for the input field.
+		 *     }
 		 * }
 		 * @param array $generator_args The query data. Contains 'id' and 'tax'.
 		 */
@@ -552,7 +594,7 @@ final class ListEdit extends Admin\Lists\Table {
 
 		$memo['tax_object']               ??= \get_taxonomy( $taxonomy );
 		$memo['permastruct']              ??= Meta\URI\Utils::get_url_permastruct( $generator_args );
-		$memo['is_taxonomy_hierarchical'] ??= $memo['tax_object']->hierarchical && $memo['tax_object']->rewrite['hierarchical'];
+		$memo['is_taxonomy_hierarchical'] ??= $memo['tax_object']->hierarchical && ( $memo['tax_object']->rewrite['hierarchical'] ?? false );
 
 		$permastruct = $memo['permastruct'];
 

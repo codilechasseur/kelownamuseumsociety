@@ -8,11 +8,9 @@ namespace The_SEO_Framework\Data\Filter;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use The_SEO_Framework\Meta;
-
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -38,6 +36,7 @@ final class Term {
 	/**
 	 * @hook "sanitize_term_meta_ . THE_SEO_FRAMEWORK_TERM_OPTIONS" 10
 	 * @since 5.0.0
+	 * @since 5.2.0 Now stores the canonical URL fully qualified.
 	 *
 	 * @param mixed[] $meta_value An unsanitized value.
 	 * @return array The sanitized term meta. An empty array on failure.
@@ -60,7 +59,14 @@ final class Term {
 					$value = Sanitize::metadata_content( $value );
 					break;
 
-				case 'canonical':
+				case 'title_no_blog_name':
+					$value = Sanitize::boolean_integer( $value );
+					break;
+
+				case 'tw_card_type':
+					$value = Sanitize::twitter_card( $value );
+					break;
+
 				case 'social_image_url':
 					$value = \sanitize_url( $value, [ 'https', 'http' ] );
 					break;
@@ -68,6 +74,10 @@ final class Term {
 				case 'social_image_id':
 					// Bound to social_image_url.
 					$value = empty( $meta_value['social_image_url'] ) ? 0 : \absint( $value );
+					break;
+
+				case 'canonical':
+					$value = Sanitize::fully_qualified_url( $value );
 					break;
 
 				case 'noindex':
@@ -78,15 +88,6 @@ final class Term {
 
 				case 'redirect':
 					$value = Sanitize::redirect_url( $value );
-					break;
-
-				case 'title_no_blog_name':
-					$value = Sanitize::boolean_integer( $value );
-					break;
-
-				case 'tw_card_type':
-					if ( ! \in_array( $value, Meta\Twitter::get_supported_cards(), true ) )
-						$value = ''; // default
 					break;
 
 				default:

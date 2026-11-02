@@ -17,7 +17,7 @@ use The_SEO_Framework\Admin\Settings\Layout\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2016 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2016 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -73,6 +73,8 @@ switch ( $instance ) : // Quite useless, but prepared for expansion.
 		);
 
 		/**
+		 * Values other than `fast`, `accurate`, and `thorough` aren't saved.
+		 *
 		 * @since 5.0.0
 		 * @param array $html_passes_method The HTML pass option by [ 'option_value' => 'Name' ]
 		 */
@@ -117,6 +119,6 @@ switch ( $instance ) : // Quite useless, but prepared for expansion.
 				'<a href="%s" target=_blank rel="noreferrer noopener">%s</a>',
 				'https://kb.theseoframework.com/?p=65#html-passes',
 				\esc_html__( 'Learn how this works.', 'autodescription' ),
-			)
+			),
 		);
 endswitch;

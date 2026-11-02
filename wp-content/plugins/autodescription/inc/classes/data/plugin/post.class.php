@@ -12,14 +12,17 @@ use function The_SEO_Framework\is_headless;
 
 use The_SEO_Framework\{
 	Data,
-	Helper\Post_Type,
-	Helper\Query,
+	Sitemap,
 	Traits\Property_Refresher,
+};
+use The_SEO_Framework\Helper\{
+	Post_Type,
+	Query,
 };
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -116,8 +119,12 @@ class Post {
 		empty( static::$meta_memo ) and static::register_automated_refresh( 'meta_memo' );
 
 		// We test post type support for "post_query"-queries might get past this point.
-		if ( empty( $post_id ) || ! Post_Type::is_supported( \get_post( $post_id )->post_type ?? '' ) )
+		if (
+			   empty( $post_id )
+			|| ! Post_Type::is_supported( \get_post( $post_id )->post_type ?? '' )
+		) {
 			return static::$meta_memo[ $post_id ] = static::get_default_meta( $post_id );
+		}
 
 		// Keep lucky first when exceeding nice numbers. This way, we won't overload memory in memoization.
 		if ( \count( static::$meta_memo ) > 69 )
@@ -241,6 +248,9 @@ class Post {
 	 * @since 4.1.4 Removed deprecated filter.
 	 * @since 5.0.0 1. Moved from `\The_SEO_Framework\Load`.
 	 *              2. Renamed from `save_post_meta`.
+	 * @since 5.2.0 1. Now clears the excluded post ID cache.
+	 *              2. Now refreshes the sitemap.
+	 *              3. Now keeps backslashes. The value is slash-escaped for `update_post_meta()`, which unslashes on write.
 	 *
 	 * @param int|\WP_Post $post_id The post ID. Also accepts Post objects.
 	 * @param array        $data    The post meta fields, will be merged with the defaults.
@@ -281,12 +291,24 @@ class Post {
 			// Save $value, or delete if the $value is empty.
 			// We can safely assume no one-zero/qubit options pass through here thanks to sanitization earlier--alleviating database weight.
 			if ( $value || ( \is_string( $value ) && \strlen( $value ) ) ) {
-				\update_post_meta( $post_id, $field, $value );
+				\update_post_meta(
+					$post_id,
+					$field,
+					\wp_slash( $value ),
+				);
 			} else {
 				// All empty values are deleted here, even if they never existed... is this the best way to handle this?
 				// This is fine for as long as we merge the getter values with the defaults.
 				\delete_post_meta( $post_id, $field );
 			}
+		}
+
+		if (
+			   ! \wp_is_post_revision( $post_id )
+			&& 'auto-draft' !== \get_post_status( $post_id )
+		) {
+			Sitemap\Registry::refresh_sitemaps();
+			Query\Exclusion::clear_excluded_post_ids_cache();
 		}
 	}
 
@@ -378,9 +400,9 @@ class Post {
 		/**
 		 * @since 5.0.0
 		 * @param ?\WP_Term $primary_term The primary term. Null if cannot be generated.
-		 * @param int       $post_id     The post ID.
-		 * @param string    $taxonomy    The taxonomy name.
-		 * @param bool      $is_headless Whether the meta are headless.
+		 * @param int       $post_id      The post ID.
+		 * @param string    $taxonomy     The taxonomy name.
+		 * @param bool      $is_headless  Whether the meta are headless.
 		 */
 		static::$pt_memo[ $post_id ][ $taxonomy ] = \apply_filters(
 			'the_seo_framework_primary_term',
@@ -415,9 +437,9 @@ class Post {
 	 * @since 3.0.0
 	 * @since 5.0.0 Moved from `\The_SEO_Framework\Load`.
 	 *
-	 * @param int|null $post_id  The post ID.
-	 * @param string   $taxonomy The taxonomy name.
-	 * @param int      $value    The new value. If empty, it will delete the entry.
+	 * @param ?int   $post_id  The post ID.
+	 * @param string $taxonomy The taxonomy name.
+	 * @param int    $value    The new value. If empty, it will delete the entry.
 	 * @return bool True on success, false on failure.
 	 */
 	public static function update_primary_term_id( $post_id = null, $taxonomy = '', $value = 0 ) {

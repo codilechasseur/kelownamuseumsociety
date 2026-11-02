@@ -12,7 +12,7 @@ use The_SEO_Framework\Data;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -52,8 +52,8 @@ class Factory {
 
 	/**
 	 * @since 4.2.0
-	 * @var array|null $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                       Leave null to autodetermine query.
+	 * @var ?array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                   Leave null to autodetermine query.
 	 */
 	protected static $args;
 
@@ -69,9 +69,9 @@ class Factory {
 	 * @since 4.2.0
 	 * @access private
 	 *
-	 * @param array|null $args    The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                            Leave null to autodetermine query.
-	 * @param int        $options Modifies return values/assertions. See const ROBOTS_* at /bootstrap/define.php
+	 * @param ?array $args    The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                        Leave null to autodetermine query.
+	 * @param int    $options Modifies return values/assertions. See const ROBOTS_* at /bootstrap/define.php
 	 * @return Factory $this
 	 */
 	public function set( $args = null, $options = 0 ) {

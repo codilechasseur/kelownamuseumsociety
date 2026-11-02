@@ -13,8 +13,10 @@ use const The_SEO_Framework\{
 	ROBOTS_IGNORE_PROTECTION,
 };
 
-use The_SEO_Framework\Data;
-use The_SEO_Framework\Meta\Robots; // Yes, it is legal to share class and namespaces.
+use The_SEO_Framework\{
+	Data,
+	Meta\Robots, // Yes, it is legal to share class and namespaces.
+};
 use The_SEO_Framework\Helper\{
 	Query,
 	Taxonomy,
@@ -22,7 +24,7 @@ use The_SEO_Framework\Helper\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -57,6 +59,7 @@ final class Front extends Factory {
 	 * @since 4.2.0
 	 * @since 4.2.5 1. Removed needlessly duplicate homepage test.
 	 *              2. Moved archive pagination check to index_protection.
+	 * @since 5.2.0 Now reads the per-author robots qubit from user meta.
 	 * @generator
 	 *
 	 * @param string $type The robots generator type (noindex, nofollow...).
@@ -76,6 +79,8 @@ final class Front extends Factory {
 				$qubit = (int) Data\Plugin\Post::get_meta_item( "_genesis_$type" );
 			} elseif ( \is_post_type_archive() ) {
 				$qubit = (int) Data\Plugin\PTA::get_meta_item( $type );
+			} elseif ( Query::is_author() ) {
+				$qubit = (int) Data\Plugin\User::get_current_post_author_meta_item( $type );
 			}
 
 			switch ( isset( $qubit ) ) {
@@ -214,6 +219,7 @@ final class Front extends Factory {
 						 * This filter won't run when a few other conditions for noindex have been met.
 						 *
 						 * @since 4.1.4
+						 * @since 5.2.0 Now also applies when robots meta are generated from arguments.
 						 * @link <https://github.com/sybrew/the-seo-framework/issues/194#issuecomment-864298702>
 						 * @param bool $noindex Whether to enable no posts protection.
 						 */
@@ -228,8 +234,7 @@ final class Front extends Factory {
 				break;
 
 			case 'protected':
-				// We get the "real ID" for WordPress might fault parsing a nefariously forged request.
-				yield 'protected' => Data\Post::is_protected( Query::get_the_real_id() );
+				yield 'protected' => Data\Post::is_protected();
 				break;
 
 			case 'cpage':

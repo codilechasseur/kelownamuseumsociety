@@ -15,13 +15,13 @@ use function The_SEO_Framework\{
 
 use The_SEO_Framework\{
 	Data,
-	Meta,
 	Helper\Query,
+	Meta,
 };
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -41,12 +41,13 @@ use The_SEO_Framework\{
  *
  * @since 5.0.0
  * @access protected
+ *         Access via tsf()->schema()->entities['WebPage'] instead.
  */
 final class WebPage extends Reference {
 
 	/**
 	 * @since 5.0.0
-	 * @var callable[] BUILDERS A list of autoloaded builder callbacks.
+	 * @var callable[] BUILDERS A list of auto-loaded builder callbacks.
 	 */
 	const BUILDERS = [
 		[ __CLASS__, 'build' ],
@@ -66,8 +67,8 @@ final class WebPage extends Reference {
 	 *
 	 * @since 5.0.0
 	 *
-	 * @param array|null $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                         Leave null to autodetermine query.
+	 * @param ?array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                     Leave null to autodetermine query.
 	 * @return string The ID.
 	 */
 	public static function get_id( $args = null ) {
@@ -76,9 +77,11 @@ final class WebPage extends Reference {
 
 	/**
 	 * @since 5.0.0
+	 * @since 5.2.0 1. The front page `about` reference now follows `knowledge_type`.
+	 *              2. Author archives generated from arguments now use `CollectionPage`.
 	 *
-	 * @param array|null $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                         Leave null to autodetermine query.
+	 * @param ?array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                     Leave null to autodetermine query.
 	 * @return ?array $entity The Schema.org graph entity. Null on failure.
 	 */
 	public static function build( $args = null ) {
@@ -109,8 +112,16 @@ final class WebPage extends Reference {
 						'target' => Meta\URI::get_canonical_url( $args ),
 					];
 
-					if ( Data\Plugin::get_option( 'knowledge_output' ) && Query::is_static_front_page( $args['id'] ) )
-						$entity['about'] = &Organization::get_dynamic_ref(); // Organization doesn't use args.
+					if (
+						   Data\Plugin::get_option( 'knowledge_output' )
+						&& Query::is_static_front_page( $args['id'] )
+					) {
+						if ( 'organization' === Data\Plugin::get_option( 'knowledge_type' ) ) {
+							$entity['about'] = &Organization::get_dynamic_ref();
+						} else {
+							$entity['about'] = &Person::get_dynamic_ref();
+						}
+					}
 
 					if ( Query::is_single( $args['id'] ) ) {
 						$entity['datePublished'] = Data\Post::get_published_time( $args['id'] );
@@ -124,6 +135,7 @@ final class WebPage extends Reference {
 						static::$type = 'CollectionPage';
 					break;
 				case 'term':
+				case 'user': // Author archives list posts. ProfilePage needs the person as mainEntity.
 					static::$type = 'CollectionPage';
 			}
 		} else {
@@ -140,8 +152,16 @@ final class WebPage extends Reference {
 				}
 			}
 
-			if ( Data\Plugin::get_option( 'knowledge_output' ) && Query::is_real_front_page() )
-				$entity['about'] = &Organization::get_dynamic_ref();
+			if (
+				   Data\Plugin::get_option( 'knowledge_output' )
+				&& Query::is_real_front_page()
+			) {
+				if ( 'organization' === Data\Plugin::get_option( 'knowledge_type' ) ) {
+					$entity['about'] = &Organization::get_dynamic_ref();
+				} else {
+					$entity['about'] = &Person::get_dynamic_ref();
+				}
+			}
 
 			if ( Query::is_archive() || Query::is_singular_archive() ) {
 				static::$type = 'CollectionPage';

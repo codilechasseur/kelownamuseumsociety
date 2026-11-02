@@ -1,7 +1,6 @@
 <?php
 /**
- * @package The_SEO_Framework\Classes\Facade\Generate_Url
- * @subpackage The_SEO_Framework\Getters\URL
+ * @package The_SEO_Framework\Classes\Facade\Pool
  */
 
 namespace The_SEO_Framework;
@@ -12,7 +11,7 @@ use The_SEO_Framework\Traits\Internal\Static_Deprecator;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -65,10 +64,10 @@ class Pool extends Legacy_API {
 	 * @since 5.0.0
 	 * @api Not used internally.
 	 *
-	 * @return \Closure An anononymous class with subpools.
+	 * @return \Closure An anonymous class with subpools.
 	 */
 	public static function admin() {
-		return static::$pool['admin'] ??= new class {
+		return static::$pool[ __FUNCTION__ ] ??= new class {
 			use Static_Deprecator;
 
 			private $colloquial_handle     = 'tsf()->admin()';
@@ -77,10 +76,10 @@ class Pool extends Legacy_API {
 
 			/**
 			 * @since 5.0.0
-			 * @return \Closure An anononymous class with subpools.
+			 * @return \Closure An anonymous class with subpools.
 			 */
 			public static function layout() {
-				return static::$subpool['layout'] ??= new class {
+				return static::$subpool[ __FUNCTION__ ] ??= new class {
 					use Static_Deprecator;
 
 					private $colloquial_handle     = 'tsf()->admin()->layout()';
@@ -89,10 +88,10 @@ class Pool extends Legacy_API {
 
 					/**
 					 * @since 5.0.0
-					 * @return \The_SEO_Framework\Admin\Settings\Layout\HTML
+					 * @return \The_SEO_Framework\Admin\Settings\Layout\Form
 					 */
 					public static function form() {
-						return static::$subpool['form'] ??= new class extends Admin\Settings\Layout\Form {
+						return static::$subpool[ __FUNCTION__ ] ??= new class extends Admin\Settings\Layout\Form {
 							use Static_Deprecator;
 
 							private $colloquial_handle     = 'tsf()->admin()->layout()->form()';
@@ -106,7 +105,7 @@ class Pool extends Legacy_API {
 					 * @return \The_SEO_Framework\Admin\Settings\Layout\HTML
 					 */
 					public static function html() {
-						return static::$subpool['html'] ??= new class extends Admin\Settings\Layout\HTML {
+						return static::$subpool[ __FUNCTION__ ] ??= new class extends Admin\Settings\Layout\HTML {
 							use Static_Deprecator;
 
 							private $colloquial_handle     = 'tsf()->admin()->layout()->html()';
@@ -122,7 +121,7 @@ class Pool extends Legacy_API {
 			 * @return \The_SEO_Framework\Admin\Menu
 			 */
 			public static function menu() {
-				return static::$subpool['menu'] ??= new class extends Admin\Menu {
+				return static::$subpool[ __FUNCTION__ ] ??= new class extends Admin\Menu {
 					use Static_Deprecator;
 
 					private $colloquial_handle     = 'tsf()->admin()->menu()';
@@ -136,7 +135,7 @@ class Pool extends Legacy_API {
 			 * @return \The_SEO_Framework\Admin\Notice
 			 */
 			public static function notice() {
-				return static::$subpool['notice'] ??= new class extends Admin\Notice {
+				return static::$subpool[ __FUNCTION__ ] ??= new class extends Admin\Notice {
 					use Static_Deprecator;
 
 					private $colloquial_handle     = 'tsf()->admin()->notice()';
@@ -148,7 +147,7 @@ class Pool extends Legacy_API {
 					 * @return \The_SEO_Framework\Admin\Notice\Persistent
 					 */
 					public static function persistent() {
-						return static::$subpool['exclusion'] ??= new class extends Admin\Notice\Persistent {
+						return static::$subpool[ __FUNCTION__ ] ??= new class extends Admin\Notice\Persistent {
 							use Static_Deprecator;
 
 							private $colloquial_handle     = 'tsf()->admin()->notice()->persistent()';
@@ -161,15 +160,57 @@ class Pool extends Legacy_API {
 
 			/**
 			 * @since 5.0.0
-			 * @return \The_SEO_Framework\Admin\Settings\Layout\HTML
+			 * @return \The_SEO_Framework\Admin\Utils
 			 */
 			public static function utils() {
-				return static::$subpool['utils'] ??= new class extends Admin\Utils {
+				return static::$subpool[ __FUNCTION__ ] ??= new class extends Admin\Utils {
 					use Static_Deprecator;
 
 					private $colloquial_handle     = 'tsf()->admin()->utils()';
 					private $deprecated_methods    = [];
 					private $deprecated_properties = [];
+				};
+			}
+
+			/**
+			 * @since 5.2.0
+			 * @return \The_SEO_Framework\Admin\SEOBar\Builder
+			 */
+			public static function seobar() {
+				return static::$subpool[ __FUNCTION__ ] ??= new class extends Admin\SEOBar\Builder {
+					use Static_Deprecator;
+
+					private $colloquial_handle     = 'tsf()->admin()->seobar()';
+					private $deprecated_methods    = [];
+					private $deprecated_properties = [];
+				};
+			}
+
+			/**
+			 * @since 5.2.0
+			 * @return \Closure An anonymous class with subpools.
+			 */
+			public static function scripts() {
+				return static::$subpool[ __FUNCTION__ ] ??= new class {
+					use Static_Deprecator;
+
+					private $colloquial_handle     = 'tsf()->admin()->scripts()';
+					private $deprecated_methods    = [];
+					private $deprecated_properties = [];
+
+					/**
+					 * @since 5.2.0
+					 * @return \The_SEO_Framework\Admin\Script\Loader
+					 */
+					public static function loader() {
+						return static::$subpool[ __FUNCTION__ ] ??= new class extends Admin\Script\Loader {
+							use Static_Deprecator;
+
+							private $colloquial_handle     = 'tsf()->admin()->scripts()->loader()';
+							private $deprecated_methods    = [];
+							private $deprecated_properties = [];
+						};
+					}
 				};
 			}
 		};
@@ -185,7 +226,7 @@ class Pool extends Legacy_API {
 	 * @return \The_SEO_Framework\Meta\Breadcrumbs
 	 */
 	public static function breadcrumbs() {
-		return static::$pool['breadcrumbs'] ??= new class extends Meta\Breadcrumbs {
+		return static::$pool[ __FUNCTION__ ] ??= new class extends Meta\Breadcrumbs {
 			use Static_Deprecator;
 
 			private $colloquial_handle     = 'tsf()->breadcrumbs()';
@@ -201,10 +242,10 @@ class Pool extends Legacy_API {
 	 * @since 5.0.0
 	 * @api Not used internally.
 	 *
-	 * @return \Closure An anononymous class with subpools.
+	 * @return \Closure An anonymous class with subpools.
 	 */
 	public static function data() {
-		return static::$pool['data'] ??= new class {
+		return static::$pool[ __FUNCTION__ ] ??= new class {
 			use Static_Deprecator;
 
 			private $colloquial_handle     = 'tsf()->data()';
@@ -216,7 +257,7 @@ class Pool extends Legacy_API {
 			 * @return \The_SEO_Framework\Data\Blog
 			 */
 			public static function blog() {
-				return static::$subpool['blog'] ??= new class extends Data\Blog {
+				return static::$subpool[ __FUNCTION__ ] ??= new class extends Data\Blog {
 					use Static_Deprecator;
 
 					private $colloquial_handle     = 'tsf()->data()->blog()';
@@ -230,7 +271,7 @@ class Pool extends Legacy_API {
 			 * @return \The_SEO_Framework\Data\Plugin
 			 */
 			public static function plugin() {
-				return static::$subpool['plugin'] ??= new class extends Data\Plugin {
+				return static::$subpool[ __FUNCTION__ ] ??= new class extends Data\Plugin {
 					use Static_Deprecator;
 
 					private $colloquial_handle     = 'tsf()->data()->plugin()';
@@ -239,23 +280,10 @@ class Pool extends Legacy_API {
 
 					/**
 					 * @since 5.0.0
-					 * @return \The_SEO_Framework\Data\Plugin\Filter
-					 */
-					public static function filter() {
-						return static::$subpool['filter'] ??= new class extends Data\Plugin\Filter {
-							use Static_Deprecator;
-
-							private $colloquial_handle     = 'tsf()->data()->plugin()->filter()';
-							private $deprecated_methods    = [];
-							private $deprecated_properties = [];
-						};
-					}
-					/**
-					 * @since 5.0.0
 					 * @return \The_SEO_Framework\Data\Plugin\Helper
 					 */
 					public static function helper() {
-						return static::$subpool['helper'] ??= new class extends Data\Plugin\Helper {
+						return static::$subpool[ __FUNCTION__ ] ??= new class extends Data\Plugin\Helper {
 							use Static_Deprecator;
 
 							private $colloquial_handle     = 'tsf()->data()->plugin()->helper()';
@@ -269,7 +297,7 @@ class Pool extends Legacy_API {
 					 * @return \The_SEO_Framework\Data\Plugin\Post
 					 */
 					public static function post() {
-						return static::$subpool['post'] ??= new class extends Data\Plugin\Post {
+						return static::$subpool[ __FUNCTION__ ] ??= new class extends Data\Plugin\Post {
 							use Static_Deprecator;
 
 							private $colloquial_handle     = 'tsf()->data()->plugin()->post()';
@@ -283,7 +311,7 @@ class Pool extends Legacy_API {
 					 * @return \The_SEO_Framework\Data\Plugin\PTA
 					 */
 					public static function pta() {
-						return static::$subpool['pta'] ??= new class extends Data\Plugin\PTA {
+						return static::$subpool[ __FUNCTION__ ] ??= new class extends Data\Plugin\PTA {
 							use Static_Deprecator;
 
 							private $colloquial_handle     = 'tsf()->data()->plugin()->pta()';
@@ -297,7 +325,7 @@ class Pool extends Legacy_API {
 					 * @return \The_SEO_Framework\Data\Plugin\Setup
 					 */
 					public static function setup() {
-						return static::$subpool['setup'] ??= new class extends Data\Plugin\Setup {
+						return static::$subpool[ __FUNCTION__ ] ??= new class extends Data\Plugin\Setup {
 							use Static_Deprecator;
 
 							private $colloquial_handle     = 'tsf()->data()->plugin()->setup()';
@@ -311,7 +339,7 @@ class Pool extends Legacy_API {
 					 * @return \The_SEO_Framework\Data\Plugin\Term
 					 */
 					public static function term() {
-						return static::$subpool['term'] ??= new class extends Data\Plugin\Term {
+						return static::$subpool[ __FUNCTION__ ] ??= new class extends Data\Plugin\Term {
 							use Static_Deprecator;
 
 							private $colloquial_handle     = 'tsf()->data()->plugin()->term()';
@@ -325,7 +353,7 @@ class Pool extends Legacy_API {
 					 * @return \The_SEO_Framework\Data\Plugin\User
 					 */
 					public static function user() {
-						return static::$subpool['user'] ??= new class extends Data\Plugin\User {
+						return static::$subpool[ __FUNCTION__ ] ??= new class extends Data\Plugin\User {
 							use Static_Deprecator;
 
 							private $colloquial_handle     = 'tsf()->data()->plugin()->user()';
@@ -341,7 +369,7 @@ class Pool extends Legacy_API {
 			 * @return \The_SEO_Framework\Data\Post
 			 */
 			public static function post() {
-				return static::$subpool['post'] ??= new class extends Data\Post {
+				return static::$subpool[ __FUNCTION__ ] ??= new class extends Data\Post {
 					use Static_Deprecator;
 
 					private $colloquial_handle     = 'tsf()->data()->post()';
@@ -355,7 +383,7 @@ class Pool extends Legacy_API {
 			 * @return \The_SEO_Framework\Data\Term
 			 */
 			public static function term() {
-				return static::$subpool['term'] ??= new class extends Data\Term {
+				return static::$subpool[ __FUNCTION__ ] ??= new class extends Data\Term {
 					use Static_Deprecator;
 
 					private $colloquial_handle     = 'tsf()->data()->term()';
@@ -369,7 +397,7 @@ class Pool extends Legacy_API {
 			 * @return \The_SEO_Framework\Data\User
 			 */
 			public static function user() {
-				return static::$subpool['user'] ??= new class extends Data\User {
+				return static::$subpool[ __FUNCTION__ ] ??= new class extends Data\User {
 					use Static_Deprecator;
 
 					private $colloquial_handle     = 'tsf()->data()->user()';
@@ -390,7 +418,7 @@ class Pool extends Legacy_API {
 	 * @return \The_SEO_Framework\Meta\Description
 	 */
 	public static function description() {
-		return static::$pool['description'] ??= new class extends Meta\Description {
+		return static::$pool[ __FUNCTION__ ] ??= new class extends Meta\Description {
 			use Static_Deprecator;
 
 			private $colloquial_handle     = 'tsf()->description()';
@@ -402,11 +430,16 @@ class Pool extends Legacy_API {
 			 * @return \The_SEO_Framework\Meta\Description\Excerpt
 			 */
 			public static function excerpt() {
-				return static::$subpool['excerpt'] ??= new class extends Meta\Description\Excerpt {
+				return static::$subpool[ __FUNCTION__ ] ??= new class extends Meta\Description\Excerpt {
 					use Static_Deprecator;
 
 					private $colloquial_handle     = 'tsf()->description()->excerpt()';
-					private $deprecated_methods    = [];
+					private $deprecated_methods    = [
+						'get_blog_page_excerpt' => [
+							'since'    => '5.2.0',
+							'fallback' => '__return_empty_string',
+						],
+					];
 					private $deprecated_properties = [];
 				};
 			}
@@ -423,7 +456,7 @@ class Pool extends Legacy_API {
 	 * @return \The_SEO_Framework\Data\Filter\Escape
 	 */
 	public static function escape() {
-		return static::$pool['escape'] ??= new class extends Data\Filter\Escape {
+		return static::$pool[ __FUNCTION__ ] ??= new class extends Data\Filter\Escape {
 			use Static_Deprecator;
 
 			private $colloquial_handle     = 'tsf()->escape()';
@@ -442,10 +475,29 @@ class Pool extends Legacy_API {
 	 * @return \The_SEO_Framework\Meta\Facebook
 	 */
 	public static function facebook() {
-		return static::$pool['facebook'] ??= new class extends Meta\Facebook {
+		return static::$pool[ __FUNCTION__ ] ??= new class extends Meta\Facebook {
 			use Static_Deprecator;
 
 			private $colloquial_handle     = 'tsf()->facebook()';
+			private $deprecated_methods    = [];
+			private $deprecated_properties = [];
+		};
+	}
+
+	/**
+	 * Returns the Fediverse API class as instantiated object with deprecation capabilities.
+	 * This allows for easy API access, and it allows us to silence fatal errors.
+	 *
+	 * @since 5.2.0
+	 * @api Not used internally.
+	 *
+	 * @return \The_SEO_Framework\Meta\Fediverse
+	 */
+	public static function fediverse() {
+		return static::$pool[ __FUNCTION__ ] ??= new class extends Meta\Fediverse {
+			use Static_Deprecator;
+
+			private $colloquial_handle     = 'tsf()->fediverse()';
 			private $deprecated_methods    = [];
 			private $deprecated_properties = [];
 		};
@@ -458,10 +510,10 @@ class Pool extends Legacy_API {
 	 * @since 5.0.0
 	 * @api Not used internally.
 	 *
-	 * @return \Closure An anononymous class with subpools.
+	 * @return \Closure An anonymous class with subpools.
 	 */
 	public static function format() {
-		return static::$pool['format'] ??= new class {
+		return static::$pool[ __FUNCTION__ ] ??= new class {
 			use Static_Deprecator;
 
 			private $colloquial_handle     = 'tsf()->format()';
@@ -473,7 +525,7 @@ class Pool extends Legacy_API {
 			 * @return \The_SEO_Framework\Helper\Format\Arrays
 			 */
 			public static function arrays() {
-				return static::$subpool['arrays'] ??= new class extends Helper\Format\Arrays {
+				return static::$subpool[ __FUNCTION__ ] ??= new class extends Helper\Format\Arrays {
 					use Static_Deprecator;
 
 					private $colloquial_handle     = 'tsf()->format()->arrays()';
@@ -487,7 +539,7 @@ class Pool extends Legacy_API {
 			 * @return \The_SEO_Framework\Helper\Format\Color
 			 */
 			public static function color() {
-				return static::$subpool['color'] ??= new class extends Helper\Format\Color {
+				return static::$subpool[ __FUNCTION__ ] ??= new class extends Helper\Format\Color {
 					use Static_Deprecator;
 
 					private $colloquial_handle     = 'tsf()->format()->color()';
@@ -501,7 +553,7 @@ class Pool extends Legacy_API {
 			 * @return \The_SEO_Framework\Helper\Format\Minify
 			 */
 			public static function minify() {
-				return static::$subpool['minify'] ??= new class extends Helper\Format\Minify {
+				return static::$subpool[ __FUNCTION__ ] ??= new class extends Helper\Format\Minify {
 					use Static_Deprecator;
 
 					private $colloquial_handle     = 'tsf()->format()->minify()';
@@ -515,7 +567,7 @@ class Pool extends Legacy_API {
 			 * @return \The_SEO_Framework\Helper\Format\HTML
 			 */
 			public static function html() {
-				return static::$subpool['html'] ??= new class extends Helper\Format\HTML {
+				return static::$subpool[ __FUNCTION__ ] ??= new class extends Helper\Format\HTML {
 					use Static_Deprecator;
 
 					private $colloquial_handle     = 'tsf()->format()->html()';
@@ -529,7 +581,7 @@ class Pool extends Legacy_API {
 			 * @return \The_SEO_Framework\Helper\Format\Markdown
 			 */
 			public static function markdown() {
-				return static::$subpool['markdown'] ??= new class extends Helper\Format\Markdown {
+				return static::$subpool[ __FUNCTION__ ] ??= new class extends Helper\Format\Markdown {
 					use Static_Deprecator;
 
 					private $colloquial_handle     = 'tsf()->format()->markdown()';
@@ -543,7 +595,7 @@ class Pool extends Legacy_API {
 			 * @return \The_SEO_Framework\Helper\Format\Strings
 			 */
 			public static function strings() {
-				return static::$subpool['strings'] ??= new class extends Helper\Format\Strings {
+				return static::$subpool[ __FUNCTION__ ] ??= new class extends Helper\Format\Strings {
 					use Static_Deprecator;
 
 					private $colloquial_handle     = 'tsf()->format()->strings()';
@@ -557,7 +609,7 @@ class Pool extends Legacy_API {
 			 * @return \The_SEO_Framework\Helper\Format\Time
 			 */
 			public static function time() {
-				return static::$subpool['time'] ??= new class extends Helper\Format\Time {
+				return static::$subpool[ __FUNCTION__ ] ??= new class extends Helper\Format\Time {
 					use Static_Deprecator;
 
 					private $colloquial_handle     = 'tsf()->format()->time()';
@@ -578,7 +630,7 @@ class Pool extends Legacy_API {
 	 * @return \The_SEO_Framework\Helper\Guidelines
 	 */
 	public static function guidelines() {
-		return static::$pool['guidelines'] ??= new class extends Helper\Guidelines {
+		return static::$pool[ __FUNCTION__ ] ??= new class extends Helper\Guidelines {
 			use Static_Deprecator;
 
 			private $colloquial_handle     = 'tsf()->guidelines()';
@@ -597,7 +649,7 @@ class Pool extends Legacy_API {
 	 * @return \The_SEO_Framework\Helper\Headers
 	 */
 	public static function headers() {
-		return static::$pool['headers'] ??= new class extends Helper\Headers {
+		return static::$pool[ __FUNCTION__ ] ??= new class extends Helper\Headers {
 			use Static_Deprecator;
 
 			private $colloquial_handle     = 'tsf()->headers()';
@@ -616,7 +668,7 @@ class Pool extends Legacy_API {
 	 * @return \The_SEO_Framework\Meta\Image
 	 */
 	public static function image() {
-		return static::$pool['image'] ??= new class extends Meta\Image {
+		return static::$pool[ __FUNCTION__ ] ??= new class extends Meta\Image {
 			use Static_Deprecator;
 
 			private $colloquial_handle     = 'tsf()->image()';
@@ -628,7 +680,7 @@ class Pool extends Legacy_API {
 			 * @return \The_SEO_Framework\Meta\Image\Utils
 			 */
 			public static function utils() {
-				return static::$subpool['utils'] ??= new class extends Meta\Image\Utils {
+				return static::$subpool[ __FUNCTION__ ] ??= new class extends Meta\Image\Utils {
 					use Static_Deprecator;
 
 					private $colloquial_handle     = 'tsf()->image()->utils()';
@@ -649,7 +701,7 @@ class Pool extends Legacy_API {
 	 * @return \The_SEO_Framework\Meta\Open_Graph
 	 */
 	public static function open_graph() {
-		return static::$pool['open_graph'] ??= new class extends Meta\Open_Graph {
+		return static::$pool[ __FUNCTION__ ] ??= new class extends Meta\Open_Graph {
 			use Static_Deprecator;
 
 			private $colloquial_handle     = 'tsf()->open_graph()';
@@ -668,7 +720,7 @@ class Pool extends Legacy_API {
 	 * @return \The_SEO_Framework\Helper\Post_Type
 	 */
 	public static function post_type() {
-		return static::$pool['post_type'] ??= new class extends Helper\Post_Type {
+		return static::$pool[ __FUNCTION__ ] ??= new class extends Helper\Post_Type {
 			use Static_Deprecator;
 
 			private $colloquial_handle     = 'tsf()->post_type()';
@@ -687,7 +739,7 @@ class Pool extends Legacy_API {
 	 * @return \The_SEO_Framework\Helper\Query
 	 */
 	public static function query() {
-		return static::$pool['query'] ??= new class extends Helper\Query {
+		return static::$pool[ __FUNCTION__ ] ??= new class extends Helper\Query {
 			use Static_Deprecator;
 
 			private $colloquial_handle     = 'tsf()->query()';
@@ -699,7 +751,7 @@ class Pool extends Legacy_API {
 			 * @return \The_SEO_Framework\Helper\Query\Cache
 			 */
 			public static function cache() {
-				return static::$subpool['cache'] ??= new class extends Helper\Query\Cache {
+				return static::$subpool[ __FUNCTION__ ] ??= new class extends Helper\Query\Cache {
 					use Static_Deprecator;
 
 					private $colloquial_handle     = 'tsf()->query()->cache()';
@@ -713,7 +765,7 @@ class Pool extends Legacy_API {
 			 * @return \The_SEO_Framework\Helper\Query\Exclusion
 			 */
 			public static function exclusion() {
-				return static::$subpool['exclusion'] ??= new class extends Helper\Query\Exclusion {
+				return static::$subpool[ __FUNCTION__ ] ??= new class extends Helper\Query\Exclusion {
 					use Static_Deprecator;
 
 					private $colloquial_handle     = 'tsf()->query()->exclusion()';
@@ -727,7 +779,7 @@ class Pool extends Legacy_API {
 			 * @return \The_SEO_Framework\Helper\Query\Utils
 			 */
 			public static function utils() {
-				return static::$subpool['utils'] ??= new class extends Helper\Query\Utils {
+				return static::$subpool[ __FUNCTION__ ] ??= new class extends Helper\Query\Utils {
 					use Static_Deprecator;
 
 					private $colloquial_handle     = 'tsf()->query()->utils()';
@@ -748,7 +800,7 @@ class Pool extends Legacy_API {
 	 * @return \The_SEO_Framework\Meta\Robots
 	 */
 	public static function robots() {
-		return static::$pool['robots'] ??= new class extends Meta\Robots {
+		return static::$pool[ __FUNCTION__ ] ??= new class extends Meta\Robots {
 			use Static_Deprecator;
 
 			private $colloquial_handle     = 'tsf()->robots()';
@@ -767,7 +819,7 @@ class Pool extends Legacy_API {
 	 * @return \The_SEO_Framework\RobotsTXT\Main
 	 */
 	public static function robotstxt() {
-		return static::$pool['robotstxt'] ??= new class extends RobotsTXT\Main {
+		return static::$pool[ __FUNCTION__ ] ??= new class extends RobotsTXT\Main {
 			use Static_Deprecator;
 
 			private $colloquial_handle     = 'tsf()->robotstxt()';
@@ -779,7 +831,7 @@ class Pool extends Legacy_API {
 			 * @return \The_SEO_Framework\RobotsTXT\Utils
 			 */
 			public static function utils() {
-				return static::$subpool['utils'] ??= new class extends RobotsTXT\Utils {
+				return static::$subpool[ __FUNCTION__ ] ??= new class extends RobotsTXT\Utils {
 					use Static_Deprecator;
 
 					private $colloquial_handle     = 'tsf()->robotstxt()->utils()';
@@ -800,7 +852,7 @@ class Pool extends Legacy_API {
 	 * @return \The_SEO_Framework\Data\Filter\Sanitize
 	 */
 	public static function sanitize() {
-		return static::$pool['sanitize'] ??= new class extends Data\Filter\Sanitize {
+		return static::$pool[ __FUNCTION__ ] ??= new class extends Data\Filter\Sanitize {
 			use Static_Deprecator;
 
 			private $colloquial_handle     = 'tsf()->sanitize()';
@@ -819,7 +871,7 @@ class Pool extends Legacy_API {
 	 * @return \The_SEO_Framework\Meta\Schema
 	 */
 	public static function schema() {
-		return static::$pool['schema'] ??= new class extends Meta\Schema {
+		return static::$pool[ __FUNCTION__ ] ??= new class extends Meta\Schema {
 			use Static_Deprecator;
 
 			private $colloquial_handle     = 'tsf()->schema()';
@@ -851,10 +903,10 @@ class Pool extends Legacy_API {
 	 * @since 5.0.0
 	 * @api Not used internally.
 	 *
-	 * @return \Closure An anononymous class with subpools.
+	 * @return \Closure An anonymous class with subpools.
 	 */
 	public static function sitemap() {
-		return static::$pool['sitemap'] ??= new class {
+		return static::$pool[ __FUNCTION__ ] ??= new class {
 			use Static_Deprecator;
 
 			private $colloquial_handle     = 'tsf()->sitemap()';
@@ -871,7 +923,7 @@ class Pool extends Legacy_API {
 			 * @return \The_SEO_Framework\Sitemap\Cache
 			 */
 			public static function cache() {
-				return static::$subpool['cache'] ??= new class extends Sitemap\Cache {
+				return static::$subpool[ __FUNCTION__ ] ??= new class extends Sitemap\Cache {
 					use Static_Deprecator;
 
 					private $colloquial_handle     = 'tsf()->sitemap()->cache()';
@@ -885,7 +937,7 @@ class Pool extends Legacy_API {
 			 * @return \The_SEO_Framework\Sitemap\Cron
 			 */
 			public static function cron() {
-				return static::$subpool['cron'] ??= new class extends Sitemap\Cron {
+				return static::$subpool[ __FUNCTION__ ] ??= new class extends Sitemap\Cron {
 					use Static_Deprecator;
 
 					private $colloquial_handle     = 'tsf()->sitemap()->cron()';
@@ -899,7 +951,7 @@ class Pool extends Legacy_API {
 			 * @return \The_SEO_Framework\Sitemap\Lock
 			 */
 			public static function lock() {
-				return static::$subpool['lock'] ??= new class extends Sitemap\Lock {
+				return static::$subpool[ __FUNCTION__ ] ??= new class extends Sitemap\Lock {
 					use Static_Deprecator;
 
 					private $colloquial_handle     = 'tsf()->sitemap()->lock()';
@@ -913,7 +965,7 @@ class Pool extends Legacy_API {
 			 * @return \The_SEO_Framework\Sitemap\Registry
 			 */
 			public static function registry() {
-				return static::$subpool['registry'] ??= new class extends Sitemap\Registry {
+				return static::$subpool[ __FUNCTION__ ] ??= new class extends Sitemap\Registry {
 					use Static_Deprecator;
 
 					private $colloquial_handle     = 'tsf()->sitemap()->registry()';
@@ -927,7 +979,7 @@ class Pool extends Legacy_API {
 			 * @return \The_SEO_Framework\Sitemap\Utils
 			 */
 			public static function utils() {
-				return static::$subpool['utils'] ??= new class extends Sitemap\Utils {
+				return static::$subpool[ __FUNCTION__ ] ??= new class extends Sitemap\Utils {
 					use Static_Deprecator;
 
 					private $colloquial_handle     = 'tsf()->sitemap()->utils()';
@@ -948,7 +1000,7 @@ class Pool extends Legacy_API {
 	 * @return \The_SEO_Framework\Helper\Taxonomy
 	 */
 	public static function taxonomy() {
-		return static::$pool['taxonomy'] ??= new class extends Helper\Taxonomy {
+		return static::$pool[ __FUNCTION__ ] ??= new class extends Helper\Taxonomy {
 			use Static_Deprecator;
 
 			private $colloquial_handle     = 'tsf()->taxonomy()';
@@ -967,7 +1019,7 @@ class Pool extends Legacy_API {
 	 * @return \The_SEO_Framework\Meta\Theme_Color
 	 */
 	public static function theme_color() {
-		return static::$pool['theme_color'] ??= new class extends Meta\Theme_Color {
+		return static::$pool[ __FUNCTION__ ] ??= new class extends Meta\Theme_Color {
 			use Static_Deprecator;
 
 			private $colloquial_handle     = 'tsf()->theme_color()';
@@ -986,7 +1038,7 @@ class Pool extends Legacy_API {
 	 * @return \The_SEO_Framework\Meta\Title
 	 */
 	public static function title() {
-		return static::$pool['title'] ??= new class extends Meta\Title {
+		return static::$pool[ __FUNCTION__ ] ??= new class extends Meta\Title {
 			use Static_Deprecator;
 
 			private $colloquial_handle     = 'tsf()->title()';
@@ -998,7 +1050,7 @@ class Pool extends Legacy_API {
 			 * @return \The_SEO_Framework\Meta\Title\Conditions
 			 */
 			public static function conditions() {
-				return static::$subpool['conditions'] ??= new class extends Meta\Title\Conditions {
+				return static::$subpool[ __FUNCTION__ ] ??= new class extends Meta\Title\Conditions {
 					use Static_Deprecator;
 
 					private $colloquial_handle     = 'tsf()->title()->conditions()';
@@ -1012,7 +1064,7 @@ class Pool extends Legacy_API {
 			 * @return \The_SEO_Framework\Meta\Title\Utils
 			 */
 			public static function utils() {
-				return static::$subpool['utils'] ??= new class extends Meta\Title\Utils {
+				return static::$subpool[ __FUNCTION__ ] ??= new class extends Meta\Title\Utils {
 					use Static_Deprecator;
 
 					private $colloquial_handle     = 'tsf()->title()->utils()';
@@ -1033,7 +1085,7 @@ class Pool extends Legacy_API {
 	 * @return \The_SEO_Framework\Meta\Twitter
 	 */
 	public static function twitter() {
-		return static::$pool['twitter'] ??= new class extends Meta\Twitter {
+		return static::$pool[ __FUNCTION__ ] ??= new class extends Meta\Twitter {
 			use Static_Deprecator;
 
 			private $colloquial_handle     = 'tsf()->twitter()';
@@ -1052,7 +1104,7 @@ class Pool extends Legacy_API {
 	 * @return \The_SEO_Framework\Meta\URI
 	 */
 	public static function uri() {
-		return static::$pool['uri'] ??= new class extends Meta\URI {
+		return static::$pool[ __FUNCTION__ ] ??= new class extends Meta\URI {
 			use Static_Deprecator;
 
 			private $colloquial_handle     = 'tsf()->uri()';
@@ -1064,7 +1116,7 @@ class Pool extends Legacy_API {
 			 * @return \The_SEO_Framework\Meta\URI\Utils
 			 */
 			public static function utils() {
-				return static::$subpool['utils'] ??= new class extends Meta\URI\Utils {
+				return static::$subpool[ __FUNCTION__ ] ??= new class extends Meta\URI\Utils {
 					use Static_Deprecator;
 
 					private $colloquial_handle     = 'tsf()->uri()->utils()';
@@ -1072,6 +1124,25 @@ class Pool extends Legacy_API {
 					private $deprecated_properties = [];
 				};
 			}
+		};
+	}
+
+	/**
+	 * Returns the User helper as an instantiated object with deprecation capabilities.
+	 * This allows for easy API access, and it allows us to silence fatal errors.
+	 *
+	 * @since 5.2.0
+	 * @api Not used internally.
+	 *
+	 * @return \The_SEO_Framework\Helper\User
+	 */
+	public static function user() {
+		return static::$pool[ __FUNCTION__ ] ??= new class extends Helper\User {
+			use Static_Deprecator;
+
+			private $colloquial_handle     = 'tsf()->user()';
+			private $deprecated_methods    = [];
+			private $deprecated_properties = [];
 		};
 	}
 }

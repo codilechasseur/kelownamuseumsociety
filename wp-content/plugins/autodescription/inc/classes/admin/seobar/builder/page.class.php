@@ -11,22 +11,22 @@ namespace The_SEO_Framework\Admin\SEOBar\Builder;
 use const The_SEO_Framework\ROBOTS_ASSERT;
 
 use The_SEO_Framework\{
+	Admin\SEOBar\Builder, // Yes, it is legal to import the same namespace.
 	Data,
 	Data\Filter\Sanitize,
 	Meta,
 	RobotsTXT,
-	Admin\SEOBar\Builder, // Yes, it is legal to import the same namespace.
 };
 use The_SEO_Framework\Helper\{
-	Guidelines,
 	Format\Strings,
+	Guidelines,
 	Migrate,
 	Query,
 };
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -67,11 +67,12 @@ final class Page extends Main {
 	 * @abstract
 	 */
 	protected function prime_cache() {
+
 		// phpcs:disable PEAR.Functions.FunctionCallSignature.Indent -- False negative.
 		static::get_cache( 'general/i18n/textsizeguidelines' )
 			or static::set_cache(
 				'general/i18n/textsizeguidelines',
-				Guidelines::get_text_size_guidelines_i18n()
+				Guidelines::get_text_size_guidelines_i18n(),
 			);
 
 		static::get_cache( 'general/detect/robotsglobal' )
@@ -100,17 +101,23 @@ final class Page extends Main {
 	 *
 	 * @since 4.0.0
 	 * @since 5.0.0 Removed first parameter.
+	 * @since 5.2.0 Now caches the post type.
 	 * @abstract
 	 */
 	protected function prime_query_cache() {
+
+		$post = \get_post( static::$query['id'] );
+
 		$this->query_cache = [
-			'post'   => \get_post( static::$query['id'] ),
+			'post'   => $post,
 			'meta'   => Data\Plugin\Post::get_meta( static::$query['id'] ), // Use TSF cache--TSF initializes it anyway.
 			'states' => [
 				'ishome'       => Query::is_real_front_page_by_id( static::$query['id'] ),
 				'locale'       => \get_locale(),
-				'isprotected'  => Data\Post::is_protected( static::$query['id'] ),
-				'isdraft'      => Data\Post::is_draft( static::$query['id'] ),
+				'isprotected'  => Data\Post::is_protected( $post ),
+				'isdraft'      => Data\Post::is_draft( $post ),
+				'istrashed'    => Data\Post::is_trash( $post ),
+				'posttype'     => $post->post_type ?? '',
 				'robotsmeta'   => array_merge(
 					[
 						'noindex'   => false,
@@ -143,81 +150,96 @@ final class Page extends Main {
 	}
 
 	/**
+	 * Tests whether indexing replaces the other tests.
+	 *
+	 * @since 5.2.0
+	 * @abstract
+	 *
+	 * @return bool True when the indexing block replaces the other tests, false otherwise.
+	 */
+	protected function has_blocking_noindex() {
+		return false;
+	}
+
+	/**
 	 * Runs title tests.
 	 *
 	 * @since 4.0.0
 	 * @since 4.0.5 Added syntax test.
+	 * @since 5.2.0 Now treats a homepage title of `0` as set when choosing the SEO Settings vs Edit Page assessment.
 	 *
 	 * @return array $item {
 	 *     The SEO Bar title item.
 	 *
-	 *     @type string $symbol The displayed symbol that identifies your bar.
-	 *     @type string $title  The title of the assessment.
-	 *     @type int    $status Power of two. See SEOBar's class constants.
-	 *     @type string $reason The final assessment: The reason for the $status. The latest state-changing reason is used.
-	 *     @type string $assess The assessments on why the reason is set. Keep it short and concise!
-	 *                          Does not accept HTML for performant ARIA support.
+	 *     @type string    $symbol The displayed symbol that identifies your bar.
+	 *     @type string    $title  The title of the assessment.
+	 *     @type int <bit> $status See `STATE_*` class constants.
+	 *     @type string    $reason The final assessment: The reason for the $status. The latest state-changing reason is used.
+	 *     @type string[]  $assess The assessments on why the reason is set. Keep it short and concise!
+	 *                             Does not accept HTML for performant ARIA support.
 	 * }
 	 */
 	protected function test_title() {
 
-		$cache = static::get_cache( 'page/title/defaults' ) ?: static::set_cache(
-			'page/title/defaults',
-			[
-				'params'   => [
-					'untitled'        => Meta\Title::get_untitled_title(),
-					'blogname_quoted' => preg_quote(
-						Sanitize::normalize_metadata_content_for_strcmp( Data\Blog::get_public_blog_name() ),
-						'/',
-					),
-					/* translators: 1 = An assessment, 2 = Disclaimer, e.g. "take it with a grain of salt" */
-					'disclaim'        => \__( '%1$s (%2$s)', 'autodescription' ),
-					'estimated'       => \__( 'Estimated from the number of characters found. The pixel counter asserts the true length.', 'autodescription' ),
-				],
-				'assess'   => [
-					'empty'      => \__( 'No title could be fetched.', 'autodescription' ),
-					'untitled'   => \sprintf(
-						/* translators: %s = "Untitled" */
-						\__( 'No title could be fetched, "%s" is used instead.', 'autodescription' ),
-						Meta\Title::get_untitled_title(),
-					),
-					'protected'  => \__( 'A page protection state is added which increases the length.', 'autodescription' ),
-					'branding'   => [
-						'not'       => \__( "It's not branded. Search engines may ignore your title. Consider adding back the site title.", 'autodescription' ),
-						'manual'    => \__( "It's manually branded.", 'autodescription' ),
-						'automatic' => \__( "It's automatically branded.", 'autodescription' ),
+		$cache =
+			   static::get_cache( 'page/title/defaults' )
+			?? static::set_cache(
+				'page/title/defaults',
+				[
+					'params'   => [
+						'untitled'        => Meta\Title::get_untitled_title(),
+						'blogname_quoted' => preg_quote(
+							Sanitize::normalize_metadata_content_for_strcmp( Data\Blog::get_public_blog_name() ),
+							'/',
+						),
+						/* translators: 1 = An assessment, 2 = Disclaimer, e.g. "take it with a grain of salt" */
+						'disclaim'        => \__( '%1$s (%2$s)', 'autodescription' ),
+						'estimated'       => \__( 'Estimated from the number of characters found. The pixel counter asserts the true length.', 'autodescription' ),
 					],
-					'duplicated' => \__( 'The site title is found multiple times.', 'autodescription' ),
-					'syntax'     => \__( "Markup syntax was found that isn't transformed. Consider rewriting the custom title.", 'autodescription' ),
-				],
-				'reason'   => [
-					'incomplete' => \__( 'Incomplete.', 'autodescription' ),
-					'duplicated' => \__( 'The branding is repeated.', 'autodescription' ),
-					'notbranded' => \__( 'Not branded.', 'autodescription' ),
-					'syntax'     => \__( 'Found markup syntax.', 'autodescription' ),
-				],
-				'defaults' => [
-					'generated' => [
-						'symbol' => \_x( 'TG', 'Title Generated', 'autodescription' ),
-						'title'  => \__( 'Title, generated', 'autodescription' ),
-						'status' => Builder::STATE_GOOD,
-						'reason' => \__( 'Automatically generated.', 'autodescription' ),
-						'assess' => [
-							'base' => \__( "It's built from the page title.", 'autodescription' ),
+					'assess'   => [
+						'empty'      => \__( 'No title could be fetched.', 'autodescription' ),
+						'untitled'   => \sprintf(
+							/* translators: %s = "Untitled" */
+							\__( 'No title could be fetched, "%s" is used instead.', 'autodescription' ),
+							Meta\Title::get_untitled_title(),
+						),
+						'protected'  => \__( 'A page protection state is added which increases the length.', 'autodescription' ),
+						'branding'   => [
+							'not'       => \__( "It's not branded. Search engines may ignore your title. Consider adding back the site title.", 'autodescription' ),
+							'manual'    => \__( "It's manually branded.", 'autodescription' ),
+							'automatic' => \__( "It's automatically branded.", 'autodescription' ),
+						],
+						'duplicated' => \__( 'The site title is found multiple times.', 'autodescription' ),
+						'syntax'     => \__( "Markup syntax was found that isn't transformed. Consider rewriting the custom title.", 'autodescription' ),
+					],
+					'reason'   => [
+						'incomplete' => \__( 'Incomplete.', 'autodescription' ),
+						'duplicated' => \__( 'The branding is repeated.', 'autodescription' ),
+						'notbranded' => \__( 'Not branded.', 'autodescription' ),
+						'syntax'     => \__( 'Found markup syntax.', 'autodescription' ),
+					],
+					'defaults' => [
+						'generated' => [
+							'symbol' => \_x( 'TG', 'Title Generated', 'autodescription' ),
+							'title'  => \__( 'Title, generated', 'autodescription' ),
+							'status' => Builder::STATE_GOOD,
+							'reason' => \__( 'Automatically generated.', 'autodescription' ),
+							'assess' => [
+								'base' => \__( "It's built from the page title.", 'autodescription' ),
+							],
+						],
+						'custom'    => [
+							'symbol' => \_x( 'T', 'Title', 'autodescription' ),
+							'title'  => \__( 'Title', 'autodescription' ),
+							'status' => Builder::STATE_GOOD,
+							'reason' => \__( 'Obtained from page SEO meta input.', 'autodescription' ),
+							'assess' => [
+								'base' => \__( "It's built from page SEO meta input.", 'autodescription' ),
+							],
 						],
 					],
-					'custom'    => [
-						'symbol' => \_x( 'T', 'Title', 'autodescription' ),
-						'title'  => \__( 'Title', 'autodescription' ),
-						'status' => Builder::STATE_GOOD,
-						'reason' => \__( 'Obtained from page SEO meta input.', 'autodescription' ),
-						'assess' => [
-							'base' => \__( "It's built from page SEO meta input.", 'autodescription' ),
-						],
-					],
 				],
-			],
-		);
+			);
 
 		$generator_args = [ 'id' => static::$query['id'] ];
 
@@ -230,7 +252,7 @@ final class Page extends Main {
 
 			if ( $this->query_cache['states']['ishome'] ) {
 				// Don't use cache here, only one page can have this state.
-				if ( Data\Plugin::get_option( 'homepage_title' ) ) {
+				if ( \strlen( Data\Plugin::get_option( 'homepage_title' ) ) ) {
 					$item['assess']['homepage'] = \__( 'The title inputted at the SEO Settings screen is used.', 'autodescription' );
 				} else {
 					$item['assess']['homepage'] = \__( 'The title inputted at the Edit Page screen is used.', 'autodescription' );
@@ -332,7 +354,7 @@ final class Page extends Main {
 		$title_len = mb_strlen( $strcmp_title );
 
 		$guidelines      = Guidelines::get_text_size_guidelines(
-			$this->query_cache['states']['locale']
+			$this->query_cache['states']['locale'],
 		)['title']['search']['chars'];
 		$guidelines_i18n = static::get_cache( 'general/i18n/textsizeguidelines' );
 
@@ -371,21 +393,23 @@ final class Page extends Main {
 	 *
 	 * @since 4.0.0
 	 * @since 4.0.5 Added syntax test.
+	 * @since 5.2.0 1. Now treats a homepage description of `0` as set when choosing the SEO Settings vs Edit Page assessment.
+	 *              2. Now treats a post excerpt of `0` as excerpt content.
 	 *
 	 * @return array $item {
 	 *     The SEO Bar description item.
 	 *
-	 *     @type string $symbol The displayed symbol that identifies your bar.
-	 *     @type string $title  The title of the assessment.
-	 *     @type int    $status Power of two. See SEOBar's class constants.
-	 *     @type string $reason The final assessment: The reason for the $status. The latest state-changing reason is used.
-	 *     @type string $assess The assessments on why the reason is set. Keep it short and concise!
-	 *                          Does not accept HTML for performant ARIA support.
+	 *     @type string    $symbol The displayed symbol that identifies your bar.
+	 *     @type string    $title  The title of the assessment.
+	 *     @type int <bit> $status See `STATE_*` class constants.
+	 *     @type string    $reason The final assessment: The reason for the $status. The latest state-changing reason is used.
+	 *     @type string[]  $assess The assessments on why the reason is set. Keep it short and concise!
+	 *                             Does not accept HTML for performant ARIA support.
 	 * }
 	 */
 	protected function test_description() {
 
-		$cache = static::get_cache( 'page/description/defaults' ) ?: static::set_cache(
+		$cache = static::get_cache( 'page/description/defaults' ) ?? static::set_cache(
 			'page/description/defaults',
 			[
 				'params'   => [
@@ -394,17 +418,15 @@ final class Page extends Main {
 					'estimated'  => \__( 'Estimated from the number of characters found. The pixel counter asserts the true length.', 'autodescription' ),
 					/**
 					 * @since 2.6.0
-					 * @param int $short_word_length The minimum stringlength of words to find as dupes.
+					 * @param int $short_word_length The minimum string length of words to find as dupes.
 					 */
 					'dupe_short' => (int) \apply_filters( 'the_seo_framework_bother_me_desc_length', 3 ),
 				],
 				'assess'   => [
-					'empty'     => \__( 'There is no usable content, so no description could be generated.', 'autodescription' ),
+					'empty'     => \__( 'There is no usable content for description generation. Search engines may create a description from the content found on this page.', 'autodescription' ),
 					'builder'   => \__( 'A page builder is used that renders content dynamically, so no description can be generated for performance and privacy reasons. Consider providing a custom description.', 'autodescription' ),
 					'protected' => \__( 'The page is protected, so no description is generated.', 'autodescription' ),
 					'excerpt'   => \__( "It's built from the page excerpt field.", 'autodescription' ),
-					/* translators: %s = list of repeated words */
-					'dupes'     => \__( 'Found repeated words: %s', 'autodescription' ),
 					'syntax'    => \__( "Markup syntax was found that isn't transformed. Consider rewriting the custom description.", 'autodescription' ),
 				],
 				'reason'   => [
@@ -456,7 +478,7 @@ final class Page extends Main {
 
 			if ( $this->query_cache['states']['ishome'] ) {
 				// Don't use cache here, only one page can have this state.
-				if ( Data\Plugin::get_option( 'homepage_description' ) ) {
+				if ( \strlen( Data\Plugin::get_option( 'homepage_description' ) ) ) {
 					$item['assess']['homepage'] = \__( 'The description inputted at the SEO Settings screen is used.', 'autodescription' );
 				} else {
 					$item['assess']['homepage'] = \__( 'The description inputted at the Edit Page screen is used.', 'autodescription' );
@@ -501,7 +523,7 @@ final class Page extends Main {
 
 				// No description is found. There's no need to continue parsing.
 				return $item;
-			} elseif ( ! empty( $this->query_cache['post']->post_excerpt ) ) {
+			} elseif ( \strlen( $this->query_cache['post']->post_excerpt ?? '' ) ) {
 				// FIXME: This is not necessarily true if the field is filtered...
 				// TODO test if filter "the_seo_framework_description_excerpt" is used?
 				// Use something like the robots generator...? Ugh, here we go again.
@@ -536,6 +558,7 @@ final class Page extends Main {
 				// This must be resolved.
 				$item['reason'] = $cache['reason']['foundmanydupe'];
 				$item['status'] = Builder::STATE_BAD;
+
 				return $item;
 			} else {
 				$item['reason'] = $cache['reason']['founddupe'];
@@ -544,7 +567,7 @@ final class Page extends Main {
 		}
 
 		$guidelines      = Guidelines::get_text_size_guidelines(
-			$this->query_cache['states']['locale']
+			$this->query_cache['states']['locale'],
 		)['description']['search']['chars'];
 		$guidelines_i18n = static::get_cache( 'general/i18n/textsizeguidelines' );
 
@@ -588,17 +611,17 @@ final class Page extends Main {
 	 * @return array $item {
 	 *     The SEO Bar robots indexing item.
 	 *
-	 *     @type string $symbol The displayed symbol that identifies your bar.
-	 *     @type string $title  The title of the assessment.
-	 *     @type int    $status Power of two. See SEOBar's class constants.
-	 *     @type string $reason The final assessment: The reason for the $status. The latest state-changing reason is used.
-	 *     @type string $assess The assessments on why the reason is set. Keep it short and concise!
-	 *                          Does not accept HTML for performant ARIA support.
+	 *     @type string    $symbol The displayed symbol that identifies your bar.
+	 *     @type string    $title  The title of the assessment.
+	 *     @type int <bit> $status See `STATE_*` class constants.
+	 *     @type string    $reason The final assessment: The reason for the $status. The latest state-changing reason is used.
+	 *     @type string[]  $assess The assessments on why the reason is set. Keep it short and concise!
+	 *                             Does not accept HTML for performant ARIA support.
 	 * }
 	 */
 	protected function test_indexing() {
 
-		$cache = static::get_cache( 'page/indexing/defaults' ) ?: static::set_cache(
+		$cache = static::get_cache( 'page/indexing/defaults' ) ?? static::set_cache(
 			'page/indexing/defaults',
 			[
 				'params'   => [],
@@ -614,7 +637,6 @@ final class Page extends Main {
 				'reason'   => [
 					'notpublic'    => \__( 'WordPress overrides the robots directive.', 'autodescription' ),
 					'protected'    => \__( 'The page is protected.', 'autodescription' ),
-					'notpublished' => \__( 'The page is not published.', 'autodescription' ),
 					'canonicalurl' => \__( 'The canonical URL points to another page.', 'autodescription' ),
 				],
 				'defaults' => [
@@ -645,13 +667,26 @@ final class Page extends Main {
 							'base' => \__( "This page isn't published and can't be found publicly.", 'autodescription' ),
 						],
 					],
+					'trashed' => [
+						'symbol' => \_x( 'I', 'Indexing', 'autodescription' ),
+						'title'  => \__( 'Indexing', 'autodescription' ),
+						'status' => Builder::STATE_UNKNOWN,
+						'reason' => \__( 'Page is in the trash.', 'autodescription' ),
+						'assess' => [
+							'base' => \__( "This page is in the trash and can't be found publicly.", 'autodescription' ),
+						],
+					],
 				],
 			],
 		);
 
 		if ( $this->query_cache['states']['isdraft'] ) {
 			$item = $cache['defaults']['draft'];
-			// TODO Really stop asserting from here?
+
+			return $item;
+		} elseif ( $this->query_cache['states']['istrashed'] ) {
+			$item = $cache['defaults']['trashed'];
+
 			return $item;
 		} elseif ( $this->query_cache['states']['robotsmeta']['noindex'] ) {
 			$item = $cache['defaults']['noindex'];
@@ -701,7 +736,7 @@ final class Page extends Main {
 			}
 		}
 
-		if ( ! empty( $robots_global['posttype']['noindex'][ static::$query['post_type'] ] ) ) {
+		if ( ! empty( $robots_global['posttype']['noindex'][ $this->query_cache['states']['posttype'] ] ) ) {
 			// Status is already set.
 			$item['assess']['posttype'] = $cache['assess']['posttype'];
 		}
@@ -750,17 +785,17 @@ final class Page extends Main {
 	 * @return array $item {
 	 *     The SEO Bar robots following item.
 	 *
-	 *     @type string $symbol The displayed symbol that identifies your bar.
-	 *     @type string $title  The title of the assessment.
-	 *     @type int    $status Power of two. See SEOBar's class constants.
-	 *     @type string $reason The final assessment: The reason for the $status. The latest state-changing reason is used.
-	 *     @type string $assess The assessments on why the reason is set. Keep it short and concise!
-	 *                          Does not accept HTML for performant ARIA support.
+	 *     @type string    $symbol The displayed symbol that identifies your bar.
+	 *     @type string    $title  The title of the assessment.
+	 *     @type int <bit> $status See `STATE_*` class constants.
+	 *     @type string    $reason The final assessment: The reason for the $status. The latest state-changing reason is used.
+	 *     @type string[]  $assess The assessments on why the reason is set. Keep it short and concise!
+	 *                             Does not accept HTML for performant ARIA support.
 	 * }
 	 */
 	protected function test_following() {
 
-		$cache = static::get_cache( 'page/following/defaults' ) ?: static::set_cache(
+		$cache = static::get_cache( 'page/following/defaults' ) ?? static::set_cache(
 			'page/following/defaults',
 			[
 				'params'   => [],
@@ -773,8 +808,7 @@ final class Page extends Main {
 					'noindex'   => \__( 'The page may not be indexed, this may also discourage link following.', 'autodescription' ),
 				],
 				'reason'   => [
-					'notpublic'    => \__( 'WordPress overrides the robots directive.', 'autodescription' ),
-					'notpublished' => \__( 'The page is not published.', 'autodescription' ),
+					'notpublic' => \__( 'WordPress overrides the robots directive.', 'autodescription' ),
 				],
 				'defaults' => [
 					'follow'   => [
@@ -804,13 +838,26 @@ final class Page extends Main {
 							'base' => \__( "This page isn't published and can't be found publicly.", 'autodescription' ),
 						],
 					],
+					'trashed'  => [
+						'symbol' => \_x( 'F', 'Following', 'autodescription' ),
+						'title'  => \__( 'Following', 'autodescription' ),
+						'status' => Builder::STATE_UNKNOWN,
+						'reason' => \__( 'Page is in the trash.', 'autodescription' ),
+						'assess' => [
+							'base' => \__( "This page is in the trash and can't be found publicly.", 'autodescription' ),
+						],
+					],
 				],
 			],
 		);
 
 		if ( $this->query_cache['states']['isdraft'] ) {
 			$item = $cache['defaults']['draft'];
-			// TODO Really stop asserting from here?
+
+			return $item;
+		} elseif ( $this->query_cache['states']['istrashed'] ) {
+			$item = $cache['defaults']['trashed'];
+
 			return $item;
 		} elseif ( $this->query_cache['states']['robotsmeta']['nofollow'] ) {
 			$item = $cache['defaults']['nofollow'];
@@ -848,7 +895,7 @@ final class Page extends Main {
 			}
 		}
 
-		if ( ! empty( $robots_global['posttype']['nofollow'][ static::$query['post_type'] ] ) ) {
+		if ( ! empty( $robots_global['posttype']['nofollow'][ $this->query_cache['states']['posttype'] ] ) ) {
 			// Status is already set.
 			$item['assess']['posttype'] = $cache['assess']['posttype'];
 		}
@@ -889,17 +936,17 @@ final class Page extends Main {
 	 * @return array $item {
 	 *     The SEO Bar robots archiving item.
 	 *
-	 *     @type string $symbol The displayed symbol that identifies your bar.
-	 *     @type string $title  The title of the assessment.
-	 *     @type int    $status Power of two. See SEOBar's class constants.
-	 *     @type string $reason The final assessment: The reason for the $status. The latest state-changing reason is used.
-	 *     @type string $assess The assessments on why the reason is set. Keep it short and concise!
-	 *                          Does not accept HTML for performant ARIA support.
+	 *     @type string    $symbol The displayed symbol that identifies your bar.
+	 *     @type string    $title  The title of the assessment.
+	 *     @type int <bit> $status See `STATE_*` class constants.
+	 *     @type string    $reason The final assessment: The reason for the $status. The latest state-changing reason is used.
+	 *     @type string[]  $assess The assessments on why the reason is set. Keep it short and concise!
+	 *                             Does not accept HTML for performant ARIA support.
 	 * }
 	 */
 	protected function test_archiving() {
 
-		$cache = static::get_cache( 'page/archiving/defaults' ) ?: static::set_cache(
+		$cache = static::get_cache( 'page/archiving/defaults' ) ?? static::set_cache(
 			'page/archiving/defaults',
 			[
 				'params'   => [],
@@ -912,8 +959,7 @@ final class Page extends Main {
 					'noindex'   => \__( 'The page may not be indexed, this may also discourage archiving.', 'autodescription' ),
 				],
 				'reason'   => [
-					'notpublic'    => \__( 'WordPress overrides the robots directive.', 'autodescription' ),
-					'notpublished' => \__( 'The page is not published.', 'autodescription' ),
+					'notpublic' => \__( 'WordPress overrides the robots directive.', 'autodescription' ),
 				],
 				'defaults' => [
 					'archive'   => [
@@ -943,13 +989,26 @@ final class Page extends Main {
 							'base' => \__( "This page isn't published and can't be found publicly.", 'autodescription' ),
 						],
 					],
+					'trashed'   => [
+						'symbol' => \_x( 'A', 'Archiving', 'autodescription' ),
+						'title'  => \__( 'Archiving', 'autodescription' ),
+						'status' => Builder::STATE_UNKNOWN,
+						'reason' => \__( 'Page is in the trash.', 'autodescription' ),
+						'assess' => [
+							'base' => \__( "This page is in the trash and can't be found publicly.", 'autodescription' ),
+						],
+					],
 				],
 			],
 		);
 
 		if ( $this->query_cache['states']['isdraft'] ) {
 			$item = $cache['defaults']['draft'];
-			// TODO Really stop asserting from here?
+
+			return $item;
+		} elseif ( $this->query_cache['states']['istrashed'] ) {
+			$item = $cache['defaults']['trashed'];
+
 			return $item;
 		} elseif ( $this->query_cache['states']['robotsmeta']['noarchive'] ) {
 			$item = $cache['defaults']['noarchive'];
@@ -987,7 +1046,7 @@ final class Page extends Main {
 			}
 		}
 
-		if ( ! empty( $robots_global['posttype']['noarchive'][ static::$query['post_type'] ] ) ) {
+		if ( ! empty( $robots_global['posttype']['noarchive'][ $this->query_cache['states']['posttype'] ] ) ) {
 			// Status is already set.
 			$item['assess']['posttype'] = $cache['assess']['posttype'];
 		}
@@ -1024,43 +1083,24 @@ final class Page extends Main {
 	 * Runs redirect tests.
 	 *
 	 * @since 4.0.0
+	 * @since 5.2.0 A stored redirect on a draft or trashed page now warns that
+	 *              it does nothing until the page is published or restored.
 	 *
 	 * @return array $item {
 	 *     The SEO Bar redirect item.
 	 *
-	 *     @type string $symbol The displayed symbol that identifies your bar.
-	 *     @type string $title  The title of the assessment.
-	 *     @type int    $status Power of two. See SEOBar's class constants.
-	 *     @type string $reason The final assessment: The reason for the $status. The latest state-changing reason is used.
-	 *     @type string $assess The assessments on why the reason is set. Keep it short and concise!
-	 *                          Does not accept HTML for performant ARIA support.
+	 *     @type string    $symbol The displayed symbol that identifies your bar.
+	 *     @type string    $title  The title of the assessment.
+	 *     @type int <bit> $status See `STATE_*` class constants.
+	 *     @type string    $reason The final assessment: The reason for the $status. The latest state-changing reason is used.
+	 *     @type string[]  $assess The assessments on why the reason is set. Keep it short and concise!
+	 *                             Does not accept HTML for performant ARIA support.
 	 * }
 	 */
 	protected function test_redirect() {
 
-		if ( empty( $this->query_cache['meta']['redirect'] ) ) {
-			$default = static::get_cache( 'page/redirect/default/0' ) ?: static::set_cache(
-				'page/redirect/default/0',
-				[
-					'symbol' => \_x( 'R', 'Redirect', 'autodescription' ),
-					'title'  => \__( 'Redirection', 'autodescription' ),
-					'status' => Builder::STATE_GOOD,
-					'reason' => \__( 'Page does not redirect visitors.', 'autodescription' ),
-					'assess' => [
-						'redirect' => \__( 'Visitors and crawlers may view this page.', 'autodescription' ),
-					],
-					'meta'   => [
-						'blocking' => false,
-					],
-				],
-			);
-
-			if ( $this->query_cache['states']['isdraft'] )
-				$default['assess']['redirect'] = \__( 'Visitors and crawlers may view this page once published.', 'autodescription' );
-
-			return $default;
-		} else {
-			return static::get_cache( 'post/redirect/default/1' ) ?: static::set_cache(
+		if ( $this->has_blocking_redirect() ) {
+			$item = static::get_cache( 'post/redirect/default/1' ) ?? static::set_cache(
 				'post/redirect/default/1',
 				[
 					'symbol' => \_x( 'R', 'Redirect', 'autodescription' ),
@@ -1075,6 +1115,34 @@ final class Page extends Main {
 					],
 				],
 			);
+
+			if ( $this->query_cache['states']['isdraft'] ) {
+				$item['status']             = Builder::STATE_OKAY;
+				$item['reason']             = \__( 'Redirect is inactive.', 'autodescription' );
+				$item['assess']['redirect'] = \__( 'A redirect is stored but does nothing until the page is published.', 'autodescription' );
+			} elseif ( $this->query_cache['states']['istrashed'] ) {
+				$item['status']             = Builder::STATE_OKAY;
+				$item['reason']             = \__( 'Redirect is inactive.', 'autodescription' );
+				$item['assess']['redirect'] = \__( 'A redirect is stored but does nothing until the page is restored.', 'autodescription' );
+			}
+
+			return $item;
 		}
+
+		return static::get_cache( 'page/redirect/default/0' ) ?? static::set_cache(
+			'page/redirect/default/0',
+			[
+				'symbol' => \_x( 'R', 'Redirect', 'autodescription' ),
+				'title'  => \__( 'Redirection', 'autodescription' ),
+				'status' => Builder::STATE_GOOD,
+				'reason' => \__( 'Page does not redirect visitors.', 'autodescription' ),
+				'assess' => [
+					'redirect' => \__( 'Visitors and crawlers may view this page.', 'autodescription' ),
+				],
+				'meta'   => [
+					'blocking' => false,
+				],
+			],
+		);
 	}
 }

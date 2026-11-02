@@ -10,7 +10,7 @@ namespace The_SEO_Framework\Traits\Internal;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -179,7 +179,6 @@ trait Static_Deprecator {
 	 *
 	 * @param string $name      The method name.
 	 * @param array  $arguments The method arguments.
-	 * @return void
 	 */
 	final public static function __callStatic( $name, $arguments ) { // phpcs:ignore Generic.CodeAnalysis -- abstract magic method.
 		\tsf()->_inaccessible_p_or_m(

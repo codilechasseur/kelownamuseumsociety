@@ -14,15 +14,15 @@ use function The_SEO_Framework\{
 	normalize_generation_args,
 };
 
-use The_SEO_Framework\{
-	Data,
-	Helper\Query,
-	Helper\Format,
+use The_SEO_Framework\Data;
+use The_SEO_Framework\Helper\{
+	Format\HTML,
+	Query,
 };
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -50,17 +50,18 @@ class Excerpt {
 	 * Returns a description excerpt.
 	 *
 	 * @since 5.1.0
+	 * @since 5.2.0 Now falls back to the post content when a singular excerpt is unusable after HTML extraction.
 	 *
-	 * @param array|null $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                         Leave null to autodetermine query.
+	 * @param ?array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                     Leave null to autodetermine query.
 	 * @return string The post, term, pta, or user excerpt.
 	 */
 	public static function get_excerpt( $args = null ) {
 		/**
 		 * @since 5.1.0
-		 * @param string     $excerpt The obtained excerpt.
-		 * @param array|null $args    The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-		 *                            Leave null to autodetermine query.
+		 * @param string $excerpt The obtained excerpt.
+		 * @param ?array $args    The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+		 *                        Leave null to autodetermine query.
 		 * @return string The post, term, pta, or user excerpt.
 		 */
 		return \apply_filters(
@@ -79,8 +80,8 @@ class Excerpt {
 	 * @alias
 	 * @todo deprecate 5.2: use get_excerpt() instead.
 	 *
-	 * @param array|null $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                         Leave null to autodetermine query.
+	 * @param ?array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                     Leave null to autodetermine query.
 	 * @return string
 	 */
 	public static function get_post_excerpt( $args = null ) {
@@ -91,29 +92,32 @@ class Excerpt {
 	 * Returns a description excerpt for the current query.
 	 *
 	 * @since 5.0.0
+	 * @since 5.2.0 1. Now keeps an excerpt of `0` instead of replacing it with an empty string.
+	 *              2. Now uses the singular excerpt for the posts page.
 	 *
 	 * @return string
 	 */
 	public static function get_excerpt_from_query() {
 
 		// phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition -- I know.
-		if ( null !== $memo = memo() ) return $memo;
+		if ( null !== $memo = memo() )
+			return $memo;
 
-		if ( Query::is_blog_as_page() ) {
-			$excerpt = self::get_blog_page_excerpt();
-		} elseif ( Query::is_singular() ) {
+		if ( Query::is_singular() ) {
 			$excerpt = self::get_singular_excerpt();
 		} elseif ( Query::is_archive() ) {
 			$excerpt = self::get_archive_excerpt();
 		}
 
-		return memo( $excerpt ?? '' ?: '' );
+		return memo( $excerpt ?? '' );
 	}
 
 	/**
 	 * Returns a description excerpt for the current query.
 	 *
 	 * @since 5.0.0
+	 * @since 5.2.0 1. Now returns nothing for a latest-posts homepage.
+	 *              2. Now uses the singular excerpt for the posts page.
 	 *
 	 * @param array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
 	 * @return string
@@ -124,47 +128,27 @@ class Excerpt {
 
 		switch ( get_query_type_from_args( $args ) ) {
 			case 'single':
-				if ( Query::is_blog_as_page( $args['id'] ) ) {
-					$excerpt = self::get_blog_page_excerpt();
-				} else {
-					$excerpt = self::get_singular_excerpt( $args['id'] );
-				}
+				$excerpt = self::get_singular_excerpt( $args['id'] );
 				break;
 			case 'term':
 				$excerpt = self::get_archive_excerpt( \get_term( $args['id'], $args['tax'] ) );
-				break;
-			case 'homeblog':
-				$excerpt = self::get_blog_page_excerpt();
 				break;
 			case 'pta':
 				$excerpt = self::get_archive_excerpt( \get_post_type_object( $args['pta'] ) );
 				break;
 			case 'user':
 				$excerpt = self::get_archive_excerpt( Data\User::get_userdata( $args['uid'] ) );
+			// Skip homeblog: a latest-posts homepage has no generated excerpt.
 		}
 
 		return $excerpt ?? '';
 	}
 
 	/**
-	 * Returns a description excerpt for the blog page.
-	 *
-	 * @since 5.0.0
-	 *
-	 * @return string
-	 */
-	private static function get_blog_page_excerpt() {
-		return \sprintf(
-			/* translators: %s = Blog page title. Front-end output. */
-			\__( 'Latest posts: %s', 'autodescription' ),
-			Data\Blog::get_public_blog_name(),
-		);
-	}
-
-	/**
 	 * Returns a description excerpt for archives.
 	 *
 	 * @since 5.0.0
+	 * @since 5.2.0 Now strips HTML from term descriptions.
 	 *
 	 * @param null|\WP_Term|\WP_Post_Type $object The term or post type object.
 	 * @return string
@@ -196,15 +180,15 @@ class Excerpt {
 			'the_seo_framework_get_excerpt',
 		);
 
-		if ( $excerpt ) return $excerpt;
+		if ( $excerpt )
+			return $excerpt;
 
 		if ( $in_the_loop ) {
 			if ( Query::is_category() || Query::is_tag() || Query::is_tax() ) {
-				// WordPress DOES NOT allow HTML in term descriptions, not even if you're a super-administrator.
-				// See https://wpscan.com/vulnerability/8bc4cf95-79f7-4d92-b320-a841ab7e6a6f/. We won't parse HTML tags unless WordPress adds native support.
-				$excerpt = $object->description ?? '';
+				// Core keeps the comment allow-list on term descriptions. Strip those tags so they are not printed as text.
+				$excerpt = HTML::extract_content( $object->description ?? '' );
 			} elseif ( Query::is_author() ) {
-				$excerpt = Format\HTML::extract_content( \get_the_author_meta(
+				$excerpt = HTML::extract_content( \get_the_author_meta(
 					'description',
 					(int) \get_query_var( 'author' ),
 				) );
@@ -244,6 +228,9 @@ class Excerpt {
 			}
 		} else {
 			$excerpt = $object->description ?? '';
+
+			if ( \strlen( $excerpt ) && $object instanceof \WP_Term )
+				$excerpt = HTML::extract_content( $excerpt );
 		}
 
 		return $excerpt;
@@ -251,8 +238,11 @@ class Excerpt {
 
 	/**
 	 * Returns a description excerpt for singular post types.
+	 * Falls back to the post content when the excerpt is unusable after HTML extraction.
+	 * The excerpt and content are not concatenated.
 	 *
 	 * @since 5.0.0
+	 * @since 5.2.0 Now falls back to the post content when the excerpt is unusable after HTML extraction.
 	 * NOTE: Don't add memo; large memory heaps can occur.
 	 *       It only runs twice on the post edit screen (post.php).
 	 *       Front-end caller get_excerpt_from_query() uses memo.
@@ -265,21 +255,24 @@ class Excerpt {
 		$post = \get_post( $id ?? Query::get_the_real_id() );
 
 		// If the post is protected, don't generate a description.
-		if ( ! $post || Data\Post::is_protected( $post ) ) return '';
+		if ( ! $post || Data\Post::is_protected( $post ) )
+			return '';
 
-		$excerpt = Data\Post::get_excerpt( $post );
+		$excerpt = HTML::extract_content( Data\Post::get_excerpt( $post ) );
 
-		if ( empty( $excerpt ) && ! Data\Post::uses_non_html_page_builder( $post->ID ) ) {
-			// We should actually get the parsed content here... but that can be heavy on the server.
-			// We could cache that parsed content, but that'd be asinine for a plugin. WordPress should've done that.
-			$excerpt = Data\Post::get_content( $post );
+		if ( \strlen( $excerpt ) )
+			return $excerpt;
 
-			if ( $excerpt )
-				$excerpt = Format\HTML::strip_paragraph_urls( Format\HTML::strip_newline_urls( $excerpt ) );
-		}
+		if ( Data\Post::uses_non_html_page_builder( $post->ID ) )
+			return '';
 
-		if ( empty( $excerpt ) ) return '';
+		// We should actually get the parsed content here... but that can be heavy on the server.
+		// We could cache that parsed content, but that'd be asinine for a plugin. WordPress should've done that.
+		$excerpt = Data\Post::get_content( $post );
 
-		return Format\HTML::extract_content( $excerpt );
+		if ( $excerpt )
+			$excerpt = HTML::strip_paragraph_urls( HTML::strip_newline_urls( $excerpt ) );
+
+		return HTML::extract_content( $excerpt );
 	}
 }

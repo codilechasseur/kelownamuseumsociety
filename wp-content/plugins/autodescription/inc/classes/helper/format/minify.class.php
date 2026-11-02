@@ -10,7 +10,7 @@ namespace The_SEO_Framework\Helper\Format;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2024 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2024 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -93,6 +93,8 @@ class Minify {
 	 * This method is compatible with XSLT syntax.
 	 *
 	 * @since 5.0.5
+	 * @since 5.2.0 1. No longer minifies ')' followed by a space, to prevent breaking CSS4 selectors like `:not(a) b`.
+	 *              2. No longer minifies spaces around '+', to prevent breaking `calc()` addition.
 	 *
 	 * @param string $sheet The sheet to minify.
 	 * @return string The minified CSS.
@@ -111,9 +113,7 @@ class Minify {
 				'  '   => ' ',
 				' :'   => ':',
 				': '   => ':',
-				' + '  => '+',
 				' )'   => ')',
-				') '   => ')',
 				' ('   => '(',
 				'( '   => '(',
 				' {'   => '{',

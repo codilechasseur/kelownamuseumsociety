@@ -23,7 +23,7 @@ use The_SEO_Framework\Helper\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2016 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2016 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -72,13 +72,14 @@ switch ( $instance ) :
 			 * @since 2.6.0
 			 * @param array $tabs The default tabs.
 			 */
-			(array) \apply_filters( 'the_seo_framework_sitemaps_settings_tabs', $tabs )
+			(array) \apply_filters( 'the_seo_framework_sitemaps_settings_tabs', $tabs ),
 		);
 		break;
 
 	case 'general':
-		$has_sitemap_plugin = Compatibility::get_active_conflicting_plugin_types()['sitemaps'];
-		$sitemap_detected   = Sitemap\Utils::has_root_sitemap_xml();
+		$conflicting_plugins = Compatibility::get_active_conflicting_plugin_types();
+		$has_sitemap_plugin  = $conflicting_plugins['sitemaps'];
+		$sitemap_detected    = Sitemap\Utils::has_root_sitemap_xml();
 
 		HTML::header_title( \__( 'Sitemap Integration Settings', 'autodescription' ) );
 		HTML::description( \__( 'The sitemap is an XML file that lists indexable pages of your website along with optional metadata. It helps search engines find new and updated content quickly.', 'autodescription' ) );
@@ -129,37 +130,91 @@ switch ( $instance ) :
 
 		if ( ! $has_sitemap_plugin && ! $sitemap_detected ) {
 			// Note to self: Do not toggle this condition in JS. The user would get a 404 message if the options have yet to be saved.
+			$sitemap_base_links       = [];
+			$sitemap_translated_links = [];
+
 			if ( Data\Plugin::get_option( 'sitemaps_output' ) ) {
-				HTML::description_noesc( \sprintf(
+				$sitemap_base_links[] = \sprintf(
 					'<a href="%s" target=_blank rel=noopener>%s</a>',
 					\esc_url( Sitemap\Registry::get_expected_sitemap_endpoint_url(), [ 'https', 'http' ] ),
 					\esc_html__( 'View the base sitemap.', 'autodescription' ),
-				) );
-				// TODO In settings generator (TSF 5.0): Overwrite this section for Polylang/WPML and output each sitemap language link respectively.
+				);
+
+				/**
+				 * @since 5.2.0
+				 * @param string[] $endpoints Administrative language names keyed by sitemap endpoint ID.
+				 *                            The ID must exist in `the_seo_framework_sitemap_endpoint_list`.
+				 */
+				$sitemap_language_endpoints = (array) \apply_filters(
+					'the_seo_framework_sitemap_settings_language_endpoints',
+					[],
+				);
+
+				foreach ( $sitemap_language_endpoints as $id => $label ) {
+					$url = Sitemap\Registry::get_expected_sitemap_endpoint_url( $id );
+
+					if ( $url && \strlen( (string) $label ) )
+						$sitemap_translated_links[] = \sprintf(
+							'<a href="%s" target=_blank rel=noopener>%s</a>',
+							\esc_url( $url, [ 'https', 'http' ] ),
+							\esc_html( $label ),
+						);
+				}
 				// TODO Also add a link telling where why it may not work consistently ('try opening in another browser, incognito, etc.')
 			} elseif ( Sitemap\Utils::use_core_sitemaps() ) {
 				$_index_url = \get_sitemap_url( 'index' );
+
 				if ( $_index_url )
-					HTML::description_noesc( \sprintf(
+					$sitemap_base_links[] = \sprintf(
 						'<a href="%s" target=_blank rel=noopener>%s</a>',
 						\esc_url( $_index_url, [ 'https', 'http' ] ),
 						\esc_html__( 'View the sitemap index.', 'autodescription' ),
-					) );
+					);
 			}
 
-			if ( Compatibility::get_active_conflicting_plugin_types()['multilingual'] ) {
-				HTML::attention_noesc(
-					// Markdown escapes.
-					Markdown::convert(
-						\sprintf(
-							/* translators: %s = Documentation URL in markdown */
-							\esc_html__( 'A multilingual plugin has been detected, so your site may have multiple sitemaps. [Learn more](%s).', 'autodescription' ),
-							'https://kb.theseoframework.com/?p=104#same-site-sitemaps',
-						),
-						[ 'a' ],
-						[ 'a_internal' => false ] // opens in new tab.
-					),
-				);
+			if ( $sitemap_base_links || $sitemap_translated_links ) {
+				?>
+				<div id=tsf-sitemap-view-links-unsaved class=hidden>
+					<?php
+					HTML::attention_description( \_n(
+						'The sitemap link below will update after saving.',
+						'The sitemap links below will update after saving.',
+						\count( $sitemap_base_links ) + \count( $sitemap_translated_links ),
+						'autodescription',
+					) );
+					?>
+				</div>
+				<div id=tsf-sitemap-view-links>
+					<?php
+					foreach ( $sitemap_base_links as $sitemap_view_link )
+						HTML::description_noesc( $sitemap_view_link );
+
+					if ( $sitemap_translated_links ) {
+						?>
+						<details>
+							<summary class=description><?php \esc_html_e( 'View translated sitemaps', 'autodescription' ); ?></summary>
+							<?php
+							foreach ( $sitemap_translated_links as $sitemap_view_link )
+								HTML::description_noesc( $sitemap_view_link );
+							?>
+						</details>
+						<?php
+						HTML::description_noesc(
+							// Markdown escapes.
+							Markdown::convert(
+								\sprintf(
+									/* translators: %s = Documentation URL in markdown */
+									\esc_html__( 'Each language has its own sitemap. [Learn more](%s).', 'autodescription' ),
+									'https://kb.theseoframework.com/?p=104#same-site-sitemaps',
+								),
+								[ 'a' ],
+								[ 'a_internal' => false ], // opens in new tab.
+							),
+						);
+					}
+					?>
+				</div>
+				<?php
 			}
 		}
 		?>
@@ -175,7 +230,7 @@ switch ( $instance ) :
 
 		?>
 		<p>
-			<input type=number min=1 max=50000 name="<?php Input::field_name( 'sitemap_query_limit' ); ?>" id="<?php Input::field_id( 'sitemap_query_limit' ); ?>" placeholder="<?= \absint( Data\Plugin\Setup::get_default_option( 'sitemap_query_limit' ) ) ?>" value="<?= \absint( Data\Plugin::get_option( 'sitemap_query_limit' ) ) ?>">
+			<input type=number min=1 max=50000 name="<?php Input::field_name( 'sitemap_query_limit' ); ?>" id="<?php Input::field_id( 'sitemap_query_limit' ); ?>" placeholder="<?= \absint( Data\Plugin\Setup::get_default_option( 'sitemap_query_limit' ) ) ?>" value="<?= \absint( Data\Plugin::get_option( 'sitemap_query_limit' ) ) ?>" data-tsf-proposed="<?= \absint( Data\Plugin\Setup::get_default_option( 'sitemap_query_limit' ) ) ?>">
 		</p>
 		<?php
 		HTML::description( \__( 'Consider lowering this value when the sitemap shows a white screen or notifies you of memory exhaustion.', 'autodescription' ) );
@@ -231,18 +286,18 @@ switch ( $instance ) :
 
 		if ( RobotsTXT\Utils::has_root_robots_txt() ) {
 			HTML::attention_description(
-				\__( 'Note: A robots.txt file has been detected in the root folder of your website, so these settings have no effect.', 'autodescription' )
+				\__( 'Note: A robots.txt file has been detected in the root folder of your website, so these settings have no effect.', 'autodescription' ),
 			);
 			echo '<hr>';
 		} elseif ( ! $robots_url ) {
 			if ( Data\Blog::is_subdirectory_installation() ) {
 				HTML::attention_description(
-					\__( 'Note: This site is installed in a subdirectory, so robots.txt files cannot be generated or used.', 'autodescription' )
+					\__( 'Note: This site is installed in a subdirectory, so robots.txt files cannot be generated or used.', 'autodescription' ),
 				);
 				echo '<hr>';
 			} elseif ( ! Query\Utils::using_pretty_permalinks() ) {
 				HTML::attention_description(
-					\__( "Note: You're using the plain permalink structure; so, no robots.txt file can be generated.", 'autodescription' )
+					\__( "Note: You're using the plain permalink structure; so, no robots.txt file can be generated.", 'autodescription' ),
 				);
 				HTML::description_noesc(
 					Markdown::convert(
@@ -254,7 +309,7 @@ switch ( $instance ) :
 						),
 						[ 'code', 'a' ],
 						[ 'a_internal' => false ], // open in new window.
-					)
+					),
 				);
 				echo '<hr>';
 			}
@@ -301,7 +356,17 @@ switch ( $instance ) :
 
 	case 'style':
 		HTML::header_title( \__( 'Sitemap Styling Settings', 'autodescription' ) );
-		HTML::description( \__( 'You can style the sitemap to give it a more personal look for your visitors. Search engines do not use these styles.', 'autodescription' ) );
+		HTML::description_noesc(
+			Markdown::convert(
+				\sprintf(
+					/* translators: %s = Learn more URL. Markdown! */
+					\esc_html__( 'You can style the sitemap to give it a more personal look for your visitors. Search engines do not use these styles. [Learn more](%s).', 'autodescription' ),
+					'https://kb.theseoframework.com/?p=119#tsf-sitemap-styling',
+				),
+				[ 'a' ],
+				[ 'a_internal' => false ],
+			),
+		);
 		HTML::description( \__( 'Note: Changes may not appear to have an effect directly because the stylesheet is cached in the browser for 30 minutes.', 'autodescription' ) );
 		?>
 		<hr>
@@ -331,7 +396,7 @@ switch ( $instance ) :
 			</label>
 		</p>
 		<p>
-			<input type=text name="<?php Input::field_name( 'sitemap_color_main' ); ?>" class=tsf-color-picker id="<?php Input::field_id( 'sitemap_color_main' ); ?>" placeholder="<?= \esc_attr( $default_colors['main'] ) ?>" value="<?= \esc_attr( $current_colors['main'] ) ?>" data-tsf-default-color="<?= \esc_attr( $default_colors['main'] ) ?>">
+			<input type=text name="<?php Input::field_name( 'sitemap_color_main' ); ?>" class=tsf-color-picker id="<?php Input::field_id( 'sitemap_color_main' ); ?>" placeholder="<?= \esc_attr( $default_colors['main'] ) ?>" value="<?= \esc_attr( $current_colors['main'] ) ?>" data-tsf-default-color="<?= \esc_attr( $default_colors['main'] ) ?>" data-tsf-proposed="<?= \esc_attr( $default_colors['main'] ) ?>">
 		</p>
 
 		<p>
@@ -340,7 +405,7 @@ switch ( $instance ) :
 			</label>
 		</p>
 		<p>
-			<input type=text name="<?php Input::field_name( 'sitemap_color_accent' ); ?>" class=tsf-color-picker id="<?php Input::field_id( 'sitemap_color_accent' ); ?>" placeholder="<?= \esc_attr( $default_colors['accent'] ) ?>" value="<?= \esc_attr( $current_colors['accent'] ) ?>" data-tsf-default-color="<?= \esc_attr( $default_colors['accent'] ) ?>">
+			<input type=text name="<?php Input::field_name( 'sitemap_color_accent' ); ?>" class=tsf-color-picker id="<?php Input::field_id( 'sitemap_color_accent' ); ?>" placeholder="<?= \esc_attr( $default_colors['accent'] ) ?>" value="<?= \esc_attr( $current_colors['accent'] ) ?>" data-tsf-default-color="<?= \esc_attr( $default_colors['accent'] ) ?>" data-tsf-proposed="<?= \esc_attr( $default_colors['accent'] ) ?>">
 		</p>
 
 		<hr>

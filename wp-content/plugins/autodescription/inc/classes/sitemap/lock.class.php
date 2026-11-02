@@ -1,6 +1,6 @@
 <?php
 /**
- * @package The_SEO_Framework\Classes\Sitemap\Cache
+ * @package The_SEO_Framework\Classes\Sitemap\Lock
  * @subpackage The_SEO_Framework\Sitemap
  */
 
@@ -8,11 +8,11 @@ namespace The_SEO_Framework\Sitemap;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use The_SEO_Framework\Helper;
+use The_SEO_Framework\Helper\Headers;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -49,7 +49,8 @@ class Lock {
 
 		$ep_list = Registry::get_sitemap_endpoint_list();
 
-		if ( ! isset( $ep_list[ $sitemap_id ] ) ) return false;
+		if ( ! isset( $ep_list[ $sitemap_id ] ) )
+			return false;
 
 		$lock_id = $ep_list[ $sitemap_id ]['lock_id'] ?? $sitemap_id;
 
@@ -66,7 +67,7 @@ class Lock {
 	 */
 	public static function output_locked_header( $sitemap_id ) {
 
-		Helper\Headers::clean_response_header();
+		Headers::clean_response_header();
 
 		\status_header( 503 );
 		\nocache_headers();
@@ -103,7 +104,8 @@ class Lock {
 
 		$lock_key = self::get_lock_key( $sitemap_id );
 
-		if ( ! $lock_key ) return false;
+		if ( ! $lock_key )
+			return false;
 
 		$ini_max_execution_time = (int) ini_get( 'max_execution_time' );
 

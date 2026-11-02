@@ -15,23 +15,23 @@ use const The_SEO_Framework\{
 
 use function The_SEO_Framework\coalesce_strlen;
 
-use The_SEO_Framework\{
-	Data\Filter\Sanitize,
-	Helper\Post_Type,
-	Helper\Query,
-	Helper\Taxonomy,
-};
 use The_SEO_Framework\Admin\Settings\Layout\{
 	Form,
 	HTML,
 	Input,
+};
+use The_SEO_Framework\Data\Filter\Sanitize;
+use The_SEO_Framework\Helper\{
+	Post_Type,
+	Query,
+	Taxonomy,
 };
 
 // phpcs:disable WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2017 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2017 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -88,9 +88,13 @@ switch ( $instance ) :
 		 */
 		$tabs = (array) \apply_filters( 'the_seo_framework_inpost_settings_tabs', $default_tabs, null );
 
-		echo '<div class="tsf-flex tsf-flex-inside-wrap">';
-		Admin\Settings\Post::flex_nav_tab_wrapper( 'inpost', $tabs );
-		echo '</div>';
+		?>
+		<div class="tsf-flex tsf-flex-inside-wrap">
+			<?php
+			Admin\Settings\Post::flex_nav_tab_wrapper( 'inpost', $tabs );
+			?>
+		</div>
+		<?php
 		break;
 
 	case 'general':
@@ -167,7 +171,7 @@ switch ( $instance ) :
 			</div>
 			<div class="tsf-flex-setting-input tsf-flex">
 				<div class=tsf-title-wrap>
-					<input class=large-text type=text name="autodescription[_genesis_title]" id=autodescription_title value="<?= \esc_html( Sanitize::metadata_content( $meta['_genesis_title'] ) ) ?>" autocomplete=off data-form-type=other>
+					<input class=large-text type=text name="autodescription[_genesis_title]" id=autodescription_title value="<?= \esc_html( Sanitize::metadata_content( $meta['_genesis_title'] ) ) ?>" autocomplete=off data-form-type=other data-tsf-proposed="">
 					<?php
 					Input::output_js_title_data(
 						'autodescription_title',
@@ -235,7 +239,7 @@ switch ( $instance ) :
 				</div>
 			</div>
 			<div class="tsf-flex-setting-input tsf-flex">
-				<textarea class=large-text name="autodescription[_genesis_description]" id=autodescription_description rows=4 cols=4 autocomplete=off><?= \esc_html( Sanitize::metadata_content( $meta['_genesis_description'] ) ) ?></textarea>
+				<textarea class=large-text name="autodescription[_genesis_description]" id=autodescription_description rows=4 cols=4 autocomplete=off data-tsf-proposed=""><?= \esc_html( Sanitize::metadata_content( $meta['_genesis_description'] ) ) ?></textarea>
 				<?php
 				Input::output_js_description_data(
 					'autodescription_description',
@@ -331,7 +335,7 @@ switch ( $instance ) :
 			</div>
 			<div class="tsf-flex-setting-input tsf-flex">
 				<div id=tsf-og-title-wrap>
-					<input class=large-text type=text name="autodescription[_open_graph_title]" id=autodescription_og_title value="<?= \esc_html( Sanitize::metadata_content( $meta['_open_graph_title'] ) ) ?>" autocomplete=off data-form-type=other data-tsf-social-group=autodescription_social_singular data-tsf-social-type=ogTitle>
+					<input class=large-text type=text name="autodescription[_open_graph_title]" id=autodescription_og_title value="<?= \esc_html( Sanitize::metadata_content( $meta['_open_graph_title'] ) ) ?>" autocomplete=off data-form-type=other data-tsf-social-group=autodescription_social_singular data-tsf-social-type=ogTitle data-tsf-proposed="">
 				</div>
 			</div>
 		</div>
@@ -349,7 +353,7 @@ switch ( $instance ) :
 				</div>
 			</div>
 			<div class="tsf-flex-setting-input tsf-flex">
-				<textarea class=large-text name="autodescription[_open_graph_description]" id=autodescription_og_description rows=3 cols=4 autocomplete=off data-tsf-social-group=autodescription_social_singular data-tsf-social-type=ogDesc><?= \esc_html( Sanitize::metadata_content( $meta['_open_graph_description'] ) ) ?></textarea>
+				<textarea class=large-text name="autodescription[_open_graph_description]" id=autodescription_og_description rows=3 cols=4 autocomplete=off data-tsf-social-group=autodescription_social_singular data-tsf-social-type=ogDesc data-tsf-proposed=""><?= \esc_html( Sanitize::metadata_content( $meta['_open_graph_description'] ) ) ?></textarea>
 			</div>
 		</div>
 
@@ -357,7 +361,7 @@ switch ( $instance ) :
 			<div class="tsf-flex-setting-label tsf-flex">
 				<div class="tsf-flex-setting-label-inner-wrap tsf-flex">
 					<label for=autodescription_twitter_title class="tsf-flex-setting-label-item tsf-flex">
-						<div><strong><?php \esc_html_e( 'Twitter Title', 'autodescription' ); ?></strong></div>
+						<div><strong><?php \esc_html_e( 'Twitter Card Title', 'autodescription' ); ?></strong></div>
 					</label>
 					<?php
 					Data\Plugin::get_option( 'display_character_counter' )
@@ -367,7 +371,7 @@ switch ( $instance ) :
 			</div>
 			<div class="tsf-flex-setting-input tsf-flex">
 				<div id=tsf-twitter-title-wrap>
-					<input class=large-text type=text name="autodescription[_twitter_title]" id=autodescription_twitter_title value="<?= \esc_html( Sanitize::metadata_content( $meta['_twitter_title'] ) ) ?>" autocomplete=off data-form-type=other data-tsf-social-group=autodescription_social_singular data-tsf-social-type=twTitle>
+					<input class=large-text type=text name="autodescription[_twitter_title]" id=autodescription_twitter_title value="<?= \esc_html( Sanitize::metadata_content( $meta['_twitter_title'] ) ) ?>" autocomplete=off data-form-type=other data-tsf-social-group=autodescription_social_singular data-tsf-social-type=twTitle data-tsf-proposed="">
 				</div>
 			</div>
 		</div>
@@ -376,7 +380,7 @@ switch ( $instance ) :
 			<div class="tsf-flex-setting-label tsf-flex">
 				<div class="tsf-flex-setting-label-inner-wrap tsf-flex">
 					<label for=autodescription_twitter_description class="tsf-flex-setting-label-item tsf-flex">
-						<div><strong><?php \esc_html_e( 'Twitter Description', 'autodescription' ); ?></strong></div>
+						<div><strong><?php \esc_html_e( 'Twitter Card Description', 'autodescription' ); ?></strong></div>
 					</label>
 					<?php
 					Data\Plugin::get_option( 'display_character_counter' )
@@ -385,7 +389,7 @@ switch ( $instance ) :
 				</div>
 			</div>
 			<div class="tsf-flex-setting-input tsf-flex">
-				<textarea class=large-text name="autodescription[_twitter_description]" id=autodescription_twitter_description rows=3 cols=4 autocomplete=off data-tsf-social-group=autodescription_social_singular data-tsf-social-type=twDesc><?php // phpcs:ignore Squiz.PHP.EmbeddedPhp -- textarea element's content is input. Do not add spaces/tabs/lines: the php tag should stick to >.
+				<textarea class=large-text name="autodescription[_twitter_description]" id=autodescription_twitter_description rows=3 cols=4 autocomplete=off data-tsf-social-group=autodescription_social_singular data-tsf-social-type=twDesc data-tsf-proposed=""><?php // phpcs:ignore Squiz.PHP.EmbeddedPhp -- textarea element's content is input. Do not add spaces/tabs/lines: the php tag should stick to >.
 					// Textareas don't require sanitization in HTML5... other than removing the closing </textarea> tag...?
 					echo \esc_html( Sanitize::metadata_content( $meta['_twitter_description'] ) );
 				// phpcs:ignore Squiz.PHP.EmbeddedPhp
@@ -401,8 +405,8 @@ switch ( $instance ) :
 						<div>
 							<?php
 							HTML::make_info(
-								\__( 'The Twitter Card type is used to determine whether an image appears on the side or as a large cover. This affects X, but also other social platforms like Discord.', 'autodescription' ),
-								'https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/abouts-cards',
+								\__( 'The Twitter Card type controls the link preview layout. On X, the summary card shows a small thumbnail beside truncated title and description; the large-image card overlays the title on the image with no description. On Discord, the image appears small at the side or large below; both card types show the description.', 'autodescription' ),
+								'https://kb.theseoframework.com/?p=451#card-types',
 							);
 							?>
 						</div>
@@ -410,25 +414,26 @@ switch ( $instance ) :
 				</div>
 			</div>
 			<div class="tsf-flex-setting-input tsf-flex">
-				<?php
-				/* translators: %s = default option value */
-				$_default_i18n     = \__( 'Default (%s)', 'autodescription' );
-				$tw_suported_cards = Meta\Twitter::get_supported_cards();
+				<div class=tsf-select-block>
+					<?php
+					/* translators: %s = default option value */
+					$_default_i18n      = \__( 'Default (%s)', 'autodescription' );
+					$tw_supported_cards = Meta\Twitter::get_supported_cards();
 
-				// phpcs:disable WordPress.Security.EscapeOutput -- make_single_select_form() escapes.
-				echo Form::make_single_select_form( [
-					'id'       => 'autodescription_twitter_card_type',
-					'class'    => 'tsf-select-block',
-					'name'     => 'autodescription[_tsf_twitter_card_type]',
-					'label'    => '',
-					'options'  => array_merge(
-						[ '' => \sprintf( $_default_i18n, $_twitter_card ) ],
-						array_combine( $tw_suported_cards, $tw_suported_cards ),
-					),
-					'selected' => $meta['_tsf_twitter_card_type'],
-				] );
-				// phpcs:enable WordPress.Security.EscapeOutput
-				?>
+					// phpcs:disable WordPress.Security.EscapeOutput -- make_single_select_form() escapes.
+					echo Form::make_single_select_form( [
+						'id'       => 'autodescription_twitter_card_type',
+						'name'     => 'autodescription[_tsf_twitter_card_type]',
+						'label'    => '',
+						'options'  => array_merge(
+							[ '' => \sprintf( $_default_i18n, $_twitter_card ) ],
+							array_combine( $tw_supported_cards, $tw_supported_cards ),
+						),
+						'selected' => $meta['_tsf_twitter_card_type'],
+					] );
+					// phpcs:enable WordPress.Security.EscapeOutput
+					?>
+				</div>
 			</div>
 		</div>
 		<?php
@@ -459,7 +464,7 @@ switch ( $instance ) :
 				</div>
 			</div>
 			<div class="tsf-flex-setting-input tsf-flex">
-				<input class=large-text type=url name="autodescription[_social_image_url]" id=autodescription_socialimage-url placeholder="<?= \esc_url( $image_placeholder ) ?>" value="<?= \esc_url( $meta['_social_image_url'] ) ?>" autocomplete=off>
+				<input class=large-text type=url name="autodescription[_social_image_url]" id=autodescription_socialimage-url placeholder="<?= \esc_url( $image_placeholder ) ?>" value="<?= \esc_url( $meta['_social_image_url'] ) ?>" autocomplete=off data-tsf-proposed="<?= \esc_url( $image_placeholder ) ?>">
 				<input type=hidden name="autodescription[_social_image_id]" id=autodescription_socialimage-id value="<?= \absint( $meta['_social_image_id'] ) ?>" disabled class=tsf-enable-media-if-js>
 				<div class="hide-if-no-tsf-js tsf-social-image-buttons">
 					<?php
@@ -538,7 +543,7 @@ switch ( $instance ) :
 				</div>
 			</div>
 			<div class="tsf-flex-setting-input tsf-flex">
-				<input class=large-text type=url name="autodescription[_genesis_canonical_uri]" id=autodescription_canonical placeholder="<?= \esc_url( $default_canonical ) ?>" value="<?= \esc_url( $meta['_genesis_canonical_uri'] ) ?>" autocomplete=off>
+				<input class=large-text type=url name="autodescription[_genesis_canonical_uri]" id=autodescription_canonical placeholder="<?= \esc_url( $default_canonical ) ?>" value="<?= \esc_url( $meta['_genesis_canonical_uri'] ) ?>" autocomplete=off data-tsf-proposed="<?= \esc_url( $default_canonical ) ?>">
 				<?php
 				$post_type   = Query::get_admin_post_type();
 				$permastruct = Meta\URI\Utils::get_url_permastruct( $generator_args );
@@ -638,14 +643,24 @@ switch ( $instance ) :
 					</div>
 					<?php
 					if ( $is_static_front_page ) {
-						printf(
-							'<div class=tsf-flex-setting-label-sub-item><span class="description attention">%s</span></div>',
-							\esc_html__( 'Warning: No public site should ever apply "noindex" or "nofollow" to the homepage.', 'autodescription' ),
-						);
-						printf(
-							'<div class=tsf-flex-setting-label-sub-item><span class=description>%s</span></div>',
-							\esc_html__( 'Note: A non-default selection here will overwrite the global homepage SEO settings.', 'autodescription' ),
-						);
+						?>
+						<div class=tsf-flex-setting-label-sub-item>
+							<?php
+							HTML::attention_description(
+								\__( 'Warning: No public site should ever apply "noindex" or "nofollow" to the homepage.', 'autodescription' ),
+								false,
+							);
+							?>
+						</div>
+						<div class=tsf-flex-setting-label-sub-item>
+							<?php
+							HTML::description(
+								\__( 'Note: A non-default selection here will overwrite the global homepage SEO settings.', 'autodescription' ),
+								false,
+							);
+							?>
+						</div>
+						<?php
 					}
 					?>
 				</div>
@@ -663,29 +678,30 @@ switch ( $instance ) :
 							</div>
 						</div>
 						<div class="tsf-flex-setting-input tsf-flex">
-						<?php
-							/* translators: %s = default option value */
-							$_default_i18n = \__( 'Default (%s)', 'autodescription' );
+							<div class=tsf-select-block>
+								<?php
+								/* translators: %s = default option value */
+								$_default_i18n = \__( 'Default (%s)', 'autodescription' );
 
-							// phpcs:disable WordPress.Security.EscapeOutput -- make_single_select_form() escapes.
-							echo Form::make_single_select_form( [
-								'id'       => $_s['id'],
-								'class'    => 'tsf-select-block',
-								'name'     => \sprintf( 'autodescription[%s]', $_s['option'] ),
-								'label'    => '',
-								'options'  => [
-									0  => \sprintf( $_default_i18n, $_s['_default'] ),
-									-1 => $_s['force_on'],
-									1  => $_s['force_off'],
-								],
-								'selected' => Data\Plugin\Post::get_meta_item( $_s['option'] ),
-								'data'     => [
-									'defaultUnprotected' => $_s['_default'],
-									'defaultI18n'        => $_default_i18n,
-								],
-							] );
-							// phpcs:enable WordPress.Security.EscapeOutput
-						?>
+								// phpcs:disable WordPress.Security.EscapeOutput -- make_single_select_form() escapes.
+								echo Form::make_single_select_form( [
+									'id'       => $_s['id'],
+									'name'     => \sprintf( 'autodescription[%s]', $_s['option'] ),
+									'label'    => '',
+									'options'  => [
+										0  => \sprintf( $_default_i18n, $_s['_default'] ),
+										-1 => $_s['force_on'],
+										1  => $_s['force_off'],
+									],
+									'selected' => Data\Plugin\Post::get_meta_item( $_s['option'] ),
+									'data'     => [
+										'defaultUnprotected' => $_s['_default'],
+										'defaultI18n'        => $_default_i18n,
+									],
+								] );
+								// phpcs:enable WordPress.Security.EscapeOutput
+								?>
+							</div>
 						</div>
 					</div>
 					<?php

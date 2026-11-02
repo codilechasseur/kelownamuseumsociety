@@ -1,7 +1,7 @@
 <?php
 /**
- * @package The_SEO_Framework\Classes\Front\Redirect
- * @subpackage The_SEO_Framework\Redirect
+ * @package The_SEO_Framework\Classes\Front\Title
+ * @subpackage The_SEO_Framework\Title
  */
 
 namespace The_SEO_Framework\Front;
@@ -15,7 +15,7 @@ use The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2020 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2020 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -31,7 +31,7 @@ use The_SEO_Framework\{
  */
 
 /**
- * Prepares redirects.
+ * Prepares document titles.
  *
  * @since 5.0.0
  * @access private
@@ -48,12 +48,16 @@ final class Title {
 
 		if (
 			   ! Query\Utils::query_supports_seo()
-			/**
-			 * @since 2.9.3
-			 * @param bool $overwrite_titles Whether to enable title overwriting.
-			 */
-			|| ! \apply_filters( 'the_seo_framework_overwrite_titles', true )
-		) return;
+			|| ! (
+				/**
+				 * @since 2.9.3
+				 * @param bool $overwrite_titles Whether to enable title overwriting.
+				 */
+				\apply_filters( 'the_seo_framework_overwrite_titles', true )
+			)
+		) {
+			return;
+		}
 
 		// Removes all pre_get_document_title filters.
 		\remove_all_filters( 'pre_get_document_title', false );

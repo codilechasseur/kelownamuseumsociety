@@ -10,7 +10,7 @@ namespace The_SEO_Framework\Front\Meta;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -135,17 +135,16 @@ final class Tags {
 	}
 
 	/**
-	 * Renders an XHTML element. Sane drop-in for DOMDocument and whatnot.
-	 *
-	 * Even though most (if not all) WordPress sites use HTML5, we expect some still use XHTML.
-	 * We expect HTML5 fully on the back-end.
+	 * Renders an HTML5 element. Sane, performant, and secure drop-in for DOMDocument and whatnot.
 	 *
 	 * @since 5.0.0
+	 * @since 5.2.0 Removed XHTML support. The tags are now always rendered in HTML5 syntax.
+	 * @example $attributes `[ 'href' => 'https://example.com/' ]`
 	 *
 	 * @param array         $attributes {
 	 *                          Associative array of tag names and tag values.
 	 *
-	 *                          @type string $value The attributes's value, keyed by name.
+	 *                          @type string {$name} The attributes's value.
 	 *                      }
 	 * @param string        $tag        The element's tag-name.
 	 * @param ?string|array $content    The tag's content. Leave null to not render content.
@@ -216,8 +215,9 @@ final class Tags {
 			);
 		}
 
-		// phpcs:disable WordPress.Security.EscapeOutput -- already escaped.
+		// phpcs:disable WordPress.Security.EscapeOutput -- $attr is escaped above, and $content is conditionally escaped below.
 		if ( isset( $content ) ) {
+			// Normal elements.
 			vprintf(
 				'<%1$s%2$s>%3$s</%1$s>',
 				[
@@ -234,8 +234,9 @@ final class Tags {
 				],
 			);
 		} else {
+			// Void elements.
 			printf(
-				'<%s%s />', // XHTML compatible.
+				'<%s%s>',
 				/** @link <https://www.w3.org/TR/2011/WD-html5-20110525/syntax.html#syntax-tag-name> */
 				preg_replace( '/[^0-9a-zA-Z]+/', '', $tag ),
 				$attr,

@@ -10,7 +10,7 @@ namespace The_SEO_Framework\Helper\Format;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -70,7 +70,7 @@ class Strings {
 	 *              This does mean that the functionality is crippled when the PHP
 	 *              installation isn't unicode compatible; this is unlikely.
 	 * @since 4.0.0 1. Now expects PCRE UTF-8 encoding support.
-	 *              2. Moved input-parameter alterting filters outside of this function.
+	 *              2. Moved input-parameter altering filters outside of this function.
 	 *              3. Short length now works as intended, instead of comparing as less, it compares as less or equal to.
 	 * @since 4.2.0 Now supports detection of connector-dashes, connector-punctuation, and closing quotes,
 	 *              and recognizes those as whole words.
@@ -127,11 +127,9 @@ class Strings {
 			if ( $count < $min_count ) continue;
 
 			if ( ( $use_mb ? mb_strlen( $word ) : \strlen( $word ) ) <= $args['short_word_length'] ) {
-				if ( $count < $args['filter_short_under'] )
-					continue;
+				if ( $count < $args['filter_short_under'] ) continue;
 			} else {
-				if ( $count < $args['filter_under'] )
-					continue;
+				if ( $count < $args['filter_under'] ) continue;
 			}
 
 			// !! Don't use mb_* here. preg_split's offset is in bytes, NOT multibytes.

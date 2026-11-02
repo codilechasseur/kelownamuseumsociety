@@ -12,7 +12,7 @@ namespace The_SEO_Framework;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2017 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2017 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -76,16 +76,16 @@ foreach ( $tabs as $tab => $args ) {
 		 * @param array $args {
 		 *     The tab creation data.
 		 *
-		 *     @type string $id     The nav-tab ID.
-		 *     @type string $tab    The tab name.
-		 *     @type array  $params {
+		 *     @type string $id   The nav-tab ID.
+		 *     @type string $tab  The tab name.
+		 *     @type array  $args {
 		 *         The tab creation arguments.
 		 *
 		 *         @type string   $name     Tab name.
 		 *         @type callable $callback Output function.
 		 *         @type string   $dashicon The dashicon to use.
-		 *         @type mixed    $args     Optional callback function args. These arguments
-		 *                                  will be extracted to variables in scope of the view.
+		 *         @type mixed    $args     Optional callback arguments. Passed as individual
+		 *                                  arguments to the callback.
 		 *     }
 		 * }
 		 */

@@ -16,7 +16,7 @@ use The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2020 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2020 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -40,19 +40,20 @@ use The_SEO_Framework\{
 final class Redirect {
 
 	/**
-	 * Redirects singular page to an alternate URL.
+	 * Redirects the homepage, singular pages, terms, and post type archives to a stored URL.
 	 *
 	 * @hook template_redirect 10
 	 * @since 2.9.0
-	 * @since 3.1.0 1. Now no longer redirects on preview.
-	 *              2. Now listens to post type settings.
-	 * @since 4.0.0 1. No longer tries to redirect on "search".
+	 * @since 3.1.0 Now listens to post type settings.
+	 * @since 4.0.0 1. A plain search is not redirected. A search that is also a term or
+	 *                 post type archive uses that redirect.
 	 *              2. Added term redirect support.
 	 *              3. No longer redirects on Customizer.
 	 * @since 5.0.0 1. Moved from `\The_SEO_Framework\Load`.
 	 *              2. Renamed from `_init_custom_field_redirect`.
+	 *              3. Now follows the stored redirect on preview.
 	 *
-	 * @return void early on non-singular pages.
+	 * @return void Early when the query does not support SEO.
 	 */
 	public static function init_meta_setting_redirect() {
 
@@ -72,7 +73,7 @@ final class Redirect {
 	}
 
 	/**
-	 * Redirects vistor to input $url.
+	 * Redirects visitor to input $url.
 	 *
 	 * @since 2.9.0
 	 * @since 5.0.0 1. Moved from `\The_SEO_Framework\Load`.

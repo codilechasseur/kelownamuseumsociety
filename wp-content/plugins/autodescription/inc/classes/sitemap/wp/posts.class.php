@@ -10,13 +10,13 @@ namespace The_SEO_Framework\Sitemap\WP;
 
 use The_SEO_Framework\{
 	Data,
-	Sitemap,
 	Helper\Format\Time,
+	Sitemap,
 };
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2020 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2020 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -34,6 +34,8 @@ use The_SEO_Framework\{
 /**
  * Augments the WordPress Core 'posts' sitemap.
  *
+ * TSF disabled Post Types do not affect Core features.
+ *
  * @since 4.1.2
  * @since 5.0.0 Moved from `\The_SEO_Framework\Builders\CoreSitemaps`.
  *
@@ -44,7 +46,7 @@ class Posts extends \WP_Sitemaps_Posts {
 	/**
 	 * Gets a URL list for a post type sitemap.
 	 *
-	 * Copied from parent and augmented slightly to return
+	 * Copied from parent and augmented to skip excluded posts and add lastmod.
 	 *
 	 * @since 4.1.2
 	 * @since 4.2.0 Renamed `$post_type` to `$object_subtype` to match parent class
@@ -56,9 +58,10 @@ class Posts extends \WP_Sitemaps_Posts {
 	 *
 	 * @param int    $page_num       Page of results.
 	 * @param string $object_subtype Optional. Post type name. Default empty.
-	 * @return array Array of URLs for a sitemap.
+	 * @return array[] Array of URL information for a sitemap.
 	 */
 	public function get_url_list( $page_num, $object_subtype = '' ) {
+
 		// Restores the more descriptive, specific name for use within this method.
 		$post_type = $object_subtype;
 
@@ -155,8 +158,10 @@ class Posts extends \WP_Sitemaps_Posts {
 				 *
 				 * @param array $sitemap_entry Sitemap entry for the home page.
 				 */
-				$sitemap_entry = \apply_filters( 'wp_sitemaps_posts_show_on_front_entry', $sitemap_entry );
-				$url_list[]    = $sitemap_entry;
+				$url_list[] = \apply_filters(
+					'wp_sitemaps_posts_show_on_front_entry',
+					$sitemap_entry,
+				);
 			}
 		}
 
@@ -192,8 +197,12 @@ class Posts extends \WP_Sitemaps_Posts {
 			 * @param WP_Post $post          Post object.
 			 * @param string  $post_type     Name of the post_type.
 			 */
-			$sitemap_entry = \apply_filters( 'wp_sitemaps_posts_entry', $sitemap_entry, $post, $post_type );
-			$url_list[]    = $sitemap_entry;
+			$url_list[] = \apply_filters(
+				'wp_sitemaps_posts_entry',
+				$sitemap_entry,
+				$post,
+				$post_type,
+			);
 		}
 
 		return $url_list;

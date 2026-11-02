@@ -8,7 +8,7 @@
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2018 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2018 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -67,6 +67,7 @@ window.tsfMedia = function () {
 		if ( button.disabled || 'undefined' === typeof wp.media ) {
 			event.preventDefault();
 			event.stopPropagation();
+
 			return;
 		}
 
@@ -132,6 +133,7 @@ window.tsfMedia = function () {
 		frame.on( 'select', onSelect );
 
 		const onCropped = croppedImage => {
+
 			let url          = croppedImage.url,
 				attachmentId = croppedImage.id;
 				// w = croppedImage.width,
@@ -151,6 +153,7 @@ window.tsfMedia = function () {
 		frame.on( 'cropped', onCropped );
 
 		const onSkippedCrop = selection => {
+
 			let url          = selection.get( 'url' ),
 				attachmentId = selection.get( 'id' );
 				// w = selection.get( 'width' ),
@@ -170,6 +173,7 @@ window.tsfMedia = function () {
 		frame.on( 'skippedcrop', onSkippedCrop );
 
 		const onDone = () => {
+
 			button.textContent = l10n.labels[ imageType ].imgChange;
 
 			if ( inputUrl )
@@ -219,7 +223,7 @@ window.tsfMedia = function () {
 		target.insertAdjacentElement( 'afterend', button );
 
 		if ( animate )
-			tsfUI.fadeIn( button, 250 ); // Magic number: tickbox doesn't quickly disappear; so double the default.
+			tsfUI.fadeIn( button, 250 ); // Magic number: thickbox doesn't quickly disappear; so double the default.
 
 		// Reset cache.
 		_resetImageEditorRemovalActions();
@@ -257,6 +261,7 @@ window.tsfMedia = function () {
 				inputRemove,
 				125, // Magic number: default.
 				() => {
+
 					inputRemove.remove();
 
 					inputSelect.textContent = l10n.labels[ imageType ].imgSelect;
@@ -312,6 +317,7 @@ window.tsfMedia = function () {
 				View.Cropper.prototype.ready.apply( this, arguments );
 			},
 			onImageLoad: function () {
+
 				let imgOptions = this.controller.get( 'imgSelectOptions' ),
 					imgSelect;
 
@@ -324,7 +330,9 @@ window.tsfMedia = function () {
 						{
 							parent: this.$el,
 							onInit: function () {
+
 								this.parent.children().on( 'mousedown touchstart', function( e ) {
+
 									if ( e.shiftKey ) {
 										imgSelect.setOptions( {
 											aspectRatio: '1:1'
@@ -356,6 +364,7 @@ window.tsfMedia = function () {
 		 */
 		const TSFCropper = wp.media.controller.Cropper.extend( {
 			createCropContent: function () {
+
 				this.cropperView = new TSFView( {
 					controller: this,
 					attachment: this.get( 'selection' ).first()
@@ -364,6 +373,7 @@ window.tsfMedia = function () {
 				this.frame.content.set( this.cropperView );
 			},
 			doCrop:            function( attachment ) {
+
 				let cropDetails = attachment.get( 'cropDetails' ),
 					control     = Cropper.control; // prototyped prior cropping, below.
 
@@ -535,6 +545,7 @@ window.tsfMedia = function () {
 	 * @param {!jQuery.event} event
 	 */
 	function _updateButtonText( event ) {
+
 		const imageId   = event.target.dataset.id || '',
 			  imageType = event.target.dataset.type || '';
 
@@ -561,6 +572,7 @@ window.tsfMedia = function () {
 
 		document.querySelectorAll( '.tsf-set-image-button' ).forEach(
 			element => {
+
 				const imageId  = element.dataset.inputId || '',
 					  inputId  = imageId && document.getElementById( `${imageId}-id` ),
 					  inputUrl = imageId && document.getElementById( `${imageId}-url` );
@@ -585,6 +597,7 @@ window.tsfMedia = function () {
 	 * @access private
 	 */
 	function _resetImageEditorSetActions() {
+
 		document.querySelectorAll( '.tsf-set-image-button' ).forEach( el => {
 			el.addEventListener( 'click', _openImageEditor );
 		} );
@@ -597,6 +610,7 @@ window.tsfMedia = function () {
 	 * @access private
 	 */
 	function _resetImageEditorRemovalActions() {
+
 		document.querySelectorAll( '.tsf-remove-image-button' ).forEach( el => {
 			el.addEventListener( 'click', _removeEditorImage );
 		} );
@@ -610,10 +624,12 @@ window.tsfMedia = function () {
 	 * @access private
 	 */
 	function _setupImageEditorActions() {
+
 		_resetImageEditorSetActions();
 		_resetImageEditorRemovalActions();
 
 		document.querySelectorAll( '.tsf-enable-media-if-js' ).forEach( el => {
+
 			el.disabled = false;
 			el.classList.remove( 'tsf-enable-media-if-js' );
 		} );
@@ -628,6 +644,8 @@ window.tsfMedia = function () {
 	 *
 	 * @since 4.1.4
 	 * @since 5.1.0 Reworked to support more notification types.
+	 * @since 5.2.0 1. Now sets `referrerPolicy` to `no-referrer` before assigning `src`.
+	 *              2. Now escapes image warnings before writing the tooltip.
 	 *
 	 * @param {Event} event
 	 */
@@ -648,6 +666,7 @@ window.tsfMedia = function () {
 		let inputSrc = event.target.value || event.target.placeholder || '';
 
 		const showElement = el => {
+
 			if ( firstLoad ) {
 				el.classList.remove( 'hidden' );
 				el.style.opacity = '1';
@@ -662,13 +681,16 @@ window.tsfMedia = function () {
 		// Hide without fading; albeit nicer, it will cause the elements to move when rearranged.
 		// There's no workaround but to keep track of every element's position, which adds a lot of code smell.
 		const hideElement = el => {
+
 			el.classList.add( 'hidden' );
 			el.style.opacity = '0';
 		}
 
 		const updateToolTip = () => {
+
 			if ( ! inputSrc.length ) {
 				[ preview, imageWarning ].forEach( hideElement );
+
 				return;
 			}
 
@@ -680,7 +702,8 @@ window.tsfMedia = function () {
 			const writeTooltips = success => {
 
 				// If the input has changed, we don't want to update the tooltip.
-				if ( currentUpdateTime !== +event.target.dataset.tsfCurrentInputTime ) return;
+				if ( currentUpdateTime !== +event.target.dataset.tsfCurrentInputTime )
+					return;
 
 				let warning     = '',
 					warningType = 'warning';
@@ -690,12 +713,12 @@ window.tsfMedia = function () {
 						// 250px is the max width for tooltips; we subtract 24 for padding, and 1 for subpixel rounding errors.
 						// We set min-height and width as that will prevent jumping. Also, those are the absolute-minimum for sharing/schema images.
 						// imageObject.style    = "max-width:min(100%,225px);max-height:225px;min-width:60px;min-height:60px;border-radius:3px;display:block";
-						imageObject.style    = "max-width:225px;max-height:225px;min-width:60px;min-height:60px;border-radius:3px;display:block;";
+						imageObject.style    = 'max-width:225px;max-height:225px;min-width:60px;min-height:60px;border-radius:3px;display:block;';
 						preview.dataset.desc = imageObject.outerHTML;
 
 						showElement( preview );
 					} else {
-						warning     = l10n.warning.i18n.notLoaded;
+						warning     = tsf.escapeString( l10n.warning.i18n.notLoaded );
 						warningType = 'error';
 
 						hideElement( preview );
@@ -713,13 +736,13 @@ window.tsfMedia = function () {
 								   l10n.warning.forbiddenTypes?.[ imageType ]?.hasOwnProperty( ext )
 								|| l10n.warning.forbiddenTypes?.all?.hasOwnProperty( ext )
 							) {
-								warning     = l10n.warning.i18n.extForbidden.replace( '%s', tsf.escapeString( ext ) );
+								warning     = tsf.escapeString( l10n.warning.i18n.extForbidden ).replace( '%s', tsf.escapeString( ext ) );
 								warningType = 'error';
 							} else if (
 								   l10n.warning.warnedTypes?.[ imageType ]?.hasOwnProperty( ext )
 								|| l10n.warning.warnedTypes?.all?.hasOwnProperty( ext )
 							) {
-								warning = l10n.warning.i18n.extWarned.replace( '%s', tsf.escapeString( ext ) );
+								warning = tsf.escapeString( l10n.warning.i18n.extWarned ).replace( '%s', tsf.escapeString( ext ) );
 							}
 						}
 						// TODO: If the above fails, we'd have to parse the MIME type.
@@ -744,16 +767,19 @@ window.tsfMedia = function () {
 			// Prepare asynchronous tooltip update.
 			let invokedTooltipUpdate = false;
 			imageObject.onload  = () => {
+
 				writeTooltips( true );
 				invokedTooltipUpdate = true;
 			}
 			imageObject.onerror = () => {
+
 				writeTooltips( false );
 				invokedTooltipUpdate = true;
 			}
 			// Do something after 7s if neither loads have been invoked (slow connection, huge image).
 			setTimeout(
 				() => {
+
 					if ( ! invokedTooltipUpdate ) {
 						imageObject.src = '';
 						writeTooltips( false );
@@ -777,8 +803,12 @@ window.tsfMedia = function () {
 			 *
 			 * We are NOT creating a document node here, that's something we leave for the tooltip.
 			 * We're just writing a template.
+			 *
+			 * no-referrer matches rel=noreferrer on TSF's external links.
+			 * Set before src, because src immediately fetches the image.
 			 */
-			imageObject.src = inputSrc;
+			imageObject.referrerPolicy = 'no-referrer';
+			imageObject.src            = inputSrc;
 		}
 
 		event.target.dataset.tsfNotificationsLoaded = true;
@@ -789,7 +819,7 @@ window.tsfMedia = function () {
 				updateToolTip,
 				// High timeout: Don't DoS the inputted URL, plus the delay is quite nice. This equals to about 522ms.
 				firstLoad && 0 ? inputSrc.length : 1000/(115/60), // Magic number: 115 Keys/Min is considered a "slow" typer. ISBN: 978-3-319-20498-7.
-			)
+			),
 		);
 	}
 
@@ -800,7 +830,9 @@ window.tsfMedia = function () {
 	 * @access private
 	 */
 	function _prepareTooltip() {
+
 		document.querySelectorAll( '.tsf-image-notifications' ).forEach( el => {
+
 			const inputUrl = document.getElementById( `${el.dataset.for}-url` );
 			if ( ! inputUrl ) return;
 
@@ -824,24 +856,28 @@ window.tsfMedia = function () {
 	 */
 	const resetImageEditorActions = tsfUtils.debounce( _setupImageEditorActions, 500 );
 
-	return Object.assign( {
-		/**
-		 * Initialises all aspects of the scripts.
-		 * You shouldn't call this.
-		 *
-		 * @since 3.1.0
-		 * @access protected
-		 *
-		 * @function
-		 */
-		load: () => {
-			// Initialize image uploader button cache.
-			document.body.addEventListener( 'tsf-ready', _setupImageEditorActions );
+	return Object.assign(
+		{
+			/**
+			 * Initialises all aspects of the scripts.
+			 * You shouldn't call this.
+			 *
+			 * @since 3.1.0
+			 * @access protected
+			 *
+			 * @function
+			 */
+			load: () => {
+				// Initialize image uploader button cache.
+				document.body.addEventListener( 'tsf-ready', _setupImageEditorActions );
+			},
 		},
-	}, {
-		resetImageEditorActions,
-	}, {
-		l10n,
-	} );
+		{
+			resetImageEditorActions,
+		},
+		{
+			l10n,
+		},
+	);
 }();
 window.tsfMedia.load();

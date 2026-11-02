@@ -12,7 +12,7 @@ use The_SEO_Framework\Sitemap;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2020 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2020 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -29,6 +29,8 @@ use The_SEO_Framework\Sitemap;
 
 /**
  * Augments the WordPress Core 'taxonomies' sitemap.
+ *
+ * TSF disabled Post Types and Taxonomies do not affect Core features.
  *
  * @since 4.1.2
  * @since 5.0.0 Moved from `\The_SEO_Framework\Builders\CoreSitemaps`.
@@ -51,9 +53,10 @@ class Taxonomies extends \WP_Sitemaps_Taxonomies {
 	 *
 	 * @param int    $page_num       Page of results.
 	 * @param string $object_subtype Optional. Taxonomy name. Default empty.
-	 * @return array Array of URLs for a sitemap.
+	 * @return array[] Array of URL information for a sitemap.
 	 */
 	public function get_url_list( $page_num, $object_subtype = '' ) {
+
 		// Restores the more descriptive, specific name for use within this method.
 		$taxonomy        = $object_subtype;
 		$supported_types = $this->get_object_subtypes();
@@ -90,7 +93,7 @@ class Taxonomies extends \WP_Sitemaps_Taxonomies {
 		$offset = ( $page_num - 1 ) * \wp_sitemaps_get_max_urls( $this->object_type );
 
 		$args           = $this->get_taxonomies_query_args( $taxonomy );
-		$args['fields'] = 'all'; // On WP<6.0 this is 'ids'; overwrite it. This line is a mirror of WPv6.0, too.
+		$args['fields'] = 'all'; // Pin to 'all'; mirrors WP core's own sitemap query.
 		$args['offset'] = $offset;
 
 		$taxonomy_terms = new \WP_Term_Query( $args );
@@ -104,12 +107,7 @@ class Taxonomies extends \WP_Sitemaps_Taxonomies {
 
 			$term_link = \get_term_link( $term, $taxonomy );
 
-			if ( \is_wp_error( $term_link ) )
-				continue;
-
-			$sitemap_entry = [
-				'loc' => $term_link,
-			];
+			if ( \is_wp_error( $term_link ) ) continue;
 
 			/**
 			 * Filters the sitemap entry for an individual term.
@@ -122,8 +120,13 @@ class Taxonomies extends \WP_Sitemaps_Taxonomies {
 			 * @param string  $taxonomy      Taxonomy name.
 			 * @param WP_Term $term          Term object.
 			 */
-			$sitemap_entry = \apply_filters( 'wp_sitemaps_taxonomies_entry', $sitemap_entry, $term->term_id, $taxonomy, $term );
-			$url_list[]    = $sitemap_entry;
+			$url_list[] = \apply_filters(
+				'wp_sitemaps_taxonomies_entry',
+				[ 'loc' => $term_link ],
+				$term->term_id,
+				$taxonomy,
+				$term,
+			);
 		}
 
 		return $url_list;

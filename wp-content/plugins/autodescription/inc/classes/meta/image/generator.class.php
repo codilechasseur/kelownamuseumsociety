@@ -8,15 +8,15 @@ namespace The_SEO_Framework\Meta\Image;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-use The_SEO_Framework\{
-	Data,
-	Helper\Query,
-	Helper\Format,
+use The_SEO_Framework\Data;
+use The_SEO_Framework\Helper\{
+	Format\HTML,
+	Query,
 };
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -52,9 +52,9 @@ final class Generator {
 	 * @since 5.0.0 No longer yields if there's obviously no URL.
 	 * @generator
 	 *
-	 * @param array|null $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                         Leave null to autodetermine query.
-	 * @param string     $size The size of the image to get.
+	 * @param ?array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                     Leave null to autodetermine query.
+	 * @param string $size The size of the image to get.
 	 * @yield array {
 	 *     The image details.
 	 *
@@ -81,9 +81,9 @@ final class Generator {
 	 * @since 5.0.0 No longer yields if there's obviously no URL.
 	 * @generator
 	 *
-	 * @param array|null $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                         Leave null to autodetermine query.
-	 * @param string     $size The size of the image to get.
+	 * @param ?array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                     Leave null to autodetermine query.
+	 * @param string $size The size of the image to get.
 	 * @yield array {
 	 *     The image details.
 	 *
@@ -114,12 +114,13 @@ final class Generator {
 	 * @since 4.2.7 1. No longer accidentally matches `<imganything` or `<img notsrc="source">`.
 	 *              2. Can no longer use images from `datalist`, `dialog`, `hgroup`, `menu`, `ol`, `object`, `output`, and `template` elements.
 	 *              3. No longer expect images from `dd`, `dt`, `figcaption`, `li`, `tfoot`, `br`, `hr`, `link`, `meta`, `option`, `samp`.
+	 * @since 5.2.0 Now yields at most 5 content images instead of 6.
 	 * @generator
 	 * @TODO consider matching these images with wp-content/uploads items via database calls, which is heavy...
 	 *       Combine query, instead of using WP API? Only do that for the first image, instead?
 	 *
-	 * @param array|null $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                         Leave null to autodetermine query.
+	 * @param ?array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                     Leave null to autodetermine query.
 	 * @yield array {
 	 *     The image details.
 	 *
@@ -142,8 +143,8 @@ final class Generator {
 
 		// \strlen( '<img src=a>' ) === 11; yes, that's a valid self-closing tag with a relative source.
 		if ( \strlen( $content ) > 10 && false !== stripos( $content, '<img ' ) ) {
-			// Clear what might have unfavourable images.
-			$content = Format\HTML::strip_tags_cs(
+			// Clear what might have unfavorable images.
+			$content = HTML::strip_tags_cs(
 				$content,
 				[
 					'space' => [],
@@ -174,7 +175,7 @@ final class Generator {
 				'id'  => 0,
 			];
 
-			if ( ++$yielded_images > self::MAX_CONTENT_IMAGES ) break;
+			if ( ++$yielded_images >= self::MAX_CONTENT_IMAGES ) break;
 		}
 	}
 
@@ -206,16 +207,16 @@ final class Generator {
 	/**
 	 * Generates image URLs and IDs from the theme header defaults or options.
 	 *
-	 * N.B. This output may be randomized.
-	 *
 	 * @since 4.0.0
 	 * @since 5.0.0 No longer yields if there's obviously no URL.
 	 * @since 5.0.1 No longer uses `get_custom_header()`, which tried to generate images.
+	 * @since 5.2.0 1. Now yields a header image when `header_image_data` is stored as an array.
+	 *              2. Now yields nothing when the header is removed or random.
 	 * @generator
 	 *
-	 * @param array|null $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                         Leave null to autodetermine query.
-	 * @param string     $size The size of the image to get.
+	 * @param ?array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                     Leave null to autodetermine query.
+	 * @param string $size The size of the image to get.
 	 * @yield array {
 	 *     The image details.
 	 *
@@ -225,31 +226,44 @@ final class Generator {
 	 */
 	public static function generate_theme_header_image_details( $args = null, $size = 'full' ) {
 
+		$header_image = \get_theme_mod( 'header_image' );
+
+		// Core strips header_image_data for these, so the theme data must not be accepted.
+		if (
+			   'remove-header' === $header_image
+			|| 'random-default-image' === $header_image
+			|| 'random-uploaded-image' === $header_image
+		) {
+			return;
+		}
+
 		$image = \get_theme_mod(
 			'header_image_data',
 			\get_theme_support( 'custom-header', 'default-image' ),
 		);
 
-		if ( \is_string( $image ) && $image ) {
+		if ( ! $image ) return;
+
+		if ( \is_string( $image ) ) {
 			yield [
 				'url' => $image,
 				'id'  => 0,
 			];
-		} elseif ( \is_object( $image ) && ! empty( $image->url ) ) {
-			if ( empty( $image->attachment_id ) ) { // This property isn't stored by default.
-				yield [
-					'url' => $image->url,
-					'id'  => 0,
-				];
-			} else {
-				$url = \wp_get_attachment_image_url( $image->attachment_id, $size );
+		} else {
+			// A header picked from the uploaded or default list is stored as an array, others as an object. See WP's set_header_image().
+			$image    = (object) $image;
+			$image_id = $image->attachment_id ?? 0;
 
-				if ( $url )
-					yield [
-						'url' => $url,
-						'id'  => $image->attachment_id,
-					];
-			}
+			// attachment_id isn't stored by default.
+			$url = $image_id
+				? \wp_get_attachment_image_url( $image_id, $size )
+				: ( $image->url ?? '' );
+
+			if ( $url )
+				yield [
+					'url' => $url,
+					'id'  => $image_id,
+				];
 		}
 	}
 
@@ -260,9 +274,9 @@ final class Generator {
 	 * @since 5.0.0 No longer yields if there's obviously no URL.
 	 * @generator
 	 *
-	 * @param array|null $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                         Leave null to autodetermine query.
-	 * @param string     $size The size of the image to get.
+	 * @param ?array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                     Leave null to autodetermine query.
+	 * @param string $size The size of the image to get.
 	 * @yield array {
 	 *     The image details.
 	 *
@@ -290,9 +304,9 @@ final class Generator {
 	 * @since 5.0.0 No longer yields if there's obviously no URL.
 	 * @generator
 	 *
-	 * @param array|null $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                         Leave null to autodetermine query.
-	 * @param string     $size The size of the image to get.
+	 * @param ?array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                     Leave null to autodetermine query.
+	 * @param string $size The size of the image to get.
 	 * @yield array {
 	 *     The image details.
 	 *

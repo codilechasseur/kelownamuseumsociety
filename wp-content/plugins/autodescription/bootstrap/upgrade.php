@@ -12,6 +12,7 @@ namespace The_SEO_Framework\Bootstrap;
 use The_SEO_Framework\{
 	Admin,
 	Data,
+	Data\Filter\Sanitize,
 };
 use The_SEO_Framework\Helper\{
 	Format\Markdown,
@@ -20,7 +21,7 @@ use The_SEO_Framework\Helper\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2015 - 2025 Sybre Waaijer, CyberWire (https://cyberwire.nl/)
+ * Copyright (C) 2015 - 2026 Sybre Waaijer, CyberWire (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -41,7 +42,7 @@ use The_SEO_Framework\Helper\{
  * compared to The SEO Framework version constant.
  *
  * @since 2.7.0
- * @since 3.2.4 Applied namspacing to this file. All method names have changed.
+ * @since 3.2.4 Applied namespacing to this file. All method names have changed.
  * @since 4.1.1 No longer memoizes the previous version early. This should help bypass the cache flush.
  * @access private
  * @TODO convert to class, see \TSF_Extension_Manager\Upgrader
@@ -104,7 +105,7 @@ function _do_upgrade() {
 
 	if ( \wp_doing_ajax() ) return;
 
-	if ( Query::is_seo_settings_page( false ) ) {
+	if ( Query::is_seo_settings_page( 'page_query' ) ) { // $_GET['page']: admin_menu has not registered the hook yet.
 		// phpcs:ignore WordPress.Security.SafeRedirect -- self_admin_url() is safe.
 		\wp_redirect( \self_admin_url() );
 		exit;
@@ -186,7 +187,7 @@ function _do_upgrade() {
  * @return string $current_version The current database version.
  */
 function _downgrade( $previous_version ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter
-	// We aren't (currently) expecting issues where downgrading causes mayem. 4051 did cause some, though. This was added later; just set to current.
+	// We aren't (currently) expecting issues where downgrading causes mayhem. 4051 did cause some, though. This was added later; just set to current.
 	return _set_to_current_version();
 }
 
@@ -216,7 +217,7 @@ function _upgrade( $previous_version ) {
 		'2701', '2802', '2900',
 		'3001', '3103', '3300',
 		'4051', '4103', '4110', '4200', '4270',
-		'5001', '5050', '5100', '5130', '5140',
+		'5001', '5050', '5100', '5130', '5140', '5200',
 	];
 	// phpcs:enable WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine
 
@@ -258,10 +259,9 @@ function _set_upgrade_lock( $release_timeout ) {
 
 	$lock_option = _get_lock_option();
 
-	// TODO WP 6.6+ change 'no' to 'off'.
 	$lock = $wpdb->query(
 		$wpdb->prepare(
-			"INSERT IGNORE INTO `$wpdb->options` ( `option_name`, `option_value`, `autoload` ) VALUES (%s, %s, 'no') /* LOCK */",
+			"INSERT IGNORE INTO `$wpdb->options` ( `option_name`, `option_value`, `autoload` ) VALUES (%s, %s, 'off') /* LOCK */",
 			$lock_option,
 			time(),
 		),
@@ -456,7 +456,7 @@ function _prepare_upgrade_notice( $previous_version, $current_version ) {
 						\sprintf(
 							/* translators: %s = Link, markdown. */
 							\esc_html__( 'To take full advantage of all SEO features, please follow our [5-minute setup guide](%s).', 'autodescription' ),
-							'https://theseoframework.com/docs/seo-plugin-setup/' // Use https://tsf.fyi/docs/setup ? Needless redirection...
+							'https://theseoframework.com/docs/seo-plugin-setup/', // Use https://tsf.fyi/docs/setup ? Needless redirection...
 						),
 						[ 'a' ],
 						[ 'a_internal' => false ],
@@ -500,11 +500,11 @@ function _prepare_upgrade_notice( $previous_version, $current_version ) {
 			],
 		];
 
-		$esc_sql_in = function ( $val ) {
-			if ( ! \is_scalar( $val ) )
-				$val = array_filter( (array) $val, 'is_scalar' );
-			return \esc_sql( $val );
-		};
+		$esc_sql_in = fn( $val ) => \esc_sql(
+			\is_scalar( $val )
+				? $val
+				: array_filter( (array) $val, 'is_scalar' ),
+		);
 
 		$found_titles = [];
 
@@ -516,7 +516,7 @@ function _prepare_upgrade_notice( $previous_version, $current_version ) {
 
 			if ( $wpdb->get_var(
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table/$indexes are escaped.
-				"SELECT 1 FROM `$table` WHERE meta_key IN ('$indexes') LIMIT 1"
+				"SELECT 1 FROM `$table` WHERE meta_key IN ('$indexes') LIMIT 1",
 			) ) {
 				$found_titles[] = $data['title'];
 			}
@@ -559,7 +559,7 @@ function _prepare_upgrade_notice( $previous_version, $current_version ) {
 }
 
 /**
- * Enqueues and outputs an Extension Manager suggestion.
+ * Loads the upgrade suggestion notice when a previous version exists.
  *
  * @hook the_seo_framework_upgraded 100
  * @since 3.1.0
@@ -701,7 +701,7 @@ function _do_upgrade_3001() {
 /**
  * Adds global cache option.
  * Sets `auto_description` option.
- * Migrates `title_seperator` option to `title_separator`.
+ * Migrates `title_seperator` option to `title_separator`. cspell:ignore seperator
  * Sets `sitemap_query_limit` option.
  * Sets `title_strip_tags` option to known behavior.
  * Migrates `attachment_noindex` option to post type settings.
@@ -718,7 +718,7 @@ function _do_upgrade_3103() {
 		// Transport title separator (option name typo).
 		Data\Plugin::update_option(
 			'title_separator',
-			Data\Plugin::get_option( 'title_seperator' ) ?: 'hyphen', // Typo intended.
+			Data\Plugin::get_option( 'title_seperator' ) ?: 'hyphen', // Typo.
 		);
 
 		// Transport attachment_noindex, attachment_nofollow, and attachment_noarchive settings.
@@ -888,7 +888,7 @@ function _do_upgrade_4270() {
 /**
  * Registers option `THE_SEO_FRAMEWORK_SITE_CACHE`.
  * Deletes the static cache for exclusions.
- * Changes `auto_descripton_html_method` to `auto_description_html_method`. (typo)
+ * Changes `auto_descripton_html_method` to `auto_description_html_method`. (typo) cspell:ignore descripton
  * Changes option `autodescription-updates-cache` to constant value THE_SEO_FRAMEWORK_SITE_CACHE.
  * Enables `ld_json_enabled` only if any structured data function used to be active.
  * Sets `homepage_twitter_card_type` to an empty string (aka default).
@@ -904,7 +904,7 @@ function _do_upgrade_5001() {
 	if ( \get_option( 'the_seo_framework_initial_db_version' ) < '5001' ) {
 		Data\Plugin::update_option(
 			'auto_description_html_method',
-			Data\Plugin::get_option( 'auto_descripton_html_method' ) ?: 'fast', // Typo intended.
+			Data\Plugin::get_option( 'auto_descripton_html_method' ) ?: 'fast',
 		);
 
 		$site_cache = \get_option( 'autodescription-updates-cache' ) ?: [];
@@ -1012,4 +1012,60 @@ function _do_upgrade_5140() {
 
 	if ( \get_option( 'the_seo_framework_initial_db_version' ) < '5140' )
 		Data\Plugin::update_option( 'breadcrumb_use_meta_title', 1 );
+}
+
+/**
+ * Registers new options 'facebook_verification', 'fediverse_site',
+ * 'fediverse_site_url', 'fediverse_creator', 'fediverse_creator_url',
+ * 'breadcrumb_archive', 'breadcrumb_taxonomy', 'knowledge_tiktok',
+ * and 'edit_proposed_values'. Copies `counter_type` from user SEO meta
+ * into user preferences.
+ *
+ * @since 5.2.0
+ * @since 5.2.0 Now also registers `edit_proposed_values`, disabled for upgraded sites.
+ */
+function _do_upgrade_5200() {
+
+	if ( \get_option( 'the_seo_framework_initial_db_version' ) < '5200' ) {
+		Data\Plugin::update_option( [
+			'facebook_verification' => '',
+			'fediverse_site'        => '',
+			'fediverse_site_url'    => '',
+			'fediverse_creator'     => '',
+			'fediverse_creator_url' => '',
+			'breadcrumb_archive'    => [],
+			'breadcrumb_taxonomy'   => [],
+			'knowledge_tiktok'      => '',
+			'edit_proposed_values'  => 0,
+		] );
+
+		global $wpdb;
+
+		// This runs on every site in a multisite. The number of authors ought to be limited.
+		// The counter_type guard below stops processing when it isn't set.
+		// Race condition writes are not an issue; add_user_meta's $unique prevents cache thrashing.
+		$meta_rows = $wpdb->get_results( $wpdb->prepare(
+			"SELECT user_id, meta_value FROM {$wpdb->usermeta} WHERE meta_key = %s",
+			\THE_SEO_FRAMEWORK_USER_OPTIONS,
+		) );
+
+		foreach ( $meta_rows as $row ) {
+			$meta = \is_serialized( $row->meta_value )
+				? unserialize( // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions -- this is the correct way.
+					trim( $row->meta_value ),
+					[ 'allowed_classes' => false ],
+				)
+				: $row->meta_value;
+
+			if ( ! \is_array( $meta ) || ! isset( $meta['counter_type'] ) )
+				continue;
+
+			\add_user_meta(
+				(int) $row->user_id,
+				\THE_SEO_FRAMEWORK_USER_PREFERENCES,
+				[ 'counter_type' => Sanitize::counter_type( $meta['counter_type'] ) ],
+				true, // unique
+			);
+		}
+	}
 }

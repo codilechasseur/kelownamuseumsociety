@@ -12,7 +12,7 @@ use function The_SEO_Framework\memo;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -45,10 +45,13 @@ final class Redirect {
 	 * @return bool Whether external redirect is allowed.
 	 */
 	public static function allow_external_redirect() {
-		/**
-		 * @since 2.1.0
-		 * @param bool $allowed Whether external redirect is allowed.
-		 */
-		return memo() ?? memo( (bool) \apply_filters( 'the_seo_framework_allow_external_redirect', true ) );
+		return memo()
+			?? memo(
+				/**
+				 * @since 2.1.0
+				 * @param bool $allowed Whether external redirect is allowed.
+				 */
+				(bool) \apply_filters( 'the_seo_framework_allow_external_redirect', true ),
+			);
 	}
 }

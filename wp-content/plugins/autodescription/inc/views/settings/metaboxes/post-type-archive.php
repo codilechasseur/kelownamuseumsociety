@@ -13,17 +13,17 @@ use The_SEO_Framework\Admin\Settings\Layout\{
 	HTML,
 	Input,
 };
-use The_SEO_Framework\{
-	Data\Filter\Sanitize,
-	Helper\Compatibility,
-	Helper\Post_Type,
+use The_SEO_Framework\Data\Filter\Sanitize;
+use The_SEO_Framework\Helper\{
+	Compatibility,
+	Post_Type,
 };
 
 // phpcs:disable WordPress.WP.GlobalVariablesOverride -- This isn't the global scope.
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2021 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2021 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -45,7 +45,7 @@ use The_SEO_Framework\{
 switch ( $instance ) :
 	case 'main':
 		HTML::description(
-			\__( 'Post type archives (PTA) are unique archives displaying all pages for a post type. Since PTAs lack an administrative interface, their SEO settings are displayed here.', 'autodescription' )
+			\__( 'Post type archives (PTA) are unique archives displaying all pages for a post type. Since PTAs lack an administrative interface, their SEO settings are displayed here.', 'autodescription' ),
 		);
 
 		?>
@@ -67,7 +67,7 @@ switch ( $instance ) :
 		printf(
 			'<span class=hidden id=tsf-post-type-archive-data %s></span>',
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- This escapes.
-			HTML::make_data_attributes( [ 'postTypes' => $post_types_data ] )
+			HTML::make_data_attributes( [ 'postTypes' => $post_types_data ] ),
 		);
 
 		?>
@@ -120,7 +120,7 @@ switch ( $instance ) :
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Shut it, noob.
 				$post_type_index ? ' hide-if-tsf-js' : '',
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- This escapes.
-				HTML::make_data_attributes( [ 'postType' => $post_type ] )
+				HTML::make_data_attributes( [ 'postType' => $post_type ] ),
 			);
 			?>
 				<div class=tsf-post-type-header>
@@ -147,7 +147,7 @@ switch ( $instance ) :
 				<div class="tsf-post-type-archive-if-excluded hidden">
 					<?php
 					HTML::attention_description(
-						\__( "This post type is excluded, so settings won't have any effect.", 'autodescription' )
+						\__( "This post type is excluded, so settings won't have any effect.", 'autodescription' ),
 					)
 					?>
 				</div>
@@ -155,7 +155,7 @@ switch ( $instance ) :
 					<?php
 					if ( Compatibility::get_active_conflicting_plugin_types()['multilingual'] ) {
 						HTML::attention(
-							\__( 'A multilingual plugin has been detected and text entered below may not be translated.', 'autodescription' )
+							\__( 'A multilingual plugin has been detected and text entered below may not be translated.', 'autodescription' ),
 						);
 					}
 
@@ -163,21 +163,21 @@ switch ( $instance ) :
 						"post_type_archive_{$post_type}",
 						/**
 						 * @since 4.2.0
-						 * @param array   $tabs      The default tabs.
-						 * @param strring $post_type The post type archive's name.
+						 * @param array  $tabs      The default tabs.
+						 * @param string $post_type The post type archive's name.
 						 */
 						(array) \apply_filters(
 							'the_seo_framework_post_type_archive_settings_tabs',
 							$tabs,
 							$post_type,
-						)
+						),
 					);
 					?>
 				</div>
 			</div>
 			<?php
 			// Output only the first time.
-			$post_type_index++ or print( '<hr class=hide-if-tsf-js>' );
+			$post_type_index++ or print '<hr class=hide-if-tsf-js>';
 		}
 		break;
 
@@ -205,11 +205,11 @@ switch ( $instance ) :
 		Form::output_pixel_counter_wrap(
 			Input::get_field_id( $args['options']['doctitle'] ),
 			'title',
-			(bool) Data\Plugin::get_option( 'display_pixel_counter' )
+			(bool) Data\Plugin::get_option( 'display_pixel_counter' ),
 		);
 		?>
 		<p class=tsf-title-wrap>
-			<input type=text name="<?php Input::field_name( $args['options']['doctitle'] ); ?>" class=large-text id="<?php Input::field_id( $args['options']['doctitle'] ); ?>" value="<?= \esc_html( Sanitize::metadata_content( Data\Plugin\PTA::get_meta_item( 'doctitle', $args['post_type'] ) ) ) ?>" autocomplete=off>
+			<input type=text name="<?php Input::field_name( $args['options']['doctitle'] ); ?>" class=large-text id="<?php Input::field_id( $args['options']['doctitle'] ); ?>" value="<?= \esc_html( Sanitize::metadata_content( Data\Plugin\PTA::get_meta_item( 'doctitle', $args['post_type'] ) ) ) ?>" autocomplete=off data-tsf-proposed="">
 			<?php
 			$pto = \get_post_type_object( $args['post_type'] );
 
@@ -281,14 +281,14 @@ switch ( $instance ) :
 		);
 		?>
 		<p>
-			<textarea name="<?php Input::field_name( $args['options']['description'] ); ?>" class=large-text id="<?php Input::field_id( $args['options']['description'] ); ?>" rows=3 cols=70><?= \esc_attr( Data\Plugin\PTA::get_meta_item( 'description', $args['post_type'] ) ) ?></textarea>
+			<textarea name="<?php Input::field_name( $args['options']['description'] ); ?>" class=large-text id="<?php Input::field_id( $args['options']['description'] ); ?>" rows=3 cols=70 data-tsf-proposed=""><?= \esc_attr( Data\Plugin\PTA::get_meta_item( 'description', $args['post_type'] ) ) ?></textarea>
 			<?php
 			Input::output_js_description_data(
 				Input::get_field_id( $args['options']['description'] ),
 				[
 					'state' => [
 						'defaultDescription' => \esc_html(
-							Meta\Description::get_generated_description( $args['generator_args'] )
+							Meta\Description::get_generated_description( $args['generator_args'] ),
 						),
 					],
 				],
@@ -320,8 +320,8 @@ switch ( $instance ) :
 		);
 
 		/* translators: %s = default option value */
-		$_default_i18n     = \__( 'Default (%s)', 'autodescription' );
-		$tw_suported_cards = Meta\Twitter::get_supported_cards();
+		$_default_i18n      = \__( 'Default (%s)', 'autodescription' );
+		$tw_supported_cards = Meta\Twitter::get_supported_cards();
 
 		?>
 		<p>
@@ -337,7 +337,7 @@ switch ( $instance ) :
 		);
 		?>
 		<p>
-			<input type=text name="<?php Input::field_name( $args['options']['og_title'] ); ?>" class=large-text id="<?php Input::field_id( $args['options']['og_title'] ); ?>" value="<?= \esc_html( Sanitize::metadata_content( Data\Plugin\PTA::get_meta_item( 'og_title', $args['post_type'] ) ) ) ?>" autocomplete=off data-tsf-social-group=<?= \esc_attr( "pta_social_settings_{$args['post_type']}" ) ?> data-tsf-social-type=ogTitle>
+			<input type=text name="<?php Input::field_name( $args['options']['og_title'] ); ?>" class=large-text id="<?php Input::field_id( $args['options']['og_title'] ); ?>" value="<?= \esc_html( Sanitize::metadata_content( Data\Plugin\PTA::get_meta_item( 'og_title', $args['post_type'] ) ) ) ?>" autocomplete=off data-tsf-social-group=<?= \esc_attr( "pta_social_settings_{$args['post_type']}" ) ?> data-tsf-social-type=ogTitle data-tsf-proposed="">
 		</p>
 
 		<p>
@@ -353,14 +353,14 @@ switch ( $instance ) :
 		);
 		?>
 		<p>
-			<textarea name="<?php Input::field_name( $args['options']['og_description'] ); ?>" class=large-text id="<?php Input::field_id( $args['options']['og_description'] ); ?>" rows=3 cols=70 autocomplete=off data-tsf-social-group=<?= \esc_attr( "pta_social_settings_{$args['post_type']}" ) ?> data-tsf-social-type=ogDesc><?= \esc_attr( Data\Plugin\PTA::get_meta_item( 'og_description', $args['post_type'] ) ) ?></textarea>
+			<textarea name="<?php Input::field_name( $args['options']['og_description'] ); ?>" class=large-text id="<?php Input::field_id( $args['options']['og_description'] ); ?>" rows=3 cols=70 autocomplete=off data-tsf-social-group=<?= \esc_attr( "pta_social_settings_{$args['post_type']}" ) ?> data-tsf-social-type=ogDesc data-tsf-proposed=""><?= \esc_attr( Data\Plugin\PTA::get_meta_item( 'og_description', $args['post_type'] ) ) ?></textarea>
 		</p>
 
 		<hr>
 
 		<p>
 			<label for="<?php Input::field_id( $args['options']['tw_title'] ); ?>" class=tsf-toblock>
-				<strong><?php \esc_html_e( 'Twitter Title', 'autodescription' ); ?></strong>
+				<strong><?php \esc_html_e( 'Twitter Card Title', 'autodescription' ); ?></strong>
 			</label>
 		</p>
 		<?php
@@ -371,12 +371,12 @@ switch ( $instance ) :
 		);
 		?>
 		<p>
-			<input type=text name="<?php Input::field_name( $args['options']['tw_title'] ); ?>" class=large-text id="<?php Input::field_id( $args['options']['tw_title'] ); ?>" value="<?= \esc_html( Sanitize::metadata_content( Data\Plugin\PTA::get_meta_item( 'tw_title', $args['post_type'] ) ) ) ?>" autocomplete=off data-tsf-social-group=<?= \esc_attr( "pta_social_settings_{$args['post_type']}" ) ?> data-tsf-social-type=twTitle>
+			<input type=text name="<?php Input::field_name( $args['options']['tw_title'] ); ?>" class=large-text id="<?php Input::field_id( $args['options']['tw_title'] ); ?>" value="<?= \esc_html( Sanitize::metadata_content( Data\Plugin\PTA::get_meta_item( 'tw_title', $args['post_type'] ) ) ) ?>" autocomplete=off data-tsf-social-group=<?= \esc_attr( "pta_social_settings_{$args['post_type']}" ) ?> data-tsf-social-type=twTitle data-tsf-proposed="">
 		</p>
 
 		<p>
 			<label for="<?php Input::field_id( $args['options']['tw_description'] ); ?>" class=tsf-toblock>
-				<strong><?php \esc_html_e( 'Twitter Description', 'autodescription' ); ?></strong>
+				<strong><?php \esc_html_e( 'Twitter Card Description', 'autodescription' ); ?></strong>
 			</label>
 		</p>
 		<?php
@@ -387,7 +387,7 @@ switch ( $instance ) :
 		);
 		?>
 		<p>
-			<textarea name="<?php Input::field_name( $args['options']['tw_description'] ); ?>" class=large-text id="<?php Input::field_id( $args['options']['tw_description'] ); ?>" rows=3 cols=70 autocomplete=off data-tsf-social-group=<?= \esc_attr( "pta_social_settings_{$args['post_type']}" ) ?> data-tsf-social-type=twDesc><?= \esc_attr( Data\Plugin\PTA::get_meta_item( 'tw_description', $args['post_type'] ) ) ?></textarea>
+			<textarea name="<?php Input::field_name( $args['options']['tw_description'] ); ?>" class=large-text id="<?php Input::field_id( $args['options']['tw_description'] ); ?>" rows=3 cols=70 autocomplete=off data-tsf-social-group=<?= \esc_attr( "pta_social_settings_{$args['post_type']}" ) ?> data-tsf-social-type=twDesc data-tsf-proposed=""><?= \esc_attr( Data\Plugin\PTA::get_meta_item( 'tw_description', $args['post_type'] ) ) ?></textarea>
 		</p>
 
 		<p>
@@ -395,31 +395,32 @@ switch ( $instance ) :
 				<strong><?php \esc_html_e( 'Twitter Card Type', 'autodescription' ); ?></strong>
 				<?php
 				HTML::make_info(
-					\__( 'The Twitter Card type is used to determine whether an image appears on the side or as a large cover. This affects X, but also other social platforms like Discord.', 'autodescription' ),
-					'https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/abouts-cards',
+					\__( 'The Twitter Card type controls the link preview layout. On X, the summary card shows a small thumbnail beside truncated title and description; the large-image card overlays the title on the image with no description. On Discord, the image appears small at the side or large below; both card types show the description.', 'autodescription' ),
+					'https://kb.theseoframework.com/?p=451#card-types',
 				);
 				?>
 			</label>
 		</p>
 		<p>
-			<?php
-			// phpcs:disable WordPress.Security.EscapeOutput -- make_single_select_form() escapes.
-			echo Form::make_single_select_form( [
-				'id'       => Input::get_field_id( $args['options']['tw_card_type'] ),
-				'class'    => 'tsf-select-block',
-				'name'     => Input::get_field_name( $args['options']['tw_card_type'] ),
-				'label'    => '',
-				'options'  => array_merge(
-					[ '' => \sprintf( $_default_i18n, Meta\Twitter::get_generated_card_type() ) ],
-					array_combine( $tw_suported_cards, $tw_suported_cards ),
-				),
-				'selected' => Data\Plugin\PTA::get_meta_item( 'tw_card_type', $args['post_type'] ),
-				'data'     => [
-					'defaultI18n' => $_default_i18n,
-				],
-			] );
-			// phpcs:enable WordPress.Security.EscapeOutput
-			?>
+			<div class=tsf-select-block>
+				<?php
+				// phpcs:disable WordPress.Security.EscapeOutput -- make_single_select_form() escapes.
+				echo Form::make_single_select_form( [
+					'id'       => Input::get_field_id( $args['options']['tw_card_type'] ),
+					'name'     => Input::get_field_name( $args['options']['tw_card_type'] ),
+					'label'    => '',
+					'options'  => array_merge(
+						[ '' => \sprintf( $_default_i18n, Meta\Twitter::get_generated_card_type() ) ],
+						array_combine( $tw_supported_cards, $tw_supported_cards ),
+					),
+					'selected' => Data\Plugin\PTA::get_meta_item( 'tw_card_type', $args['post_type'] ),
+					'data'     => [
+						'defaultI18n' => $_default_i18n,
+					],
+				] );
+				// phpcs:enable WordPress.Security.EscapeOutput
+				?>
+			</div>
 		</p>
 
 		<hr>
@@ -436,7 +437,7 @@ switch ( $instance ) :
 			</label>
 		</p>
 		<p>
-			<input class=large-text type=url name="<?php Input::field_name( $args['options']['social_image_url'] ); ?>" id="<?= \esc_attr( "tsf_pta_socialimage_{$args['post_type']}" ) ?>-url" placeholder="<?= \esc_url( Meta\Image::get_first_generated_image_url( $args['generator_args'], 'social' ) ) ?>" value="<?= \esc_url( Data\Plugin\PTA::get_meta_item( 'social_image_url', $args['post_type'] ) ) ?>">
+			<input class=large-text type=url name="<?php Input::field_name( $args['options']['social_image_url'] ); ?>" id="<?= \esc_attr( "tsf_pta_socialimage_{$args['post_type']}" ) ?>-url" placeholder="<?= \esc_url( Meta\Image::get_first_generated_image_url( $args['generator_args'], 'social' ) ) ?>" value="<?= \esc_url( Data\Plugin\PTA::get_meta_item( 'social_image_url', $args['post_type'] ) ) ?>" data-tsf-proposed="<?= \esc_url( Meta\Image::get_first_generated_image_url( $args['generator_args'], 'social' ) ) ?>">
 			<input type=hidden name="<?php Input::field_name( $args['options']['social_image_id'] ); ?>" id="<?= \esc_attr( "tsf_pta_socialimage_{$args['post_type']}" ) ?>-id" value="<?= \absint( Data\Plugin\PTA::get_meta_item( 'social_image_id', $args['post_type'] ) ) ?>" disabled class=tsf-enable-media-if-js>
 		</p>
 		<p class=hide-if-no-tsf-js>
@@ -466,7 +467,7 @@ switch ( $instance ) :
 			</label>
 		</p>
 		<p>
-			<input type=url name="<?php Input::field_name( $args['options']['canonical'] ); ?>" class=large-text id="<?php Input::field_id( $args['options']['canonical'] ); ?>" placeholder="<?= \esc_url( $default_canonical ) ?>" value="<?= \esc_url( Data\Plugin\PTA::get_meta_item( 'canonical', $args['post_type'] ) ) ?>" autocomplete=off>
+			<input type=url name="<?php Input::field_name( $args['options']['canonical'] ); ?>" class=large-text id="<?php Input::field_id( $args['options']['canonical'] ); ?>" placeholder="<?= \esc_url( $default_canonical ) ?>" value="<?= \esc_url( Data\Plugin\PTA::get_meta_item( 'canonical', $args['post_type'] ) ) ?>" autocomplete=off data-tsf-proposed="<?= \esc_url( $default_canonical ) ?>">
 			<?php
 			Input::output_js_canonical_data(
 				Input::get_field_id( $args['options']['canonical'] ),
@@ -544,24 +545,30 @@ switch ( $instance ) :
 				),
 				true,
 			);
-			// phpcs:disable WordPress.Security.EscapeOutput -- make_single_select_form() escapes.
-			echo Form::make_single_select_form( [
-				'id'       => Input::get_field_id( $args['options'][ $_r_type ] ),
-				'class'    => 'tsf-select-block',
-				'name'     => Input::get_field_name( $args['options'][ $_r_type ] ),
-				'label'    => '',
-				'options'  => [
-					0  => $_default_unknown_i18n,
-					-1 => $_rs['force_on'],
-					1  => $_rs['force_off'],
-				],
-				'selected' => $_rs['_value'],
-				'data'     => [
-					'defaultI18n' => $_default_i18n,
-					'defaultOn'   => $_rs['_defaultOn'],
-					'defaultOff'  => $_rs['_defaultOff'],
-				],
-			] );
+			?>
+			<div class=tsf-select-block>
+				<?php
+				// phpcs:disable WordPress.Security.EscapeOutput -- make_single_select_form() escapes.
+				echo Form::make_single_select_form( [
+					'id'       => Input::get_field_id( $args['options'][ $_r_type ] ),
+					'name'     => Input::get_field_name( $args['options'][ $_r_type ] ),
+					'label'    => '',
+					'options'  => [
+						0  => $_default_unknown_i18n,
+						-1 => $_rs['force_on'],
+						1  => $_rs['force_off'],
+					],
+					'selected' => $_rs['_value'],
+					'data'     => [
+						'defaultI18n' => $_default_i18n,
+						'defaultOn'   => $_rs['_defaultOn'],
+						'defaultOff'  => $_rs['_defaultOff'],
+					],
+				] );
+				// phpcs:enable WordPress.Security.EscapeOutput
+				?>
+			</div>
+			<?php
 		}
 		?>
 		<hr>

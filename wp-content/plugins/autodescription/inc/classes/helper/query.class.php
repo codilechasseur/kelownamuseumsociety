@@ -17,7 +17,7 @@ use The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -107,7 +107,8 @@ class Query {
 			return self::get_the_real_admin_id();
 
 		// phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition -- I know.
-		if ( $use_cache && ( null !== $memo = umemo( __METHOD__ ) ) ) return $memo;
+		if ( $use_cache && ( null !== $memo = umemo( __METHOD__ ) ) )
+			return $memo;
 
 		// Try to get ID from plugins or feed when caching is available.
 		if ( $use_cache ) {
@@ -155,9 +156,11 @@ class Query {
 		return (int) \apply_filters(
 			'the_seo_framework_current_admin_id',
 			// Get in the loop first, fall back to globals or get parameters.
-			   \get_the_id()
-			?: self::get_admin_post_id()
-			?: self::get_admin_term_id()
+			(
+				   \get_the_id()
+				?: self::get_admin_post_id()
+				?: self::get_admin_term_id()
+			),
 		);
 	}
 
@@ -212,6 +215,22 @@ class Query {
 	}
 
 	/**
+	 * Fetches the user ID being edited on profile and user-edit screens.
+	 *
+	 * WordPress assigns `$user_id` before `admin_enqueue_scripts` on those screens.
+	 *
+	 * @since 5.2.0
+	 * @global int $user_id
+	 *
+	 * @return int The user ID. 0 when this is not a profile or user-edit screen.
+	 */
+	public static function get_admin_user_id() {
+		return self::is_profile_edit()
+			? \absint( $GLOBALS['user_id'] ?? 0 )
+			: 0;
+	}
+
+	/**
 	 * Returns the current taxonomy, if any.
 	 * Memoizes the return value.
 	 *
@@ -247,7 +266,7 @@ class Query {
 			?? Query\Cache::memo(
 				\is_admin()
 					? self::get_admin_post_type()
-					: self::get_post_type_real_id()
+					: self::get_post_type_real_id(),
 			);
 	}
 
@@ -319,8 +338,8 @@ class Query {
 				/**
 				 * @since 4.0.5
 				 * @since 4.0.7 The $id can now be null, when no post is given.
-				 * @param bool     $is_singular_archive Whether the post ID is a singular archive.
-				 * @param int|null $id                  The supplied post ID. Null when in the loop.
+				 * @param bool $is_singular_archive Whether the post ID is a singular archive.
+				 * @param ?int $id                  The supplied post ID. Null when in the loop.
 				 */
 				(bool) \apply_filters(
 					'the_seo_framework_is_singular_archive',
@@ -346,12 +365,14 @@ class Query {
 			return self::is_archive_admin();
 
 		// phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition -- I know.
-		if ( null !== $memo = Query\Cache::memo() ) return $memo;
+		if ( null !== $memo = Query\Cache::memo() )
+			return $memo;
 
 		if ( \is_archive() && false === self::is_singular() )
 			return Query\Cache::memo( true );
 
 		if ( isset( $GLOBALS['wp_query']->query ) && false === self::is_singular() ) {
+
 			global $wp_query;
 
 			if (
@@ -361,8 +382,9 @@ class Query {
 				|| $wp_query->is_post_type_archive
 				|| $wp_query->is_author
 				|| $wp_query->is_date
-			)
+			) {
 				return Query\Cache::memo( true );
+			}
 		}
 
 		return Query\Cache::memo( false );
@@ -415,20 +437,72 @@ class Query {
 	}
 
 	/**
-	 * Detects Post or Archive Lists in Admin.
+	 * Detects post, term, and user lists in WP Admin.
 	 *
 	 * @since 2.6.0
 	 * @since 5.0.0 Moved from `\The_SEO_Framework\Load`.
+	 * @since 5.2.0 Now includes the users list.
 	 * @todo should be renamed to is_list_edit()
 	 * @global \WP_Screen $current_screen
 	 *
-	 * @return bool We're on the edit screen.
+	 * @return bool True on a posts, terms, or users list. False otherwise.
 	 */
 	public static function is_wp_lists_edit() {
 
 		switch ( $GLOBALS['current_screen']->base ?? '' ) {
 			case 'edit-tags':
 			case 'edit':
+			case 'users':
+			case 'users-network':
+				return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Detects the users list in WP Admin.
+	 *
+	 * Includes the site users list and the network users list.
+	 *
+	 * @since 5.2.0
+	 * @global \WP_Screen $current_screen
+	 *
+	 * @return bool True on the users list. False otherwise.
+	 */
+	public static function is_users_list() {
+
+		switch ( $GLOBALS['current_screen']->base ?? '' ) {
+			case 'users':
+			case 'users-network':
+				return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Detects profile and user screens in WP Admin.
+	 *
+	 * Includes the users list, profile, user-edit, and Add User screens, including their network variants.
+	 * The users list base is `users`. WordPress names the Add User screen base `user` because `user-new` is stored as action `add`.
+	 *
+	 * @since 5.2.0
+	 * @global \WP_Screen $current_screen
+	 *
+	 * @return bool True if on a profile or user admin screen. False otherwise.
+	 */
+	public static function is_profile_admin() {
+
+		switch ( $GLOBALS['current_screen']->base ?? '' ) {
+			case 'users':
+			case 'users-network':
+			case 'profile':
+			case 'profile-network':
+			case 'user':
+			case 'user-network':
+			case 'user-edit':
+			case 'user-edit-network':
 				return true;
 		}
 
@@ -567,9 +641,7 @@ class Query {
 	 */
 	public static function is_editable_term() {
 		return Query\Cache::memo()
-			?? Query\Cache::memo(
-				Query::is_category() || Query::is_tag() || Query::is_tax()
-			);
+			?? Query\Cache::memo( self::is_category() || self::is_tag() || self::is_tax() );
 	}
 
 	/**
@@ -943,15 +1015,14 @@ class Query {
 	 * @return bool
 	 */
 	public static function is_product_admin() {
-		return Query\Cache::memo()
-			?? Query\Cache::memo(
-				/**
-				 * @since 4.0.5
-				 * @since 4.1.4 Now has its return value memoized.
-				 * @param bool $is_product_admin
-				 */
-				(bool) \apply_filters( 'the_seo_framework_is_product_admin', false ),
-			);
+		return Query\Cache::memo() ?? Query\Cache::memo(
+			/**
+			 * @since 4.0.5
+			 * @since 4.1.4 Now has its return value memoized.
+			 * @param bool $is_product_admin
+			 */
+			(bool) \apply_filters( 'the_seo_framework_is_product_admin', false ),
+		);
 	}
 
 	/**
@@ -976,17 +1047,22 @@ class Query {
 	 * @since 2.7.0 Added secure parameter.
 	 * @since 2.9.0 If $secure is false, the cache is no longer used.
 	 * @since 5.0.0 Moved from `\The_SEO_Framework\Load`.
-	 * @see self::is_menu_page() for security notification.
+	 * @since 5.2.0 Replaced `$secure` with `'page_hook'` (default) and `'page_query'` (kept backward compatibility for a falsy value).
+	 *              `$secure` was a misnomer that never checked capabilities.
+	 * @see self::is_menu_page() for the `$_GET['page']` tradeoff.
 	 *
-	 * @param bool $secure Whether to ignore the use of the second (insecure) parameter.
+	 * @param bool|string $via How to detect the screen.
+	 *                        `'page_hook'` (default): memoized registered page hook. Use after `admin_init`.
+	 *                        `'page_query'` or a falsy value: uncached `$_GET['page']` match. Use before the hook exists.
+	 *                        Any other value uses `'page_hook'`.
 	 * @return bool
 	 */
-	public static function is_seo_settings_page( $secure = true ) {
+	public static function is_seo_settings_page( $via = 'page_hook' ) {
 
 		if ( ! \is_admin() )
 			return false;
 
-		if ( ! $secure )
+		if ( ! $via || 'page_query' === $via )
 			return self::is_menu_page( '', \THE_SEO_FRAMEWORK_SITE_OPTIONS_SLUG );
 
 		return Query\Cache::memo()
@@ -1017,6 +1093,7 @@ class Query {
 	 * @return bool true if screen match.
 	 */
 	public static function is_menu_page( $pagehook = '', $pageslug = '' ) {
+
 		global $page_hook;
 
 		if ( isset( $page_hook ) ) {
@@ -1280,8 +1357,8 @@ class Query {
 		if ( null !== $memo = Query\Cache::memo( null, $post_id ) )
 			return $memo;
 
-		if ( $post_id || Query::is_singular() ) {
-			$post = \get_post( $post_id ?: Query::get_the_real_id() );
+		if ( $post_id || self::is_singular() ) {
+			$post = \get_post( $post_id ?: self::get_the_real_id() );
 
 			$author_id = isset( $post->post_author ) && \post_type_supports( $post->post_type, 'author' )
 				? $post->post_author
@@ -1289,6 +1366,21 @@ class Query {
 		}
 
 		return Query\Cache::memo( $author_id ?? 0, $post_id );
+	}
+
+	/**
+	 * Returns the author ID for the current query.
+	 *
+	 * Singular queries use the post author. Author archives use the queried author.
+	 *
+	 * @since 5.2.0
+	 *
+	 * @return int The user ID. 0 when no author applies.
+	 */
+	public static function get_current_author_id() {
+		return self::get_post_author_id() ?: (
+			self::is_author() ? (int) self::get_the_real_id() : 0
+		);
 	}
 
 	/**

@@ -8,26 +8,9 @@ namespace The_SEO_Framework\Internal;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
-// Precautionary.
-use function The_SEO_Framework\{
-	is_headless,
-	normalize_generation_args,
-	get_query_type_from_args,
-	memo,
-	umemo,
-};
-
-// Precautionary.
-use The_SEO_Framework\{
-	Data,
-	Helper,
-	Helper\Query,
-	Meta,
-};
-
 /**
  * The SEO Framework plugin
- * Copyright (C) 2015 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2015 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published

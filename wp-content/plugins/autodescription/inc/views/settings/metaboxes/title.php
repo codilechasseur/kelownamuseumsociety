@@ -22,7 +22,7 @@ use The_SEO_Framework\Helper\Format\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2016 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2016 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -53,7 +53,7 @@ switch ( $instance ) :
 
 		$post_title = \esc_html( Strings::hellip_if_over(
 			Meta\Title::get_post_title( $latest_post_id ) ?: \__( 'Example Post', 'autodescription' ),
-			60
+			60,
 		) );
 
 		$cat_prefix = \esc_html( \_x( 'Category:', 'category archive title prefix', 'default' ) );
@@ -190,7 +190,7 @@ switch ( $instance ) :
 			 * @since 2.6.0
 			 * @param array $tabs The default tabs.
 			 */
-			(array) \apply_filters( 'the_seo_framework_title_settings_tabs', $tabs )
+			(array) \apply_filters( 'the_seo_framework_title_settings_tabs', $tabs ),
 		);
 		break;
 
@@ -234,7 +234,7 @@ switch ( $instance ) :
 			\sprintf(
 				/* translators: %s = HTML tag example */
 				\__( 'This strips HTML tags, like %s, from the title. Disable this option to display generated HTML tags as plain text in meta titles.', 'autodescription' ),
-				'<code>&amp;lt;strong&amp;gt;</code>' // Double escaped HTML (&amp;) for attribute display.
+				'<code>&amp;lt;strong&amp;gt;</code>', // Double escaped HTML (&amp;) for attribute display.
 			),
 			'',
 			false,
@@ -262,7 +262,7 @@ switch ( $instance ) :
 			</label>
 		</p>
 		<p class=tsf-title-wrap>
-			<input type=text name="<?php Input::field_name( 'site_title' ); ?>" class=large-text id="<?php Input::field_id( 'site_title' ); ?>" placeholder="<?= \esc_html( Sanitize::metadata_content( Data\Blog::get_filtered_blog_name() ) ) ?>" value="<?= \esc_html( Sanitize::metadata_content( Data\Plugin::get_option( 'site_title' ) ) ) ?>" autocomplete=off>
+			<input type=text name="<?php Input::field_name( 'site_title' ); ?>" class=large-text id="<?php Input::field_id( 'site_title' ); ?>" placeholder="<?= \esc_html( Sanitize::metadata_content( Data\Blog::get_filtered_blog_name() ) ) ?>" value="<?= \esc_html( Sanitize::metadata_content( Data\Plugin::get_option( 'site_title' ) ) ) ?>" autocomplete=off data-tsf-proposed="<?= \esc_attr( Sanitize::metadata_content( Data\Blog::get_filtered_blog_name() ) ) ?>">
 		</p>
 		<?php
 		HTML::description( \__( 'This option does not affect header titles displayed directly on your website.', 'autodescription' ) );

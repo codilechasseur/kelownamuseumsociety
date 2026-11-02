@@ -15,7 +15,7 @@ use The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -65,7 +65,7 @@ abstract class Main {
 	 * @since 4.2.0 No longer resets time zone.
 	 * @ignore
 	 */
-	final public function shutdown_generation() { }
+	final public function shutdown_generation() {}
 
 	/**
 	 * Generates and returns the sitemap content.

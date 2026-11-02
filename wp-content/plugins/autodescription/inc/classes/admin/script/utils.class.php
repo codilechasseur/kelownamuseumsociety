@@ -1,6 +1,6 @@
 <?php
 /**
- * @package The_SEO_Framework\Classes\Admin\Script\Loader
+ * @package The_SEO_Framework\Classes\Admin\Script\Utils
  * @subpackage The_SEO_Framework\Scripts
  */
 
@@ -10,7 +10,7 @@ namespace The_SEO_Framework\Admin\Script;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -69,7 +69,7 @@ final class Utils {
 	}
 
 	/**
-	 * Checks ajax referred set by set_js_nonces based on capability.
+	 * Creates a nonce for an AJAX action when the user has the capability.
 	 *
 	 * @since 5.0.0
 	 * @since 5.1.0 Added the `...$args` parameter.
@@ -99,15 +99,13 @@ final class Utils {
 	 *
 	 * @param string $capability The capability that was required for the nonce check to be created.
 	 * @param mixed  ...$args    The arguments to pass to the capability check.
-	 * @return null|false|int False if the nonce is invalid, 1 if the nonce is valid
-	 *                        and generated between 0-12 hours ago, 2 if the nonce is
-	 *                        valid and generated between 12-24 hours ago.
-	 *                        Null on capability check failure.
+	 * @return int 1 if the nonce is valid and generated between 0-12 hours ago,
+	 *             2 if the nonce is valid and generated between 12-24 hours ago.
 	 */
 	public static function check_ajax_capability_referer( $capability, ...$args ) {
 
 		if ( \current_user_can( $capability, ...$args ) )
-			return \check_ajax_referer( "tsf-ajax-$capability", 'nonce', true );
+			return \check_ajax_referer( "tsf-ajax-$capability", 'nonce' );
 
 		\wp_die( -1, 403 );
 	}

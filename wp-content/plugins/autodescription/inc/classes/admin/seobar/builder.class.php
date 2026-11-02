@@ -8,11 +8,16 @@ namespace The_SEO_Framework\Admin\SEOBar;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
+use function The_SEO_Framework\{
+	get_query_type_from_args,
+	normalize_generation_args,
+};
+
 use The_SEO_Framework\Data;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -34,9 +39,11 @@ use The_SEO_Framework\Data;
  * @since 5.0.0 1. Moved from `\The_SEO_Framework\Interpreters`
  *              2. Renamed from `SEOBar`.
  *              3. The entire class is now static.
- * @access private
+ * @since 5.2.0 No longer final.
+ * @access protected
+ *         Use tsf()->admin()->seobar() instead.
  */
-final class Builder {
+class Builder {
 
 	/**
 	 * The recognized SEO Bar item states.
@@ -61,12 +68,12 @@ final class Builder {
 	 * @var array $item {
 	 *     The current SEO Bar item list.
 	 *
-	 *     @type string $symbol The displayed symbol that identifies your bar.
-	 *     @type string $title  The title of the assessment.
-	 *     @type int    $status Power of two. See SEOBar's class constants.
-	 *     @type string $reason The final assessment: The reason for the $status. The latest state-changing reason is used.
-	 *     @type string $assess The assessments on why the reason is set. Keep it short and concise!
-	 *                          Does not accept HTML for performant ARIA support.
+	 *     @type string    $symbol The displayed symbol that identifies your bar.
+	 *     @type string    $title  The title of the assessment.
+	 *     @type int <bit> $status See `STATE_*` class constants.
+	 *     @type string    $reason The final assessment: The reason for the $status. The latest state-changing reason is used.
+	 *     @type string[]  $assess The assessments on why the reason is set. Keep it short and concise!
+	 *                             Does not accept HTML for performant ARIA support.
 	 * }
 	 */
 	private static $items = [];
@@ -82,16 +89,10 @@ final class Builder {
 	 *
 	 * @since 4.0.0
 	 * @since 4.1.4 Now manages the builder, too.
+	 * @since 5.2.0 1. Now builds a user SEO Bar when `uid` is set and `id` is empty.
+	 *              2. Now reads the post type from the post. `$query['post_type']` is ignored.
 	 *
-	 * @param array $query {
-	 *     The query arguments for the SEO Bar.
-	 *
-	 *     @type int    $id        Required. The current post or term ID.
-	 *     @type string $tax       Optional. If not set, this will interpret it as a post.
-	 *     @type string $pta       Not implemented. Do not populate.
-	 *     @type string $post_type Optional. If not set, this will be automatically filled.
-	 *                             This parameter is ignored for taxonomies.
-	 * }
+	 * @param array $query The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
 	 * @return string The SEO Bar.
 	 */
 	public static function generate_bar( $query ) {
@@ -99,22 +100,27 @@ final class Builder {
 		// Link the input query for action hooks.
 		self::$query = &$query;
 
-		$query += [
-			'id'        => 0,
-			'tax'       => $query['taxonomy'] ?? '',
-			'taxonomy'  => $query['tax'] ?? '', // Legacy fallback.
-			'pta'       => '',
-			'post_type' => '',
-		];
+		normalize_generation_args( $query );
 
-		if ( empty( $query['id'] ) ) return '';
+		if ( null === $query )
+			return '';
 
-		if ( empty( $query['tax'] ) )
-			$query['post_type'] = $query['post_type'] ?: \get_post_type( $query['id'] );
+		switch ( get_query_type_from_args( $query ) ) {
+			case 'user':
+				$builder = Builder\User::get_instance();
+				break;
 
-		$builder = $query['tax']
-			? Builder\Term::get_instance()
-			: Builder\Page::get_instance();
+			case 'term':
+				$builder = Builder\Term::get_instance();
+				break;
+
+			case 'single':
+				$builder = Builder\Page::get_instance();
+				break;
+
+			default:
+				return '';
+		}
 
 		/**
 		 * Adjust interpreter and builder items here, before the tests have run.
@@ -165,11 +171,11 @@ final class Builder {
 	 * @return array {
 	 *     An array of SEO Bar items.
 	 *
-	 *     @type string $symbol The displayed symbol that identifies your bar.
-	 *     @type string $title  The title of the assessment.
-	 *     @type string $status Either 'good', 'okay', 'bad', or 'unknown'.
-	 *     @type string $reason The final assessment: The reason for the $status.
-	 *     @type string $assess The assessments on why the reason is set.
+	 *     @type string    $symbol The displayed symbol that identifies your bar.
+	 *     @type string    $title  The title of the assessment.
+	 *     @type int <bit> $status See `STATE_*` class constants.
+	 *     @type string    $reason The final assessment: The reason for the $status.
+	 *     @type string[]  $assess The assessments on why the reason is set.
 	 * }
 	 */
 	public static function &collect_seo_bar_items() {
@@ -185,12 +191,12 @@ final class Builder {
 	 * @param array  $item {
 	 *     The SEO Bar item.
 	 *
-	 *     @type string $symbol Required. The displayed symbol that identifies your bar.
-	 *     @type string $title  Required. The title of the assessment.
-	 *     @type string $status Required. Accepts 'good', 'okay', 'bad', 'unknown'.
-	 *     @type string $reason Required. The final assessment: The reason for the $status.
-	 *     @type string $assess Required. The assessments on why the reason is set. Keep it short and concise!
-	 *                          Does not accept HTML for performant ARIA support.
+	 *     @type string    $symbol Required. The displayed symbol that identifies your bar.
+	 *     @type string    $title  Required. The title of the assessment.
+	 *     @type int <bit> $status Required. See `STATE_*` class constants.
+	 *     @type string    $reason Required. The final assessment: The reason for the $status.
+	 *     @type string[]  $assess Required. The assessments on why the reason is set. Keep it short and concise!
+	 *                             Does not accept HTML for performant ARIA support.
 	 * }
 	 */
 	public static function register_seo_bar_item( $key, $item ) {
@@ -253,6 +259,7 @@ final class Builder {
 	 * Generates SEO Bar single HTML block content.
 	 *
 	 * @since 4.0.0
+	 * @since 5.2.0 Now strips HTML tags from title and reason before interpolating them into the tooltip HTML and ARIA text.
 	 * @generator
 	 * FIXME? The data herein is obtained via `builders/seobar-{type}.php`. If they escape their cache before we do here, it'd be much quicker.
 	 *        Provided, however, that there are fewer items cached (130~137) than SEOBar blocks outputted (240 on most sites).
@@ -319,38 +326,44 @@ final class Builder {
 				$symbol = $item['symbol'];
 			}
 
+			$title  = \wp_strip_all_tags( $item['title'] );
+			$reason = \wp_strip_all_tags( $item['reason'] );
+
 			$html = \sprintf(
 				'<strong>%s:</strong> %s<br>%s',
-				$item['title'],
-				$item['reason'],
+				$title,
+				$reason,
 				\sprintf(
 					'<ol>%s</ol>',
 					implode(
 						'',
-						array_map( static fn( $a ) => "<li>$a</li>", $item['assess'] ),
+						array_map( fn( $a ) => "<li>$a</li>", $item['assess'] ),
 					),
 				),
 			);
 
-			$count       = \count( $item['assess'] );
-			$assessments = [];
+			$single_assessment = \count( $item['assess'] ) < 2;
+			$assessments       = [];
 
-			if ( $count < 2 ) {
+			if ( $single_assessment ) {
 				$assessments[] = reset( $item['assess'] );
-			} else {
-				$i = 0;
-				foreach ( $item['assess'] as $text ) {
-					$assessments[] = \sprintf( $gettext['enum'], ++$i, $text );
-				}
+			} else foreach ( $item['assess'] as $text ) {
+				// An ++$i loop instead of count saves 6ns but adds 2ns for the single assessment above.
+				// Any other workaround adds more jumps.
+				$assessments[] = \sprintf(
+					$gettext['enum'],
+					\count( $assessments ) + 1,
+					$text,
+				);
 			}
 
 			$aria = \sprintf(
 				$gettext['aria'],
-				$item['title'],
-				$item['reason'],
+				$title,
+				$reason,
 				\sprintf(
 					$gettext['list'],
-					$count < 2 ? $gettext['assessment'] : $gettext['assessments'],
+					$single_assessment ? $gettext['assessment'] : $gettext['assessments'],
 					implode( ' ', $assessments ),
 				),
 			);

@@ -8,14 +8,16 @@ namespace The_SEO_Framework\Admin\Script;
 
 \defined( 'THE_SEO_FRAMEWORK_PRESENT' ) or die;
 
+use function The_SEO_Framework\has_run;
+
 use The_SEO_Framework\{
 	Data,
 	Meta,
 };
 use The_SEO_Framework\Helper\{
 	Compatibility,
-	Guidelines,
 	Format\Arrays,
+	Guidelines,
 	Query,
 	Taxonomy,
 	Template,
@@ -23,7 +25,7 @@ use The_SEO_Framework\Helper\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -47,18 +49,50 @@ use The_SEO_Framework\Helper\{
  * - params shouldn't change, like the page ID.
  *
  * @since 5.0.0
+ * @since 5.2.0 No longer final.
  * @see \The_SEO_Framework\Admin\Script\Registry
- * @access private
+ * @access protected
+ *         Use tsf()->admin()->scripts()->loader() instead.
  */
-final class Loader {
+class Loader {
+
+	/**
+	 * Initializes and enqueues scripts anywhere.
+	 *
+	 * Great for manual initialization; for example, on the front-end.
+	 *
+	 * @since 5.2.0
+	 * @api Not used internally.
+	 */
+	public static function mount() {
+
+		self::init();
+
+		$enqueue_hook = \is_admin() ? 'admin_enqueue_scripts' : 'wp_enqueue_scripts';
+
+		if ( \did_action( $enqueue_hook ) ) {
+			Registry::enqueue();
+		} else {
+			\add_action( $enqueue_hook, [ Registry::class, 'enqueue' ] );
+		}
+	}
 
 	/**
 	 * Initializes scripts based on admin query.
 	 *
+	 * @hook admin_enqueue_scripts 0
 	 * @since 5.0.0
-	 * @access private
+	 * @since 5.2.0 1. Prevents multiple runs.
+	 *              2. Now also loads author profile scripts.
+	 *              3. Now registers `tsf-http` for the settings and author screens.
+	 *              4. Now loads the title, description, social, canonical, media, and counter scripts on the author profile screen.
+	 *              5. Now loads `tsf-propose` when `edit_proposed_values` is enabled, and always on SEO Settings.
+	 *              6. Now registers `tsf-fediverse` for the settings and author screens.
+	 *              7. Now registers `tsf-socialformat` for the settings and author screens.
 	 */
 	public static function init() {
+
+		if ( has_run( __METHOD__ ) ) return;
 
 		$scripts = [
 			self::get_common_scripts(),
@@ -66,6 +100,9 @@ final class Loader {
 
 		if ( Query::is_post_edit() ) {
 			self::prepare_media_scripts();
+
+			if ( Data\Plugin::get_option( 'edit_proposed_values' ) )
+				$scripts[] = self::get_propose_scripts();
 
 			$scripts[] = self::get_post_edit_scripts();
 			$scripts[] = self::get_tabs_scripts();
@@ -77,14 +114,21 @@ final class Loader {
 			$scripts[] = self::get_primaryterm_scripts();
 			$scripts[] = self::get_ays_scripts();
 
-			if ( Data\Plugin::get_option( 'display_pixel_counter' ) || Data\Plugin::get_option( 'display_character_counter' ) )
+			if (
+				   Data\Plugin::get_option( 'display_pixel_counter' )
+				|| Data\Plugin::get_option( 'display_character_counter' )
+			) {
 				$scripts[] = self::get_counter_scripts();
+			}
 
 			if ( Query::is_block_editor() )
 				$scripts[] = self::get_gutenberg_compat_scripts();
 		} elseif ( Query::is_term_edit() ) {
 			if ( Data\Plugin::get_option( 'display_term_edit_options' ) ) {
 				self::prepare_media_scripts();
+
+				if ( Data\Plugin::get_option( 'edit_proposed_values' ) )
+					$scripts[] = self::get_propose_scripts();
 
 				$scripts[] = self::get_term_edit_scripts();
 				$scripts[] = self::get_media_scripts();
@@ -94,11 +138,19 @@ final class Loader {
 				$scripts[] = self::get_canonical_scripts();
 				$scripts[] = self::get_ays_scripts();
 
-				if ( Data\Plugin::get_option( 'display_pixel_counter' ) || Data\Plugin::get_option( 'display_character_counter' ) )
+				if (
+					   Data\Plugin::get_option( 'display_pixel_counter' )
+					|| Data\Plugin::get_option( 'display_character_counter' )
+				) {
 					$scripts[] = self::get_counter_scripts();
+				}
 			}
-		} elseif ( Query::is_wp_lists_edit() ) {
+		} elseif ( Query::is_wp_lists_edit() && ! Query::is_profile_admin() ) {
+			// User profiles don't have quick edit.
 			if ( Data\Plugin::get_option( 'display_list_edit_options' ) ) {
+				if ( Data\Plugin::get_option( 'edit_proposed_values' ) )
+					$scripts[] = self::get_propose_scripts();
+
 				$scripts[] = self::get_list_edit_scripts();
 				$scripts[] = self::get_title_scripts();
 				$scripts[] = self::get_description_scripts();
@@ -107,13 +159,22 @@ final class Loader {
 				if ( Query::is_singular_admin() )
 					$scripts[] = self::get_primaryterm_scripts();
 
-				if ( Data\Plugin::get_option( 'display_pixel_counter' ) || Data\Plugin::get_option( 'display_character_counter' ) )
+				if (
+					   Data\Plugin::get_option( 'display_pixel_counter' )
+					|| Data\Plugin::get_option( 'display_character_counter' )
+				) {
 					$scripts[] = self::get_counter_scripts();
+				}
 			}
 		} elseif ( Query::is_seo_settings_page() ) {
 			self::prepare_media_scripts();
 			self::prepare_metabox_scripts();
 
+			// The checkbox on this screen engages and disengages the script without a reload.
+			$scripts[] = self::get_propose_scripts();
+			$scripts[] = self::get_http_scripts();
+			$scripts[] = self::get_fediverse_scripts();
+			$scripts[] = self::get_socialformat_scripts();
 			$scripts[] = self::get_seo_settings_scripts();
 			$scripts[] = self::get_tabs_scripts();
 			$scripts[] = self::get_media_scripts();
@@ -125,6 +186,30 @@ final class Loader {
 
 			// Always load unconditionally, options may enable the counters dynamically.
 			$scripts[] = self::get_counter_scripts();
+		} elseif ( Query::is_profile_edit() ) {
+			if ( Data\Plugin::get_option( 'display_user_edit_options' ) ) {
+				self::prepare_media_scripts();
+
+				if ( Data\Plugin::get_option( 'edit_proposed_values' ) )
+					$scripts[] = self::get_propose_scripts();
+
+				$scripts[] = self::get_http_scripts();
+				$scripts[] = self::get_fediverse_scripts();
+				$scripts[] = self::get_socialformat_scripts();
+				$scripts[] = self::get_author_edit_scripts();
+				$scripts[] = self::get_media_scripts();
+				$scripts[] = self::get_title_scripts();
+				$scripts[] = self::get_description_scripts();
+				$scripts[] = self::get_social_scripts();
+				$scripts[] = self::get_canonical_scripts();
+
+				if (
+					   Data\Plugin::get_option( 'display_pixel_counter' )
+					|| Data\Plugin::get_option( 'display_character_counter' )
+				) {
+					$scripts[] = self::get_counter_scripts();
+				}
+			}
 		}
 
 		/**
@@ -169,6 +254,7 @@ final class Loader {
 	 * @since 4.0.0
 	 */
 	public static function prepare_metabox_scripts() {
+
 		\wp_enqueue_script( 'common' );
 		\wp_enqueue_script( 'wp-lists' );
 		\wp_enqueue_script( 'postbox' );
@@ -178,6 +264,7 @@ final class Loader {
 	 * Returns the common TSF scripts.
 	 *
 	 * @since 5.1.0
+	 * @since 5.2.0 No longer includes unused `manage_options` and `upload_files` l10n nonces.
 	 *
 	 * @return array The script params.
 	 */
@@ -205,7 +292,7 @@ final class Loader {
 			[
 				'id'       => 'tsf',
 				'type'     => 'js',
-				'deps'     => [ 'wp-util', 'tsf-utils' ],
+				'deps'     => [ 'tsf-utils' ],
 				'autoload' => true,
 				'name'     => 'tsf',
 				'base'     => \THE_SEO_FRAMEWORK_DIR_URL . 'lib/js/',
@@ -214,14 +301,7 @@ final class Loader {
 					'name' => 'tsfL10n',
 					'data' => [
 						'nonces' => [
-							/**
-							 * Use THE_SEO_FRAMEWORK_SETTINGS_CAP ?... might conflict with other nonces.
-							 * -> Just add it to the end, if it matches the existing ones, that's fine (just double work).
-							 * If we do this, also add it to "states" or something.
-							 */
-							'manage_options' => Utils::create_ajax_capability_nonce( 'manage_options' ), // unused
-							'upload_files'   => Utils::create_ajax_capability_nonce( 'upload_files' ), // unused
-							'edit_posts'     => Utils::create_ajax_capability_nonce( 'edit_posts' ),
+							'edit_posts' => Utils::create_ajax_capability_nonce( 'edit_posts' ),
 						],
 						'states' => [
 							'debug' => \SCRIPT_DEBUG,
@@ -238,20 +318,20 @@ final class Loader {
 				'base'     => \THE_SEO_FRAMEWORK_DIR_URL . 'lib/css/',
 				'ver'      => \THE_SEO_FRAMEWORK_VERSION,
 				'inline'   => [
-					'.tsf-tooltip-text-wrap'   => [
+					'.tsf-tooltip-text-wrap'    => [
 						'background-color:{{$bg_accent}}',
 						'color:{{$rel_bg_accent}}',
 					],
-					'.tsf-tooltip-text-wrap *' => [
+					'.tsf-tooltip-text-wrap *'  => [
 						'color:{{$rel_bg_accent}}',
 					],
-					'.tsf-tooltip-arrow:after' => [
+					'.tsf-tooltip-arrow::after' => [
 						'border-top-color:{{$bg_accent}}',
 					],
-					'.tsf-tooltip-down .tsf-tooltip-arrow:after' => [
+					'.tsf-tooltip-down .tsf-tooltip-arrow::after' => [
 						'border-bottom-color:{{$bg_accent}}',
 					],
-					'.tsf-tooltip-text'        => [
+					'.tsf-tooltip-text'         => [
 						\is_rtl() ? 'direction:rtl' : '',
 					],
 				],
@@ -327,7 +407,17 @@ final class Loader {
 	 */
 	public static function get_list_edit_scripts() {
 
-		$deps = [ 'tsf-title', 'tsf-description', 'tsf-canonical', 'tsf-postslugs', 'tsf-termslugs', 'tsf-authorslugs', 'tsf', 'tsf-tt', 'tsf-utils' ];
+		$deps = [
+			'tsf',
+			'tsf-authorslugs',
+			'tsf-canonical',
+			'tsf-description',
+			'tsf-postslugs',
+			'tsf-termslugs',
+			'tsf-title',
+			'tsf-tt',
+			'tsf-utils',
+		];
 
 		// tsf-pt-le is only registered on singular admin (post list) pages, not term list pages.
 		if ( Query::is_singular_admin() )
@@ -356,10 +446,86 @@ final class Loader {
 	}
 
 	/**
+	 * Returns HTTP helper script params.
+	 *
+	 * Registered only. `tsf-settings`, `tsf-author`, `tsf-fediverse`, and `tsf-socialformat` load it as a dependency.
+	 *
+	 * @since 5.2.0
+	 *
+	 * @return array The script params.
+	 */
+	public static function get_http_scripts() {
+		return [
+			'id'       => 'tsf-http',
+			'type'     => 'js',
+			'deps'     => [],
+			'autoload' => false,
+			'name'     => 'http',
+			'base'     => \THE_SEO_FRAMEWORK_DIR_URL . 'lib/js/',
+			'ver'      => \THE_SEO_FRAMEWORK_VERSION,
+		];
+	}
+
+	/**
+	 * Returns Fediverse helper script params.
+	 *
+	 * Registered only. `tsf-settings` and `tsf-author` load it as a dependency.
+	 *
+	 * @since 5.2.0
+	 *
+	 * @return array The script params.
+	 */
+	public static function get_fediverse_scripts() {
+		return [
+			'id'       => 'tsf-fediverse',
+			'type'     => 'js',
+			'deps'     => [ 'tsf', 'tsf-http' ],
+			'autoload' => false,
+			'name'     => 'fediverse',
+			'base'     => \THE_SEO_FRAMEWORK_DIR_URL . 'lib/js/',
+			'ver'      => \THE_SEO_FRAMEWORK_VERSION,
+		];
+	}
+
+	/**
+	 * Returns social profile URL format hint script params.
+	 *
+	 * Registered only. `tsf-settings` and `tsf-author` load it as a dependency.
+	 *
+	 * @since 5.2.0
+	 *
+	 * @return array The script params.
+	 */
+	public static function get_socialformat_scripts() {
+		return [
+			'id'       => 'tsf-socialformat',
+			'type'     => 'js',
+			'deps'     => [ 'tsf-http' ],
+			'autoload' => false,
+			'name'     => 'socialformat',
+			'base'     => \THE_SEO_FRAMEWORK_DIR_URL . 'lib/js/',
+			'ver'      => \THE_SEO_FRAMEWORK_VERSION,
+			'l10n'     => [
+				'name' => 'tsfSocialFormatL10n',
+				'data' => [
+					'i18n' => [
+						/* translators: %s = suggested profile URL */
+						'socialFormatSuggested' => \__( 'Suggested format: %s', 'autodescription' ),
+						/* translators: %s = example value */
+						'socialFormatExample'    => \__( 'Example: %s', 'autodescription' ),
+					],
+				],
+			],
+		];
+	}
+
+	/**
 	 * Returns the SEO Settings page script params.
 	 *
 	 * @since 4.0.0
 	 * @since 4.1.0 Updated l10n.data.
+	 * @since 5.2.0 1. Now depends on `tsf-fediverse`.
+	 *              2. Now depends on `tsf-socialformat`.
 	 *
 	 * @return array The script params.
 	 */
@@ -380,7 +546,23 @@ final class Loader {
 			[
 				'id'       => 'tsf-settings',
 				'type'     => 'js',
-				'deps'     => [ 'jquery', 'tsf-ays', 'tsf-title', 'tsf-description', 'tsf-social', 'tsf-canonical', 'tsf', 'tsf-tabs', 'tsf-tt', 'wp-color-picker', 'wp-util' ],
+				'deps'     => [
+					'jquery',
+					'tsf',
+					'tsf-propose',
+					'tsf-ays',
+					'tsf-canonical',
+					'tsf-description',
+					'tsf-fediverse',
+					'tsf-http',
+					'tsf-social',
+					'tsf-socialformat',
+					'tsf-tabs',
+					'tsf-title',
+					'tsf-tt',
+					'wp-color-picker',
+					'wp-util',
+				],
 				'autoload' => true,
 				'name'     => 'settings',
 				'base'     => \THE_SEO_FRAMEWORK_DIR_URL . 'lib/js/',
@@ -445,7 +627,21 @@ final class Loader {
 			[
 				'id'       => 'tsf-post',
 				'type'     => 'js',
-				'deps'     => [ 'tsf-ays', 'tsf-title', 'tsf-description', 'tsf-social', 'tsf-canonical', 'tsf-postslugs', 'tsf-termslugs', 'tsf-authorslugs', 'tsf-tabs', 'tsf-tt', 'tsf-utils', 'tsf-ui', 'tsf' ],
+				'deps'     => [
+					'tsf',
+					'tsf-authorslugs',
+					'tsf-ays',
+					'tsf-canonical',
+					'tsf-description',
+					'tsf-postslugs',
+					'tsf-social',
+					'tsf-tabs',
+					'tsf-termslugs',
+					'tsf-title',
+					'tsf-tt',
+					'tsf-ui',
+					'tsf-utils',
+				],
 				'autoload' => true,
 				'name'     => 'post',
 				'base'     => \THE_SEO_FRAMEWORK_DIR_URL . 'lib/js/',
@@ -491,8 +687,6 @@ final class Loader {
 		$id       = Query::get_the_real_id();
 		$taxonomy = Query::get_current_taxonomy();
 
-		$additions_forced_disabled = (bool) Data\Plugin::get_option( 'title_rem_additions' );
-
 		if ( Meta\Title\Conditions::use_generated_archive_prefix( \get_term( $id, $taxonomy ) ) ) {
 			$term_prefix = \sprintf(
 				/* translators: %s: Taxonomy singular name. */
@@ -516,7 +710,16 @@ final class Loader {
 			[
 				'id'       => 'tsf-term',
 				'type'     => 'js',
-				'deps'     => [ 'tsf-ays', 'tsf-title', 'tsf-description', 'tsf-social', 'tsf-canonical', 'tsf-termslugs', 'tsf-tt', 'tsf' ],
+				'deps'     => [
+					'tsf',
+					'tsf-ays',
+					'tsf-canonical',
+					'tsf-description',
+					'tsf-social',
+					'tsf-termslugs',
+					'tsf-title',
+					'tsf-tt',
+				],
 				'autoload' => true,
 				'name'     => 'term',
 				'base'     => \THE_SEO_FRAMEWORK_DIR_URL . 'lib/js/',
@@ -525,7 +728,7 @@ final class Loader {
 					'name' => 'tsfTermL10n',
 					'data' => [
 						'params' => [
-							'additionsForcedDisabled' => $additions_forced_disabled,
+							'additionsForcedDisabled' => (bool) Data\Plugin::get_option( 'title_rem_additions' ),
 							'id'                      => $id,
 							'taxonomy'                => $taxonomy,
 							'termPrefix'              => Utils::decode_entities( $term_prefix ),
@@ -534,6 +737,71 @@ final class Loader {
 							'edit_term' => [
 								$id => Utils::create_ajax_capability_nonce( 'edit_term', $id ),
 							],
+						],
+					],
+				],
+			],
+		];
+	}
+
+	/**
+	 * Returns Author profile scripts params.
+	 *
+	 * @since 5.2.0
+	 *
+	 * @return array The script params.
+	 */
+	public static function get_author_edit_scripts() {
+
+		$id   = Query::get_admin_user_id();
+		$user = Data\User::get_userdata( $id );
+
+		if (
+			   $user
+			&& Meta\Title\Conditions::use_generated_archive_prefix( $user )
+		) {
+			$author_prefix = \_x( 'Author:', 'author archive title prefix', 'default' );
+		} else {
+			$author_prefix = '';
+		}
+
+		return [
+			[
+				'id'       => 'tsf-author',
+				'type'     => 'css',
+				'deps'     => [ 'tsf-tt', 'tsf' ],
+				'autoload' => true,
+				'name'     => 'author',
+				'base'     => \THE_SEO_FRAMEWORK_DIR_URL . 'lib/css/',
+				'ver'      => \THE_SEO_FRAMEWORK_VERSION,
+			],
+			[
+				'id'       => 'tsf-author',
+				'type'     => 'js',
+				'deps'     => [
+					'tsf',
+					'tsf-canonical',
+					'tsf-description',
+					'tsf-fediverse',
+					'tsf-http',
+					'tsf-social',
+					'tsf-socialformat',
+					'tsf-title',
+					'tsf-tt',
+					'tsf-utils',
+				],
+				'autoload' => true,
+				'name'     => 'author',
+				'base'     => \THE_SEO_FRAMEWORK_DIR_URL . 'lib/js/',
+				'ver'      => \THE_SEO_FRAMEWORK_VERSION,
+				'l10n'     => [
+					'name' => 'tsfAuthorL10n',
+					'data' => [
+						'params' => [
+							'additionsForcedDisabled' => (bool) Data\Plugin::get_option( 'title_rem_additions' ),
+							'authorPrefix'            => Utils::decode_entities( $author_prefix ),
+							'id'                      => $id,
+							'nicename'                => $user ? $user->user_nicename : '',
 						],
 					],
 				],
@@ -589,6 +857,7 @@ final class Loader {
 	 * @since 4.0.0
 	 * @since 4.1.2 Removed redundant button titles.
 	 * @since 5.1.0 Added tsf-media CSS. Added `tsfMediaL10n.warning`.
+	 * @since 5.2.0 Now passes media labels and warnings to JavaScript unescaped.
 	 *
 	 * @return array The script params.
 	 */
@@ -616,22 +885,22 @@ final class Loader {
 					'data' => [
 						'labels'  => [
 							'social' => [
-								'imgSelect'      => \esc_attr__( 'Select Image', 'autodescription' ),
+								'imgSelect'      => \__( 'Select Image', 'autodescription' ),
 								'imgSelectTitle' => '',
-								'imgChange'      => \esc_attr__( 'Change Image', 'autodescription' ),
-								'imgRemove'      => \esc_attr__( 'Remove Image', 'autodescription' ),
+								'imgChange'      => \__( 'Change Image', 'autodescription' ),
+								'imgRemove'      => \__( 'Remove Image', 'autodescription' ),
 								'imgRemoveTitle' => '',
-								'imgFrameTitle'  => \esc_attr_x( 'Select Social Image', 'Frame title', 'autodescription' ),
-								'imgFrameButton' => \esc_attr__( 'Use this image', 'autodescription' ),
+								'imgFrameTitle'  => \_x( 'Select Social Image', 'Frame title', 'autodescription' ),
+								'imgFrameButton' => \__( 'Use this image', 'autodescription' ),
 							],
 							'logo'   => [
-								'imgSelect'      => \esc_attr__( 'Select Logo', 'autodescription' ),
+								'imgSelect'      => \__( 'Select Logo', 'autodescription' ),
 								'imgSelectTitle' => '',
-								'imgChange'      => \esc_attr__( 'Change Logo', 'autodescription' ),
-								'imgRemove'      => \esc_attr__( 'Remove Logo', 'autodescription' ),
+								'imgChange'      => \__( 'Change Logo', 'autodescription' ),
+								'imgRemove'      => \__( 'Remove Logo', 'autodescription' ),
 								'imgRemoveTitle' => '',
-								'imgFrameTitle'  => \esc_attr_x( 'Select Logo', 'Frame title', 'autodescription' ),
-								'imgFrameButton' => \esc_attr__( 'Use this image', 'autodescription' ),
+								'imgFrameTitle'  => \_x( 'Select Logo', 'Frame title', 'autodescription' ),
+								'imgFrameButton' => \__( 'Use this image', 'autodescription' ),
 							],
 						],
 						'warning' => [
@@ -655,11 +924,11 @@ final class Loader {
 								],
 							],
 							'i18n'           => [
-								'notLoaded'    => \esc_attr__( 'The image file could not be loaded.', 'autodescription' ),
+								'notLoaded'    => \__( 'The image file could not be loaded.', 'autodescription' ),
 								/* translators: %s is the file extension. */
-								'extWarned'    => \esc_attr__( 'The file extension "%s" is not supported on all platforms, which could prevent this image from being displayed.', 'autodescription' ),
+								'extWarned'    => \__( 'The file extension "%s" is not supported on all platforms, which could prevent this image from being displayed.', 'autodescription' ),
 								/* translators: %s is the file extension. */
-								'extForbidden' => \esc_attr__( 'The file extension "%s" is not supported. Choose a different file.', 'autodescription' ),
+								'extForbidden' => \__( 'The file extension "%s" is not supported. Choose a different file.', 'autodescription' ),
 							],
 						],
 						'nonce'   => Utils::create_ajax_capability_nonce( 'upload_files' ),
@@ -756,6 +1025,7 @@ final class Loader {
 	 * @return array The script params.
 	 */
 	public static function get_canonical_scripts() {
+
 		global $wp_rewrite;
 
 		$parsed_home_url = Meta\URI\Utils::get_parsed_front_page_url();
@@ -850,8 +1120,11 @@ final class Loader {
 				'name'    => $tax,
 				'primary' => $primary_term_id, // if 0, it'll use hints from the interface.
 				'i18n'    => [
-					/* translators: %s = term name */
-					'selectPrimary' => \sprintf( \esc_html__( 'Select primary %s', 'autodescription' ), $singular_name ),
+					'selectPrimary' => \esc_html( \sprintf(
+						/* translators: %s = term name */
+						\__( 'Select primary %s', 'autodescription' ),
+						$singular_name,
+					) ),
 				],
 			];
 		}
@@ -915,9 +1188,36 @@ final class Loader {
 	}
 
 	/**
+	 * Returns the generated-value editing script params.
+	 *
+	 * @since 5.2.0
+	 *
+	 * @return array The script params.
+	 */
+	public static function get_propose_scripts() {
+		return [
+			'id'       => 'tsf-propose',
+			'type'     => 'js',
+			'deps'     => [ 'tsf' ],
+			'autoload' => true,
+			'name'     => 'propose',
+			'base'     => \THE_SEO_FRAMEWORK_DIR_URL . 'lib/js/',
+			'ver'      => \THE_SEO_FRAMEWORK_VERSION,
+			'l10n'     => [
+				'name' => 'tsfProposeL10n',
+				'data' => [
+					'enabled' => (bool) Data\Plugin::get_option( 'edit_proposed_values' ),
+				],
+			],
+		];
+	}
+
+	/**
 	 * Returns the Pixel and Character counter script params.
 	 *
 	 * @since 4.0.0
+	 * @since 5.2.0 1. Now reads the counter from user preferences.
+	 *              2. Now passes the pixel-counter sentence to JavaScript unescaped.
 	 *
 	 * @return array The script params.
 	 */
@@ -944,11 +1244,11 @@ final class Loader {
 					'name' => 'tsfCL10n',
 					'data' => [
 						'guidelines'  => Guidelines::get_text_size_guidelines(),
-						'counterType' => \absint( Data\Plugin\User::get_meta_item( 'counter_type' ) ),
+						'counterType' => \absint( Data\Plugin\User::get_preference_item( 'counter_type' ) ),
 						'i18n'        => [
 							'guidelines' => Guidelines::get_text_size_guidelines_i18n(),
 							/* translators: Pixel counter. 1: number (value), 2: number (guideline) */
-							'pixelsUsed' => \esc_attr__( '%1$d out of %2$d pixels are used.', 'autodescription' ),
+							'pixelsUsed' => \__( '%1$d out of %2$d pixels are used.', 'autodescription' ),
 						],
 					],
 				],

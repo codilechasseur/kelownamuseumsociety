@@ -11,7 +11,7 @@ namespace The_SEO_Framework;
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2025 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -30,7 +30,7 @@ namespace The_SEO_Framework;
 \add_filter( 'avada_setting_get_disable_rich_snippet_title', __NAMESPACE__ . '\_avada_disable_switch_option' );
 \add_filter( 'avada_setting_get_disable_rich_snippet_author', __NAMESPACE__ . '\_avada_disable_switch_option' );
 \add_filter( 'avada_setting_get_disable_rich_snippet_date', __NAMESPACE__ . '\_avada_disable_switch_option' );
-\add_filter( 'avada_options_sections', __NAMESPACE__ . '\_avada_remove_settings_sections', 10, 1 );
+\add_filter( 'avada_options_sections', __NAMESPACE__ . '\_avada_remove_settings_sections' );
 \add_filter( 'fusion_pagetype_data', __NAMESPACE__ . '\_avada_unset_meta_box_seo_tab', 10, 2 );
 
 /**

@@ -31,10 +31,20 @@ class Post_Type {
 	 * Key to cache the flush rewrite.
 	 *
 	 * @since 6.0.0
+	 * @deprecated 7.8.4 The flush is tracked in an option; this transient is no longer read.
 	 *
 	 * @var string
 	 */
 	const FLUSH_REWRITE_TRANSIENT = 'tribe_events_series_flush_rewrite';
+
+	/**
+	 * Option that records the Series rewrite rules were flushed.
+	 *
+	 * @since 7.8.4
+	 *
+	 * @var string
+	 */
+	private const FLUSH_REWRITE_OPTION = 'tec_events_pro_series_rewrite_flushed';
 
 	/**
 	 * Args for series post type
@@ -183,12 +193,40 @@ class Post_Type {
 	 * Since we are adding a new post type, let's flush rewrite rules this once.
 	 *
 	 * @since 6.0.0
+	 * @since 7.8.4 Tracks the flush in an option, waits for `wp_loaded` and no longer writes the `.htaccess` file.
 	 */
 	public function flush_rewrite() {
-		if ( ! get_transient( static::FLUSH_REWRITE_TRANSIENT ) ) {
-			set_transient( static::FLUSH_REWRITE_TRANSIENT, true, MONTH_IN_SECONDS );
-			flush_rewrite_rules();
+		/*
+		 * An option, not a transient: a persistent object cache can evict transients, which would
+		 * flush on every request. A soft flush is enough, since the Series rules live in the
+		 * `rewrite_rules` option; a hard flush rewrites `.htaccess` using `home_url()`, which a
+		 * multilingual plugin can filter to a language prefix such as `/en/`.
+		 */
+		if ( get_option( self::FLUSH_REWRITE_OPTION ) ) {
+			return;
 		}
+
+		// `WP_Rewrite::flush_rules()` waits for `wp_loaded`; flag the flush only once it has really run.
+		if ( ! did_action( 'wp_loaded' ) ) {
+			add_action( 'wp_loaded', [ $this, 'flush_rewrite' ] );
+
+			return;
+		}
+
+		flush_rewrite_rules( false ); // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.flush_rewrite_rules_flush_rewrite_rules -- One-time soft flush to add the Series rules.
+		update_option( self::FLUSH_REWRITE_OPTION, true );
+		delete_transient( self::FLUSH_REWRITE_TRANSIENT );
+	}
+
+	/**
+	 * Clears the flush flag so the Series rules are flushed again on the next request.
+	 *
+	 * @since 7.8.4
+	 *
+	 * @return void
+	 */
+	public function reset_flush_rewrite(): void {
+		delete_option( self::FLUSH_REWRITE_OPTION );
 	}
 
 	/**

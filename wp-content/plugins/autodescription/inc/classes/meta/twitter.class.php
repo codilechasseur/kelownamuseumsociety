@@ -22,7 +22,7 @@ use The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -38,7 +38,7 @@ use The_SEO_Framework\{
  */
 
 /**
- * Holds getters for meta tag output.
+ * Holds getters for Twitter output.
  *
  * @since 5.0.0
  * @access protected
@@ -54,7 +54,9 @@ class Twitter {
 	 * @return bool Whether to fall back to Open Graph tags.
 	 */
 	public static function fallback_to_open_graph() {
+
 		static $fallback;
+
 		return $fallback ??= (bool) Data\Plugin::get_option( 'og_tags' );
 	}
 
@@ -63,8 +65,8 @@ class Twitter {
 	 *
 	 * @since 5.0.0
 	 *
-	 * @param array|null $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                         Leave null to autodetermine query.
+	 * @param ?array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                     Leave null to autodetermine query.
 	 * @return string The Twitter Card type.
 	 */
 	public static function get_card_type( $args = null ) {
@@ -76,9 +78,10 @@ class Twitter {
 	 * Gets the custom card type.
 	 *
 	 * @since 5.0.0
+	 * @since 5.2.0 Now returns the custom author archive card type from user meta.
 	 *
-	 * @param array|null $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                         Leave null to autodetermine query.
+	 * @param ?array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                     Leave null to autodetermine query.
 	 * @return string The custom card type. Empty string if not set.
 	 */
 	public static function get_custom_card_type( $args = null ) {
@@ -89,7 +92,8 @@ class Twitter {
 			switch ( get_query_type_from_args( $args ) ) {
 				case 'single':
 					if ( Query::is_static_front_page( $args['id'] ) ) {
-						$card = Data\Plugin::get_option( 'homepage_twitter_card_type' )
+						$card =
+							   Data\Plugin::get_option( 'homepage_twitter_card_type' )
 							?: Data\Plugin\Post::get_meta_item( '_tsf_twitter_card_type', $args['id'] );
 					} else {
 						$card = Data\Plugin\Post::get_meta_item( '_tsf_twitter_card_type', $args['id'] );
@@ -103,12 +107,16 @@ class Twitter {
 					break;
 				case 'pta':
 					$card = Data\Plugin\PTA::get_meta_item( 'tw_card_type', $args['pta'] );
+					break;
+				case 'user':
+					$card = Data\Plugin\User::get_meta_item( 'tw_card_type', $args['uid'] );
 			}
 		} else {
 			if ( Query::is_real_front_page() ) {
 				if ( Query::is_static_front_page() ) {
-					$card = Data\Plugin::get_option( 'homepage_twitter_card_type' )
-						 ?: Data\Plugin\Post::get_meta_item( '_tsf_twitter_card_type' );
+					$card =
+						   Data\Plugin::get_option( 'homepage_twitter_card_type' )
+						?: Data\Plugin\Post::get_meta_item( '_tsf_twitter_card_type' );
 				} else {
 					$card = Data\Plugin::get_option( 'homepage_twitter_card_type' );
 				}
@@ -118,13 +126,12 @@ class Twitter {
 				$card = Data\Plugin\Term::get_meta_item( 'tw_card_type' );
 			} elseif ( \is_post_type_archive() ) {
 				$card = Data\Plugin\PTA::get_meta_item( 'tw_card_type' );
+			} elseif ( Query::is_author() ) {
+				$card = Data\Plugin\User::get_current_post_author_meta_item( 'tw_card_type' );
 			}
 		}
 
-		if ( ! empty( $card ) && \in_array( $card, self::get_supported_cards(), true ) )
-			return $card;
-
-		return '';
+		return Sanitize::twitter_card( $card );
 	}
 
 	/**
@@ -132,19 +139,19 @@ class Twitter {
 	 *
 	 * @NOTE Forward compatibility with $args: https://github.com/sybrew/the-seo-framework/issues/525
 	 * @since 5.0.0
+	 * @since 5.2.0 Now uses array_first(). An empty supported list returns null.
 	 *
-	 * @param array|null $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                         Leave null to autodetermine query.
-	 * @return string The default Twitter Card type for the current request.
+	 * @param ?array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                     Leave null to autodetermine query.
+	 * @return ?string The default Twitter Card type, or null when no card is supported.
 	 */
 	public static function get_generated_card_type( $args = null ) { // phpcs:ignore Generic.CodeAnalysis, VariableAnalysis.CodeAnalysis -- see doc note
 
-		$card = Data\Plugin::get_option( 'twitter_card' );
+		$card = Sanitize::twitter_card( Data\Plugin::get_option( 'twitter_card' ) );
 
-		$supported_cards = self::get_supported_cards();
-		// Forward compatibility
-		if ( ! \in_array( $card, $supported_cards, true ) )
-			$card = reset( $supported_cards );
+		// Forward compatibility, this is practically a no-op now.
+		if ( ! $card )
+			$card = array_first( self::get_supported_cards() );
 
 		return $card;
 	}
@@ -183,9 +190,13 @@ class Twitter {
 	}
 
 	/**
-	 * Returns the Twitter post creator.
+	 * Returns the Twitter creator for the current query.
+	 *
+	 * Singular queries use the post author. Author archives use the queried author.
+	 * Falls back to the site creator.
 	 *
 	 * @since 5.0.0
+	 * @since 5.2.0 Now uses the queried author's handle on author archives.
 	 *
 	 * @return string
 	 */
@@ -196,12 +207,12 @@ class Twitter {
 
 	/**
 	 * Returns the Twitter meta title.
-	 * Falls back to Open Graph title.
+	 * Falls back to the Open Graph title when Open Graph tags are enabled, and otherwise to the meta title.
 	 *
 	 * @since 5.0.0
 	 *
-	 * @param array|null $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                         Leave null to autodetermine query.
+	 * @param ?array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                     Leave null to autodetermine query.
 	 * @return string Twitter Title.
 	 */
 	public static function get_title( $args = null ) {
@@ -211,12 +222,12 @@ class Twitter {
 
 	/**
 	 * Returns the Twitter meta title from custom field.
-	 * Falls back to Open Graph title.
+	 * Falls back to the Open Graph title when Open Graph tags are enabled, and otherwise to the meta title.
 	 *
 	 * @since 5.0.0
 	 *
-	 * @param array|null $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                         Leave null to autodetermine query.
+	 * @param ?array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                     Leave null to autodetermine query.
 	 * @return string Twitter Title.
 	 */
 	public static function get_custom_title( $args = null ) {
@@ -227,9 +238,10 @@ class Twitter {
 
 	/**
 	 * Returns the Twitter meta title from custom field, based on query.
-	 * Falls back to Open Graph title.
+	 * Falls back to the Open Graph title when Open Graph tags are enabled, and otherwise to the meta title.
 	 *
 	 * @since 5.0.0
+	 * @since 5.2.0 Now returns the custom author archive title from user meta.
 	 *
 	 * @return string Custom twitter Title.
 	 */
@@ -237,8 +249,9 @@ class Twitter {
 
 		if ( Query::is_real_front_page() ) {
 			if ( Query::is_static_front_page() ) {
-				$title = coalesce_strlen( Data\Plugin::get_option( 'homepage_twitter_title' ) )
-					  ?? Data\Plugin\Post::get_meta_item( '_twitter_title' );
+				$title =
+					   coalesce_strlen( Data\Plugin::get_option( 'homepage_twitter_title' ) )
+					?? Data\Plugin\Post::get_meta_item( '_twitter_title' );
 			} else {
 				$title = Data\Plugin::get_option( 'homepage_twitter_title' );
 			}
@@ -248,9 +261,12 @@ class Twitter {
 			$title = Data\Plugin\Term::get_meta_item( 'tw_title' );
 		} elseif ( \is_post_type_archive() ) {
 			$title = Data\Plugin\PTA::get_meta_item( 'tw_title' );
+		} elseif ( Query::is_author() ) {
+			$title = Data\Plugin\User::get_current_post_author_meta_item( 'tw_title' );
 		}
 
-		if ( ! isset( $title ) ) return '';
+		if ( ! isset( $title ) )
+			return '';
 
 		if ( \strlen( $title ) )
 			return Sanitize::metadata_content( $title );
@@ -263,9 +279,10 @@ class Twitter {
 
 	/**
 	 * Returns the Twitter meta title from custom field, based on arguments.
-	 * Falls back to Open Graph title.
+	 * Falls back to the Open Graph title when Open Graph tags are enabled, and otherwise to the meta title.
 	 *
 	 * @since 5.0.0
+	 * @since 5.2.0 Now returns the custom author archive title from user meta.
 	 *
 	 * @param array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
 	 * @return string Twitter Title.
@@ -277,8 +294,9 @@ class Twitter {
 		switch ( get_query_type_from_args( $args ) ) {
 			case 'single':
 				if ( Query::is_static_front_page( $args['id'] ) ) {
-					$title = coalesce_strlen( Data\Plugin::get_option( 'homepage_twitter_title' ) )
-						  ?? Data\Plugin\Post::get_meta_item( '_twitter_title', $args['id'] );
+					$title =
+						   coalesce_strlen( Data\Plugin::get_option( 'homepage_twitter_title' ) )
+						?? Data\Plugin\Post::get_meta_item( '_twitter_title', $args['id'] );
 				} else {
 					$title = Data\Plugin\Post::get_meta_item( '_twitter_title', $args['id'] );
 				}
@@ -291,9 +309,13 @@ class Twitter {
 				break;
 			case 'pta':
 				$title = Data\Plugin\PTA::get_meta_item( 'tw_title', $args['pta'] );
+				break;
+			case 'user':
+				$title = Data\Plugin\User::get_meta_item( 'tw_title', $args['uid'] );
 		}
 
-		if ( ! isset( $title ) ) return '';
+		if ( ! isset( $title ) )
+			return '';
 
 		if ( \strlen( $title ) )
 			return Sanitize::metadata_content( $title );
@@ -310,8 +332,8 @@ class Twitter {
 	 *
 	 * @since 5.0.0
 	 *
-	 * @param array|null $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                         Leave null to autodetermine query.
+	 * @param ?array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                     Leave null to autodetermine query.
 	 * @return string The generated Twitter Title.
 	 */
 	public static function get_generated_title( $args = null ) {
@@ -320,12 +342,12 @@ class Twitter {
 
 	/**
 	 * Returns the Twitter meta description.
-	 * Falls back to Open Graph description.
+	 * Falls back to the Open Graph description when Open Graph tags are enabled, and otherwise to the meta description.
 	 *
 	 * @since 5.0.0
 	 *
-	 * @param array|null $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                         Leave null to autodetermine query.
+	 * @param ?array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                     Leave null to autodetermine query.
 	 * @return string The real Twitter description output.
 	 */
 	public static function get_description( $args = null ) {
@@ -335,12 +357,12 @@ class Twitter {
 
 	/**
 	 * Returns the Twitter meta description from custom field.
-	 * Falls back to Open Graph description.
+	 * Falls back to the Open Graph description when Open Graph tags are enabled, and otherwise to the meta description.
 	 *
 	 * @since 5.0.0
 	 *
-	 * @param array|null $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                         Leave null to autodetermine query.
+	 * @param ?array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                     Leave null to autodetermine query.
 	 * @return string Twitter description.
 	 */
 	public static function get_custom_description( $args = null ) {
@@ -351,9 +373,10 @@ class Twitter {
 
 	/**
 	 * Returns the Twitter meta description from custom field, based on query.
-	 * Falls back to Open Graph description.
+	 * Falls back to the Open Graph description when Open Graph tags are enabled, and otherwise to the meta description.
 	 *
 	 * @since 5.0.0
+	 * @since 5.2.0 Now returns the custom author archive description from user meta.
 	 *
 	 * @return string Twitter description.
 	 */
@@ -361,8 +384,9 @@ class Twitter {
 
 		if ( Query::is_real_front_page() ) {
 			if ( Query::is_static_front_page() ) {
-				$desc = coalesce_strlen( Data\Plugin::get_option( 'homepage_twitter_description' ) )
-					 ?? Data\Plugin\Post::get_meta_item( '_twitter_description' );
+				$desc =
+					   coalesce_strlen( Data\Plugin::get_option( 'homepage_twitter_description' ) )
+					?? Data\Plugin\Post::get_meta_item( '_twitter_description' );
 			} else {
 				$desc = Data\Plugin::get_option( 'homepage_twitter_description' );
 			}
@@ -372,10 +396,13 @@ class Twitter {
 			$desc = Data\Plugin\Term::get_meta_item( 'tw_description' );
 		} elseif ( \is_post_type_archive() ) {
 			$desc = Data\Plugin\PTA::get_meta_item( 'tw_description' );
+		} elseif ( Query::is_author() ) {
+			$desc = Data\Plugin\User::get_current_post_author_meta_item( 'tw_description' );
 		}
 
 		// Do not check empty(). See strlen below.
-		if ( ! isset( $desc ) ) return '';
+		if ( ! isset( $desc ) )
+			return '';
 
 		if ( \strlen( $desc ) )
 			return Sanitize::metadata_content( $desc );
@@ -388,9 +415,11 @@ class Twitter {
 
 	/**
 	 * Returns the Twitter meta description from custom field, based on arguments.
-	 * Falls back to Open Graph description.
+	 * Falls back to the Open Graph description, or the meta description when Open Graph tags are disabled.
 	 *
 	 * @since 5.0.0
+	 * @since 5.2.0 1. The arguments path now correctly falls back to the meta description when Open Graph tags are disabled.
+	 *              2. Now returns the custom author archive description from user meta.
 	 *
 	 * @param array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
 	 * @return string Twitter description.
@@ -402,8 +431,9 @@ class Twitter {
 		switch ( get_query_type_from_args( $args ) ) {
 			case 'single':
 				if ( Query::is_static_front_page( $args['id'] ) ) {
-					$desc = coalesce_strlen( Data\Plugin::get_option( 'homepage_twitter_description' ) )
-						 ?? Data\Plugin\Post::get_meta_item( '_twitter_description', $args['id'] );
+					$desc =
+						   coalesce_strlen( Data\Plugin::get_option( 'homepage_twitter_description' ) )
+						?? Data\Plugin\Post::get_meta_item( '_twitter_description', $args['id'] );
 				} else {
 					$desc = Data\Plugin\Post::get_meta_item( '_twitter_description', $args['id'] );
 				}
@@ -416,10 +446,14 @@ class Twitter {
 				break;
 			case 'pta':
 				$desc = Data\Plugin\PTA::get_meta_item( 'tw_description', $args['pta'] );
+				break;
+			case 'user':
+				$desc = Data\Plugin\User::get_meta_item( 'tw_description', $args['uid'] );
 		}
 
 		// Do not check empty(). See strlen below.
-		if ( ! isset( $desc ) ) return '';
+		if ( ! isset( $desc ) )
+			return '';
 
 		if ( \strlen( $desc ) )
 			return Sanitize::metadata_content( $desc );
@@ -427,16 +461,16 @@ class Twitter {
 		// At least there was an attempt made to fetch a title when we reach this. Try harder.
 		return self::fallback_to_open_graph()
 			? Open_Graph::get_custom_description_from_args( $args )
-			: Title::get_custom_description( $args );
+			: Description::get_custom_description( $args );
 	}
 
 	/**
-	 * Returns the autogenerated Twitter meta description. Falls back to Open Graph and then meta description.
+	 * Returns the autogenerated Twitter meta description.
 	 *
 	 * @since 5.0.0
 	 *
-	 * @param array|null $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
-	 *                         Leave null to autodetermine query.
+	 * @param ?array $args The query arguments. Accepts 'id', 'tax', 'pta', and 'uid'.
+	 *                     Leave null to autodetermine query.
 	 * @return string The generated Twitter description output.
 	 */
 	public static function get_generated_description( $args = null ) {

@@ -7,7 +7,7 @@
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2019 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2019 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -128,13 +128,16 @@ window.tsfPTGB = function () {
 
 		const get = () => +( _primaryTermField().value );
 		const set = ( id, fallback ) => {
+
 			id = +id;
 			_primaryTermField().value = id;
 			dispatchUpdateEvent( id || +fallback, taxonomySlug );
+
 			return id;
 		};
 
 		const revalidate = selectedTerms => {
+
 			const primaryTerm = get();
 
 			if ( selectedTerms.includes( primaryTerm ) )
@@ -144,6 +147,7 @@ window.tsfPTGB = function () {
 		}
 
 		const registerPostField = () => {
+
 			const wrap = document.getElementById( 'tsf-gutenberg-data-holder' );
 
 			if ( wrap ) {
@@ -187,6 +191,7 @@ window.tsfPTGB = function () {
 				availableTerms,
 			} = useSelect(
 				select => {
+
 					const { getTaxonomy, getEntityRecords, isResolving } = select( 'core' );
 					const { getEditedPostAttribute }                     = select( 'core/editor' );
 
@@ -208,6 +213,7 @@ window.tsfPTGB = function () {
 				// = Mega edge case Gutenberg doesn't handle (properly) either.
 			useEffect(
 				() => {
+
 					if ( ! selectedTerms.includes( +selection ) || primaryTerm.get() !== +selection ) {
 						primaryTerm.revalidate( selectedTerms );
 						setSelection( primaryTerm.get() );
@@ -224,11 +230,13 @@ window.tsfPTGB = function () {
 					|| availableTerms?.[0]?.id
 					|| 0
 				);
+
 				// Hide selector. Halt function.
 				return null;
 			}
 
 			const onChange = termId => {
+
 				if ( ! selectedTerms.includes( +termId ) ) return;
 				primaryTerm.set( termId );
 				setSelection( primaryTerm.get() );
@@ -295,21 +303,24 @@ window.tsfPTGB = function () {
 		);
 	}
 
-	return Object.assign( {
-		/**
-		 * Initialises all aspects of the scripts.
-		 * You shouldn't call this.
-		 *
-		 * @since 3.2.0
-		 * @access protected
-		 *
-		 * @function
-		 */
-		load: () => {
-			document.body.addEventListener( 'tsf-ready', _initPrimaryTerm );
+	return Object.assign(
+		{
+			/**
+			 * Initialises all aspects of the scripts.
+			 * You shouldn't call this.
+			 *
+			 * @since 3.2.0
+			 * @access protected
+			 *
+			 * @function
+			 */
+			load: () => {
+				document.body.addEventListener( 'tsf-ready', _initPrimaryTerm );
+			},
 		},
-	}, {
-		l10n,
-	} );
+		{
+			l10n,
+		},
+	);
 }();
 window.tsfPTGB.load();

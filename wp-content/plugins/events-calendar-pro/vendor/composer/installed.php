@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'the-events-calendar/events-pro',
-        'pretty_version' => 'dev-release/M26.octillery',
-        'version' => 'dev-release/M26.octillery',
-        'reference' => 'f9b01221e851658740598b95fe2b136cc03dce43',
+        'pretty_version' => 'dev-release/M26.raichu',
+        'version' => 'dev-release/M26.raichu',
+        'reference' => '0857978bed6fa8504c576167c923bebd7f12f57f',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -29,9 +29,9 @@
             'dev_requirement' => false,
         ),
         'the-events-calendar/events-pro' => array(
-            'pretty_version' => 'dev-release/M26.octillery',
-            'version' => 'dev-release/M26.octillery',
-            'reference' => 'f9b01221e851658740598b95fe2b136cc03dce43',
+            'pretty_version' => 'dev-release/M26.raichu',
+            'version' => 'dev-release/M26.raichu',
+            'reference' => '0857978bed6fa8504c576167c923bebd7f12f57f',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

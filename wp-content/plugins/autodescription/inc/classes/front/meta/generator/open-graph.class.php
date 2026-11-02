@@ -15,7 +15,7 @@ use The_SEO_Framework\{
 
 /**
  * The SEO Framework plugin
- * Copyright (C) 2023 - 2025 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
+ * Copyright (C) 2023 - 2026 Sybre Waaijer, CyberWire B.V. (https://cyberwire.nl/)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as published
@@ -40,7 +40,7 @@ final class Open_Graph {
 
 	/**
 	 * @since 5.0.0
-	 * @var callable[] GENERATORS A list of autoloaded meta callbacks.
+	 * @var callable[] GENERATORS A list of auto-loaded meta callbacks.
 	 */
 	public const GENERATORS = [
 		[ __CLASS__, 'generate_open_graph_type' ],
@@ -159,11 +159,13 @@ final class Open_Graph {
 
 	/**
 	 * @since 5.0.0
+	 * @since 5.2.0 Now percent-encodes non-ASCII octets in the image URL.
 	 * @generator
 	 */
 	public static function generate_open_graph_image() {
 
 		$i = 0;
+
 		foreach ( Meta\Image::get_image_details(
 			null,
 			! Data\Plugin::get_option( 'multi_og_image' ),
@@ -171,7 +173,7 @@ final class Open_Graph {
 			yield "og:image:$i" => [
 				'attributes' => [
 					'property' => 'og:image',
-					'content'  => $image['url'],
+					'content'  => Meta\URI\Utils::encode_url( $image['url'] ),
 				],
 			];
 
@@ -182,6 +184,7 @@ final class Open_Graph {
 						'content'  => $image['width'],
 					],
 				];
+
 				yield "og:image:height:$i" => [
 					'attributes' => [
 						'property' => 'og:image:height',
